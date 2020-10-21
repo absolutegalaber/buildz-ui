@@ -46,3 +46,13 @@ export interface BuildSearchResult {
   hasPrevious: boolean;
 }
 
+export interface Environment {
+  id: number;
+  name: string;
+  artifacts: Build[];
+}
+
+export interface EnvironmentBuilds {
+  environment: string;
+  builds: { [key: string]: Build };
+}

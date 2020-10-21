@@ -7,15 +7,33 @@ import {BuildSearch} from '../service/domain';
     <form novalidate (submit)="doSearch.emit()">
       <div class="form-group">
         <label for="project">Project</label>
-        <input type="text" class="form-control" id="project" aria-describedby="projectHelp" name="project"
+        <input type="text" class="form-control form-control-sm" id="project" aria-describedby="projectHelp" name="project"
                [(ngModel)]="theSearch.project">
         <small id="projectHelp" class="form-text text-muted">Project name</small>
       </div>
       <div class="form-group">
         <label for="branch">Branch</label>
-        <input type="text" class="form-control" id="branch" aria-describedby="branchHelp" name="branch"
+        <input type="text" class="form-control form-control-sm" id="branch" aria-describedby="branchHelp" name="branch"
                [(ngModel)]="theSearch.branch">
         <small id="branchHelp" class="form-text text-muted">Branch name</small>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="branch">Min #</label>
+            <input type="text" class="form-control form-control-sm" id="branch" aria-describedby="minBuildNumberHelp" name="minBuildNumber"
+                   [(ngModel)]="theSearch.minBuildNumber">
+            <small id="minBuildNumberHelp" class="form-text text-muted">Mio BuildNumber</small>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group row">
+            <label for="branch">Max #</label>
+            <input type="text" class="form-control form-control-sm" id="branch" aria-describedby="maxBuildNumberHelp" name="maxBuildNumber"
+                   [(ngModel)]="theSearch.maxBuildNumber">
+            <small id="maxBuildNumberHelp" class="form-text text-muted">Max BuildNumber</small>
+          </div>
+        </div>
       </div>
       <input type="submit" class="btn btn-primary" value="Filter"/>
     </form>

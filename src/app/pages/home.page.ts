@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {BuildsClientService} from '../service/builds-client.service';
+import {BuildsApi} from '../service/builds-api.service';
 import {Observable} from 'rxjs';
 import {BuildStats} from '../service/domain';
 import {Router} from '@angular/router';
@@ -10,13 +10,13 @@ import {Router} from '@angular/router';
   `
 })
 export class HomePage {
-  stats: Observable<BuildStats> = this.client.stats()
+  stats: Observable<BuildStats> = this.buildsApi.stats()
 
   projectSelected(projectName: string) {
-    this.client.projectSelected(projectName);
+    this.buildsApi.projectSelected(projectName);
     this.router.navigate(['/builds']);
   }
 
-  constructor(private client: BuildsClientService, private router: Router) {
+  constructor(private buildsApi: BuildsApi, private router: Router) {
   }
 }

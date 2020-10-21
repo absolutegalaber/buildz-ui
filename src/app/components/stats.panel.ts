@@ -21,7 +21,7 @@ import {BuildStats} from '../service/domain';
       <div class="col">
         <div class="row" *ngFor="let environment of stats.environments">
           <div class="col text-right">
-            <a class="btn">{{environment}}</a>
+            <a class="btn" [routerLink]="['/environment-builds', environment]">{{environment}}</a>
           </div>
         </div>
       </div>

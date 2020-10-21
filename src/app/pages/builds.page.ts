@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
-import {BuildsClientService} from '../service/builds-client.service';
+import {BuildsApi} from '../service/builds-api.service';
 import {Build} from '../service/domain';
 
 @Component({
   template: `
     <div class="container-fluid">
       <div class="row">
-        <div class="col-2">
+        <div class="col-3">
           <bz-build-search-form
             [theSearch]="search | async"
             (doSearch)="client.search()"
@@ -14,7 +14,7 @@ import {Build} from '../service/domain';
 
           </bz-build-search-form>
         </div>
-        <div class="col-5">
+        <div class="col-4">
           <bz-build-list
             [searchResult]="result | async"
             (buildSelected)="buildSelected($event)"
@@ -35,9 +35,9 @@ export class BuildsPage {
   selectedBuild = this.client.selectedBuild;
 
   buildSelected(build: Build) {
-    this.client.selected(build)
+    this.client.selectBuild(build)
   }
 
-  constructor(public client: BuildsClientService) {
+  constructor(public client: BuildsApi) {
   }
 }

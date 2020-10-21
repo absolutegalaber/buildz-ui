@@ -5,12 +5,15 @@ import {Build} from '../service/domain';
   selector: 'bz-build-label-list',
   template: `
     <table *ngIf="build != null && build.labels.length>0">
+      <tr>
+        <td colspan="2"><b>{{build.project}}:{{build.branch}}:{{build.buildNumber}}</b></td>
+      </tr>
       <tr *ngFor="let label of build.labels">
         <td>{{label.key}}</td>
         <td>{{label.value}}</td>
       </tr>
     </table>
-    <span *ngIf="build != null && build.labels.length == 0"> No Labels </span>
+    <span *ngIf="build != null && build.labels.length == 0"><b>{{build.project}}:{{build.branch}}:{{build.buildNumber}}</b> has no Labels </span>
     <span *ngIf="build === null"> Nothing Selected </span>
   `
 })
