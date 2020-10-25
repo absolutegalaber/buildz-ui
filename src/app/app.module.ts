@@ -7,15 +7,17 @@ import {Navbar} from './components/navbar';
 import {HomePage} from './pages/home.page';
 import {HttpClientModule} from '@angular/common/http';
 import {StatsPanel} from './components/stats.panel';
-import {BuildsApi} from './service/builds-api.service';
+import {BuildzApi} from './service/builds-api.service';
 import {BuildsPage} from './pages/builds.page';
 import {BuildSearchFrom} from './components/build-search.from';
 import {FormsModule} from '@angular/forms';
 import {BuildList} from './components/build.list';
 import {BuildLabelList} from './components/build-label.list';
 import {EnvironmentBuildsPage} from './pages/environment-builds.page';
-import {LoadEnvironmentsBuildsGuard} from './guards/load-environmentsBuilds.guard';
+import {LoadEnvironmentsBuildsGuard} from './guards/load-environments-builds.guard';
 import {EnvironmentBuildsPanel} from './components/environment-builds.panel';
+import {LoadBuildsSearchGuard} from './guards/load-builds-search-guard.service';
+import {BuildzData} from './service/buildz-data.service';
 
 let components = [
   Navbar,
@@ -45,8 +47,10 @@ let pages = [
     FormsModule
   ],
   providers: [
-    BuildsApi,
-    LoadEnvironmentsBuildsGuard
+    BuildzApi,
+    BuildzData,
+    LoadEnvironmentsBuildsGuard,
+    LoadBuildsSearchGuard
   ],
   bootstrap: [AppComponent]
 })

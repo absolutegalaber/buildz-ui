@@ -1,43 +1,46 @@
 import {Component} from '@angular/core';
-import {BuildsApi} from '../service/builds-api.service';
-import {Build} from '../service/domain';
+import {BuildzApi} from '../service/builds-api.service';
+import {BuildzData} from '../service/buildz-data.service';
 
 @Component({
   template: `
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-3">
-          <bz-build-search-form
-            [theSearch]="search | async"
-            (doSearch)="client.search()"
-          >
-
-          </bz-build-search-form>
+    <ng-container *ngIf="searchResult|async as theSearchResult">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <bz-build-search-form
+              [theSearch]="search | async"
+              [theSearchResult]="theSearchResult"
+              [buildzData]="buildzData.data | async"
+              (doSearch)="client.update()"
+              (addLabel)="client.addLabel($event)"
+              (clearLabels)="client.clearLabel($event)"
+              (nextPage)="client.nextPage()"
+              (previousPage)="client.previousPage()"
+            >
+            </bz-build-search-form>
+          </div>
         </div>
-        <div class="col-4">
-          <bz-build-list
-            [searchResult]="result | async"
-            (buildSelected)="buildSelected($event)"
-            (previousPage)="client.previousPage()"
-            (nextPage)=" client.nextPage()"
-          ></bz-build-list>
-        </div>
-        <div class="col-5">
-          <bz-build-label-list [build]="selectedBuild | async"></bz-build-label-list>
+        <div class="row mt-5">
+          <div class="col-6">
+            <bz-build-list
+              [searchResult]="theSearchResult"
+              (buildSelected)="client.selectBuild($event)"
+            ></bz-build-list>
+          </div>
+          <div class="col-6">
+            <bz-build-label-list [build]="selectedBuild | async"></bz-build-label-list>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   `
 })
 export class BuildsPage {
   search = this.client.buildSearch;
-  result = this.client.buildSearchResult;
+  searchResult = this.client.buildSearchResult;
   selectedBuild = this.client.selectedBuild;
 
-  buildSelected(build: Build) {
-    this.client.selectBuild(build)
-  }
-
-  constructor(public client: BuildsApi) {
+  constructor(public client: BuildzApi, public buildzData: BuildzData) {
   }
 }

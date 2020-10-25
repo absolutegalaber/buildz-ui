@@ -5,25 +5,50 @@ import {BuildStats} from '../service/domain';
   selector: 'bz-stats',
   template: `
     <div class="row" *ngIf="stats != null">
-
-      <div class="col">
-        <div class="row" *ngFor="let project of stats.projects">
-          <div class="col">
-            <a class="btn" (click)="projectSelected.emit(project)">{{project}}</a>
-          </div>
-        </div>
+      <div class="col shadow">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <td><b>Known Projects</b></td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let project of stats.projects">
+            <td>
+              <a class="btn" [routerLink]="['/builds-of/', project]">{{project}}</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-right">
+              <a [routerLink]="['/builds']">Browse</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="col">
-        Currently <b>{{stats.numberOfBuilds}}</b> Builds with <b>{{stats.numberOfLabels}}</b> Labels known to this Build Tool.
+      <div class="col text-center">
+        <b>{{stats.projects.length}}</b> Projects.<br>
+        <b>{{stats.environments.length}}</b> Environments.<br>
+        <b>{{stats.numberOfBuilds}}</b> Builds.<br>
+        <b>{{stats.numberOfLabels}}</b> Labels.
       </div>
 
-      <div class="col">
-        <div class="row" *ngFor="let environment of stats.environments">
-          <div class="col text-right">
-            <a class="btn" [routerLink]="['/environment-builds', environment]">{{environment}}</a>
-          </div>
-        </div>
+      <div class="col shadow">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <td><b>Known Environments</b></td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let environment of stats.environments">
+            <td>
+              <a class="btn" [routerLink]="['/environment-builds', environment]">{{environment}}</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
 
     </div>

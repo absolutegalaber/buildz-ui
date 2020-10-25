@@ -1,6 +1,8 @@
 export interface BuildStats {
   projects: string[];
+  branches: string[];
   environments: string[];
+  labelKeys: string[];
   numberOfBuilds: number;
   numberOfLabels: number;
 }
@@ -10,12 +12,17 @@ export interface BuildLabel {
   value: string;
 }
 
+export interface SearchLabel {
+  key: string,
+  value: string
+}
+
 export interface BuildSearch {
   project?: string;
   branch?: string;
   minBuildNumber?: number;
   maxBuildNumber?: number;
-  labels?: BuildLabel[];
+  labels?: any;
   pageSize?: number;
   page?: number;
   sortAttribute?: string;
@@ -23,8 +30,11 @@ export interface BuildSearch {
 }
 
 export const DEFAULT_BUILD_SEARCH: BuildSearch = {
+  project: '',
+  branch: '',
   page: 0,
   pageSize: 10,
+  labels: {},
   sortAttribute: 'buildNumber',
   sortDirection: 'DESC'
 }
@@ -44,6 +54,15 @@ export interface BuildSearchResult {
   totalPages: number;
   hasNext: boolean;
   hasPrevious: boolean;
+}
+
+export const EMTPY_BUILD_SEARCH_RESULT = {
+  builds: [],
+  page: 0,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
+  hasPrevious: false
 }
 
 export interface Environment {

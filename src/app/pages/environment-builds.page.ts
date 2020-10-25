@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {BuildsApi} from '../service/builds-api.service';
+import {BuildzApi} from '../service/builds-api.service';
 
 @Component({
   template: `
@@ -14,6 +14,6 @@ import {BuildsApi} from '../service/builds-api.service';
 export class EnvironmentBuildsPage {
   environmentBuilds = this.buildsApi.environmentBuilds
 
-  constructor(public buildsApi: BuildsApi) {
+  constructor(public buildsApi: BuildzApi) {
   }
 }

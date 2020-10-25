@@ -1,22 +1,26 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Build, BuildSearch, BuildSearchResult, BuildStats, DEFAULT_BUILD_SEARCH, EnvironmentBuilds} from './domain';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {Build, BuildSearch, BuildSearchResult, BuildStats, DEFAULT_BUILD_SEARCH, EMTPY_BUILD_SEARCH_RESULT, EnvironmentBuilds, SearchLabel} from './domain';
+import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
+import {switchMap, tap} from 'rxjs/operators';
 
 @Injectable()
-export class BuildsApi {
+export class BuildzApi {
   private _currentBuildSearch: BuildSearch = DEFAULT_BUILD_SEARCH;
-  private _currentBuildSearchResult: BuildSearchResult;
+  private _currentBuildSearchResult: BuildSearchResult = EMTPY_BUILD_SEARCH_RESULT;
   private _currentEnvironmentBuilds: EnvironmentBuilds;
 
-  private _buildSearch: Subject<BuildSearch> = new ReplaySubject();
-  private _buildSearchResult: Subject<BuildSearchResult> = new ReplaySubject();
+  private _buildSearch: Subject<BuildSearch> = new BehaviorSubject(this._currentBuildSearch);
+  private _buildSearchResult = this.buildSearch.pipe(
+    switchMap((theSearch: BuildSearch) =>
+      this.httpClient.post<BuildSearchResult>(`/api/v1/builds/search`, theSearch).pipe(
+        tap((result: BuildSearchResult) => this._currentBuildSearchResult = result)
+      )
+    ));
+
+
   private _selectedBuild: Subject<Build> = new ReplaySubject();
   private _environmentBuilds: Subject<EnvironmentBuilds> = new ReplaySubject();
-
-  constructor(private htto: HttpClient) {
-    this._buildSearch.next(this._currentBuildSearch);
-  }
 
   get environmentBuilds(): Subject<EnvironmentBuilds> {
     return this._environmentBuilds;
@@ -26,7 +30,7 @@ export class BuildsApi {
     return this._buildSearch;
   }
 
-  get buildSearchResult(): Subject<BuildSearchResult> {
+  get buildSearchResult(): Observable<BuildSearchResult> {
     return this._buildSearchResult;
   }
 
@@ -35,48 +39,43 @@ export class BuildsApi {
   }
 
   stats(): Observable<BuildStats> {
-    return this.htto.get<BuildStats>(`/api/v1/builds/stats`)
+    return this.httpClient.get<BuildStats>(`/api/v1/builds/stats`)
   }
 
   projectSelected(projectName: string): void {
-    let theSearch = DEFAULT_BUILD_SEARCH;
-    theSearch.project = projectName;
-    this._buildSearch.next(theSearch);
-    this.search()
+    this._currentBuildSearch = DEFAULT_BUILD_SEARCH;
+    this._currentBuildSearch.project = projectName;
+    this.update()
   }
 
-  search() {
-    this.htto.post<BuildSearchResult>(`/api/v1/builds/search`, this._currentBuildSearch)
-      .subscribe((theResult: BuildSearchResult) => {
-        this._currentBuildSearchResult = theResult;
-        this._buildSearchResult.next(theResult);
-      });
+  update(): void {
     this.selectBuild(null)
-
+    this.buildSearch.next(this._currentBuildSearch)
   }
 
   nextPage() {
-    if (this._currentBuildSearch.page < this._currentBuildSearchResult.totalPages)
-      this._currentBuildSearch.page++;
-    this._buildSearch.next(this._currentBuildSearch)
-    this.htto.post<BuildSearchResult>(`/api/v1/builds/search`, this._currentBuildSearch)
-      .subscribe((theResult: BuildSearchResult) =>
-        this._buildSearchResult.next(theResult)
-      );
-    this.selectBuild(null)
-
+    if (this._currentBuildSearch.page + 1 < this._currentBuildSearchResult.totalPages) {
+      this._currentBuildSearch.page += 1;
+      this.update()
+    }
   }
 
   previousPage() {
     if (this._currentBuildSearch.page > 0) {
       this._currentBuildSearch.page--;
       this._buildSearch.next(this._currentBuildSearch)
-      this.htto.post<BuildSearchResult>(`/api/v1/builds/search`, this._currentBuildSearch)
-        .subscribe((theResult: BuildSearchResult) =>
-          this._buildSearchResult.next(theResult)
-        );
-      this.selectBuild(null)
+      this.update()
     }
+  }
+
+  addLabel(newLabel: SearchLabel) {
+    this._currentBuildSearch.labels[newLabel.key] = newLabel.value
+    this.update()
+  }
+
+  clearLabel(labelKey: string) {
+    delete this._currentBuildSearch.labels[labelKey]
+    this.update()
   }
 
   selectBuild(newSelected: Build) {
@@ -84,11 +83,14 @@ export class BuildsApi {
   }
 
   loadEnvironment(newSelectedEnvironmentName: string): Observable<EnvironmentBuilds> {
-    this.htto.get<EnvironmentBuilds>(`/api/v1/builds/of-environment/${newSelectedEnvironmentName}`)
+    this.httpClient.get<EnvironmentBuilds>(`/api/v1/builds/of-environment/${newSelectedEnvironmentName}`)
       .subscribe((environmentBuilds: EnvironmentBuilds) => {
         this._currentEnvironmentBuilds = environmentBuilds;
         this._environmentBuilds.next(this._currentEnvironmentBuilds)
       });
     return this.environmentBuilds
+  }
+
+  constructor(private httpClient: HttpClient) {
   }
 }

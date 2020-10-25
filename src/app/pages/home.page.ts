@@ -1,22 +1,12 @@
 import {Component} from '@angular/core';
-import {BuildsApi} from '../service/builds-api.service';
-import {Observable} from 'rxjs';
-import {BuildStats} from '../service/domain';
-import {Router} from '@angular/router';
+import {BuildzData} from '../service/buildz-data.service';
 
 @Component({
   template: `
-    <bz-stats [stats]="stats | async" (projectSelected)="projectSelected($event)"></bz-stats>
+    <bz-stats [stats]="buildzData.data | async"></bz-stats>
   `
 })
 export class HomePage {
-  stats: Observable<BuildStats> = this.buildsApi.stats()
-
-  projectSelected(projectName: string) {
-    this.buildsApi.projectSelected(projectName);
-    this.router.navigate(['/builds']);
-  }
-
-  constructor(private buildsApi: BuildsApi, private router: Router) {
+  constructor(public buildzData: BuildzData) {
   }
 }
