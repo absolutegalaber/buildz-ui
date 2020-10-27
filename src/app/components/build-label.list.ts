@@ -4,7 +4,7 @@ import {Build} from '../service/domain';
 @Component({
   selector: 'bz-build-label-list',
   template: `
-    <table *ngIf="build != null && build.labels.length>0">
+    <table *ngIf="build != null && build.labels.length>0" class="table table-striped table-sm">
       <tr>
         <td colspan="2"><b>{{build.project}}:{{build.branch}}:{{build.buildNumber}}</b></td>
       </tr>

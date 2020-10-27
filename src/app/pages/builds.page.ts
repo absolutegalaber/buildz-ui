@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {BuildzApi} from '../service/builds-api.service';
-import {BuildzData} from '../service/buildz-data.service';
+import {BuildzData} from '../service/buildz-data.state';
 
 @Component({
   template: `
@@ -22,13 +22,13 @@ import {BuildzData} from '../service/buildz-data.service';
           </div>
         </div>
         <div class="row mt-5">
-          <div class="col-6">
+          <div class="col-4">
             <bz-build-list
               [searchResult]="theSearchResult"
               (buildSelected)="client.selectBuild($event)"
             ></bz-build-list>
           </div>
-          <div class="col-6">
+          <div class="col-8">
             <bz-build-label-list [build]="selectedBuild | async"></bz-build-label-list>
           </div>
         </div>

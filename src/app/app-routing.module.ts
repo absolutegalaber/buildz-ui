@@ -2,15 +2,17 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomePage} from './pages/home.page';
 import {BuildsPage} from './pages/builds.page';
-import {EnvironmentBuildsPage} from './pages/environment-builds.page';
-import {LoadEnvironmentsBuildsGuard} from './guards/load-environments-builds.guard';
+import {EnvironmentPage} from './pages/environment.page';
+import {LoadEnvironmentGuard} from './guards/load-environment-guard';
 import {LoadBuildsSearchGuard} from './guards/load-builds-search-guard.service';
+import {ErrorPage} from './pages/error.page';
 
 const routes: Routes = [
   {path: '', component: HomePage},
   {path: 'builds', component: BuildsPage, canActivate: [LoadBuildsSearchGuard]},
   {path: 'builds-of/:projectName', component: BuildsPage, canActivate: [LoadBuildsSearchGuard]},
-  {path: 'environment-builds/:environmentName', component: EnvironmentBuildsPage, canActivate: [LoadEnvironmentsBuildsGuard]}
+  {path: 'edit-environment/:environmentName', component: EnvironmentPage, canActivate: [LoadEnvironmentGuard]},
+  {path: 'error', component: ErrorPage}
 ];
 
 @NgModule({

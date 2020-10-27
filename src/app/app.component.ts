@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {BuildzData} from './service/buildz-data.service';
+import {BuildzData} from './service/buildz-data.state';
 
 @Component({
   selector: 'app-root',

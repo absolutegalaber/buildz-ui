@@ -65,13 +65,31 @@ export const EMTPY_BUILD_SEARCH_RESULT = {
   hasPrevious: false
 }
 
+export interface Artifact {
+  id?: number,
+  project: string,
+  branch: string,
+  labels: { [key: string]: string }
+}
+
 export interface Environment {
   id: number;
   name: string;
   artifacts: Build[];
 }
 
+export const EMPTY_ENVIRONMENT: Environment = {
+  id: null,
+  name: '',
+  artifacts: []
+}
+
 export interface EnvironmentBuilds {
   environment: string;
   builds: { [key: string]: Build };
+}
+
+export const EMPTY_ENVIRONMENT_BUILDS: EnvironmentBuilds = {
+  environment: '',
+  builds: {}
 }

@@ -5,22 +5,22 @@ import {BuildStats} from '../service/domain';
   selector: 'bz-stats',
   template: `
     <div class="row" *ngIf="stats != null">
-      <div class="col shadow">
-        <table class="table table-striped">
+      <div class="col">
+        <table class="table table-striped table-sm">
           <thead>
           <tr>
             <td><b>Known Projects</b></td>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let project of stats.projects">
+          <tr *ngFor="let project of stats.projects" [routerLink]="['/builds-of/', project]" style="cursor: pointer">
             <td>
-              <a class="btn" [routerLink]="['/builds-of/', project]">{{project}}</a>
+              {{project}}
             </td>
           </tr>
           <tr>
             <td class="text-right">
-              <a [routerLink]="['/builds']">Browse</a>
+              <a [routerLink]="['/builds']">Browse Builds</a>
             </td>
           </tr>
           </tbody>
@@ -34,18 +34,22 @@ import {BuildStats} from '../service/domain';
         <b>{{stats.numberOfLabels}}</b> Labels.
       </div>
 
-      <div class="col shadow">
-        <table class="table table-striped">
+      <div class="col">
+        <table class="table table-striped table-sm">
           <thead>
           <tr>
-            <td><b>Known Environments</b></td>
+            <td colspan="2"><b>Known Environments</b></td>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let environment of stats.environments">
-            <td>
-              <a class="btn" [routerLink]="['/environment-builds', environment]">{{environment}}</a>
+          <tr *ngFor="let environment of stats.environments" style="cursor: pointer">
+            <td (click)="projectSelected.emit(environment)">
+              {{environment}}
             </td>
+            <td [routerLink]="['/edit-environment', environment]">Edit</td>
+          </tr>
+          <tr>
+            <td class="text-right" colspan="2">New</td>
           </tr>
           </tbody>
         </table>

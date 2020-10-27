@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Build, BuildSearch, BuildSearchResult, BuildStats, DEFAULT_BUILD_SEARCH, EMTPY_BUILD_SEARCH_RESULT, EnvironmentBuilds, SearchLabel} from './domain';
+import {Build, BuildSearch, BuildSearchResult, BuildStats, DEFAULT_BUILD_SEARCH, EMTPY_BUILD_SEARCH_RESULT, SearchLabel} from './domain';
 import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
 
@@ -8,7 +8,6 @@ import {switchMap, tap} from 'rxjs/operators';
 export class BuildzApi {
   private _currentBuildSearch: BuildSearch = DEFAULT_BUILD_SEARCH;
   private _currentBuildSearchResult: BuildSearchResult = EMTPY_BUILD_SEARCH_RESULT;
-  private _currentEnvironmentBuilds: EnvironmentBuilds;
 
   private _buildSearch: Subject<BuildSearch> = new BehaviorSubject(this._currentBuildSearch);
   private _buildSearchResult = this.buildSearch.pipe(
@@ -20,11 +19,6 @@ export class BuildzApi {
 
 
   private _selectedBuild: Subject<Build> = new ReplaySubject();
-  private _environmentBuilds: Subject<EnvironmentBuilds> = new ReplaySubject();
-
-  get environmentBuilds(): Subject<EnvironmentBuilds> {
-    return this._environmentBuilds;
-  }
 
   get buildSearch(): Subject<BuildSearch> {
     return this._buildSearch;
@@ -80,15 +74,6 @@ export class BuildzApi {
 
   selectBuild(newSelected: Build) {
     this.selectedBuild.next(newSelected);
-  }
-
-  loadEnvironment(newSelectedEnvironmentName: string): Observable<EnvironmentBuilds> {
-    this.httpClient.get<EnvironmentBuilds>(`/api/v1/builds/of-environment/${newSelectedEnvironmentName}`)
-      .subscribe((environmentBuilds: EnvironmentBuilds) => {
-        this._currentEnvironmentBuilds = environmentBuilds;
-        this._environmentBuilds.next(this._currentEnvironmentBuilds)
-      });
-    return this.environmentBuilds
   }
 
   constructor(private httpClient: HttpClient) {

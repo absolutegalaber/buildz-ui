@@ -4,7 +4,7 @@ import {BuildSearch, BuildSearchResult, BuildStats, SearchLabel} from '../servic
 @Component({
   selector: 'bz-build-search-form',
   template: `
-    <div class="container-fluid shadow rounded" *ngIf="theSearch !== null && theSearchResult !== null">
+    <div class="container-fluid" *ngIf="theSearch !== null && theSearchResult !== null">
       <form novalidate (submit)="doSearch.emit()">
         <div class="form-row">
 

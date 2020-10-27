@@ -13,11 +13,16 @@ import {BuildSearchFrom} from './components/build-search.from';
 import {FormsModule} from '@angular/forms';
 import {BuildList} from './components/build.list';
 import {BuildLabelList} from './components/build-label.list';
-import {EnvironmentBuildsPage} from './pages/environment-builds.page';
-import {LoadEnvironmentsBuildsGuard} from './guards/load-environments-builds.guard';
+import {EnvironmentPage} from './pages/environment.page';
+import {LoadEnvironmentGuard} from './guards/load-environment-guard';
 import {EnvironmentBuildsPanel} from './components/environment-builds.panel';
 import {LoadBuildsSearchGuard} from './guards/load-builds-search-guard.service';
-import {BuildzData} from './service/buildz-data.service';
+import {BuildzData} from './service/buildz-data.state';
+import {EnvironmentsApi} from './service/environments-api.service';
+import {EnvironmentForm} from './components/environment-form';
+import {ErrorPage} from './pages/error.page';
+import {BuildzError} from './service/buildz-error.state';
+import {ErrorAlertPanel} from './components/error-alert.panel';
 
 let components = [
   Navbar,
@@ -25,13 +30,16 @@ let components = [
   BuildSearchFrom,
   BuildList,
   BuildLabelList,
-  EnvironmentBuildsPanel
+  EnvironmentBuildsPanel,
+  EnvironmentForm,
+  ErrorAlertPanel
 ];
 
 let pages = [
   HomePage,
   BuildsPage,
-  EnvironmentBuildsPage
+  EnvironmentPage,
+  ErrorPage
 ]
 
 @NgModule({
@@ -48,8 +56,10 @@ let pages = [
   ],
   providers: [
     BuildzApi,
+    EnvironmentsApi,
     BuildzData,
-    LoadEnvironmentsBuildsGuard,
+    BuildzError,
+    LoadEnvironmentGuard,
     LoadBuildsSearchGuard
   ],
   bootstrap: [AppComponent]

@@ -4,14 +4,18 @@ import {EnvironmentBuilds} from '../service/domain';
 @Component({
   selector: 'bz-environment-builds-panel',
   template: `
-    <div class="row">
-      <div class="col">
-        <table class="table table-striped">
-          <tbody>
+    <div class="row" *ngIf="environmentBuilds.environment != null && environmentBuilds.environment.length > 0">
+      <div class="col offset-8">
+        <table class="table table-striped table-sm">
+          <thead>
           <tr>
             <td colspan="3">
-              <h4>{{environmentBuilds.environment}}</h4>
+              <b>Environment: {{environmentBuilds.environment}}</b>
             </td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
           </tr>
           <tr *ngFor="let build of environmentBuilds.builds | keyvalue">
             <td>{{build.value.project}}</td>

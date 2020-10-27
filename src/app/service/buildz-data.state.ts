@@ -21,7 +21,6 @@ export class BuildzData {
   }
 
   load(): void {
-
     this.http.get<BuildStats>('/api/v1/builds/stats').pipe(
       map((stats: BuildStats) => {
         this.loaded = true
