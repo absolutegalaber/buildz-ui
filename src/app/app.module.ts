@@ -23,6 +23,7 @@ import {EnvironmentForm} from './components/environment-form';
 import {ErrorPage} from './pages/error.page';
 import {BuildzError} from './service/buildz-error.state';
 import {ErrorAlertPanel} from './components/error-alert.panel';
+import {DeadCenterComponent} from './layout/dead-center.component';
 
 let components = [
   Navbar,
@@ -32,7 +33,8 @@ let components = [
   BuildLabelList,
   EnvironmentBuildsPanel,
   EnvironmentForm,
-  ErrorAlertPanel
+  ErrorAlertPanel,
+  DeadCenterComponent
 ];
 
 let pages = [

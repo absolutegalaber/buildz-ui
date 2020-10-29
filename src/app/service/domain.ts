@@ -13,8 +13,14 @@ export interface BuildLabel {
 }
 
 export interface SearchLabel {
-  key: string,
-  value: string
+  key: string;
+  value: string;
+}
+
+export interface ArtifactSearchLabel {
+  projectName: string;
+  key: string;
+  value: string;
 }
 
 export interface BuildSearch {
@@ -75,7 +81,14 @@ export interface Artifact {
 export interface Environment {
   id: number;
   name: string;
-  artifacts: Build[];
+  artifacts: Artifact[];
+}
+
+export interface EditableEnvironment {
+  id: number;
+  name: string;
+  artifacts: { [key: string]: Artifact }
+  requiredProjects?: string[];
 }
 
 export const EMPTY_ENVIRONMENT: Environment = {

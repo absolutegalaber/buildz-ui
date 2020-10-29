@@ -10,7 +10,7 @@ import {BuildSearch, BuildSearchResult, BuildStats, SearchLabel} from '../servic
 
           <div class="col-4">
             <div class="form-group">
-              <select class="form-control form-control-sm" [(ngModel)]="theSearch.project" name="project" (ngModelChange)="doSearch.emit()">
+              <select class="form-control form-control-sm" [(ngModel)]="theSearch.project" name="project" (change)="doSearch.emit()">
                 <option value="">All Projects</option>
                 <option *ngFor="let p of buildzData.projects" [value]="p">{{p}}</option>
               </select>
