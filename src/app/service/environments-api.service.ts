@@ -4,6 +4,7 @@ import {ArtifactSearchLabel, EMPTY_ENVIRONMENT, EMPTY_ENVIRONMENT_BUILDS, Enviro
 import {BehaviorSubject, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {artifactOf, artifactsForVerification} from './util-functions';
+import {BuildzAlert} from './buildz-alert.state';
 
 @Injectable()
 export class EnvironmentsApi {
@@ -88,11 +89,12 @@ export class EnvironmentsApi {
     this.httpClient.post<Environment>('/api/v1/environments/', this._currentEnvironment).pipe(
       tap((saved: Environment) => {
         this._currentEnvironment = saved;
+        this.buildzAlert.info('Environment saved', `The Enironment was saved successfully <br/>{id=${this._currentEnvironment.id}}`)
         this._environment.next(this._currentEnvironment);
       })
     ).subscribe()
   }
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private buildzAlert: BuildzAlert) {
   }
 }

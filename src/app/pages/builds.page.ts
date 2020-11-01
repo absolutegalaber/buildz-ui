@@ -22,14 +22,11 @@ import {BuildzData} from '../service/buildz-data.state';
           </div>
         </div>
         <div class="row mt-5">
-          <div class="col-4">
-            <bz-build-list
-              [searchResult]="theSearchResult"
+          <div class="col-10 offset-1">
+            <bz-builds-accordion
+              [searchResult]="theSearchResult.builds"
               (buildSelected)="client.selectBuild($event)"
-            ></bz-build-list>
-          </div>
-          <div class="col-8">
-            <bz-build-label-list [build]="selectedBuild | async"></bz-build-label-list>
+            ></bz-builds-accordion>
           </div>
         </div>
       </div>

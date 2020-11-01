@@ -5,7 +5,7 @@ import {EnvironmentBuilds} from '../service/domain';
   selector: 'bz-environment-builds-panel',
   template: `
     <div class="row" *ngIf="environmentBuilds.environment != null && environmentBuilds.environment.length > 0">
-      <div class="col offset-8">
+      <div class="col">
         <table class="table table-striped table-sm">
           <thead>
           <tr>

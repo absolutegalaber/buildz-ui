@@ -4,20 +4,14 @@ import {Build, BuildSearchResult} from '../service/domain';
 @Component({
   selector: 'bz-build-list',
   template: `
-    <table class="table table-striped table-sm" *ngIf="searchResult != null">
-      <thead>
-      <tr>
-        <td>Found {{searchResult.totalElements}} Builds</td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let build of searchResult.builds" (click)="buildSelected.emit(build)" style="cursor: pointer">
-        <td>
-          {{build.project}}:{{build.branch}}:{{build.buildNumber}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div class="list-group" *ngIf="searchResult != null">
+      <span class="list-group-item list-group-item-primary">Found {{searchResult.totalElements}} Builds</span>
+      <button class="list-group-item list-group-item-action" *ngFor="let build of searchResult.builds"
+              (click)="buildSelected.emit(build)"
+      >
+        {{build.project}}:{{build.branch}}:{{build.buildNumber}}
+      </button>
+    </div>
     <span *ngIf="searchResult === null"> Nothing Loaded </span>
   `
 })

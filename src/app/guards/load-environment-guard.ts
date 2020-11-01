@@ -3,12 +3,12 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Observable, of} from 'rxjs';
 import {catchError, mapTo} from 'rxjs/operators';
 import {EnvironmentsApi} from '../service/environments-api.service';
-import {BuildzError} from '../service/buildz-error.state';
+import {BuildzAlert} from '../service/buildz-alert.state';
 
 @Injectable()
 export class LoadEnvironmentGuard implements CanActivate {
 
-  constructor(private environmentsApi: EnvironmentsApi, private router: Router, private buildError: BuildzError) {
+  constructor(private environmentsApi: EnvironmentsApi, private router: Router, private buildzAlert: BuildzAlert) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -16,8 +16,7 @@ export class LoadEnvironmentGuard implements CanActivate {
     return this.environmentsApi.selectEnvironment(environmentName).pipe(
       mapTo(true),
       catchError((err) => {
-        this.buildError.errorOccurred(err)
-        this.router.navigate(['/error']);
+        this.buildzAlert.errorOccurred(err)
         return of(false)
       })
     );

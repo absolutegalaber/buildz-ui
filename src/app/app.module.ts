@@ -11,7 +11,6 @@ import {BuildzApi} from './service/builds-api.service';
 import {BuildsPage} from './pages/builds.page';
 import {BuildSearchFrom} from './components/build-search.from';
 import {FormsModule} from '@angular/forms';
-import {BuildList} from './components/build.list';
 import {BuildLabelList} from './components/build-label.list';
 import {EnvironmentPage} from './pages/environment.page';
 import {LoadEnvironmentGuard} from './guards/load-environment-guard';
@@ -20,10 +19,15 @@ import {LoadBuildsSearchGuard} from './guards/load-builds-search-guard.service';
 import {BuildzData} from './service/buildz-data.state';
 import {EnvironmentsApi} from './service/environments-api.service';
 import {EnvironmentForm} from './components/environment-form';
-import {ErrorPage} from './pages/error.page';
-import {BuildzError} from './service/buildz-error.state';
-import {ErrorAlertPanel} from './components/error-alert.panel';
+import {AlertPanel} from './components/alert.panel';
 import {DeadCenterComponent} from './layout/dead-center.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {BuildzAlert} from './service/buildz-alert.state';
+import {BuildsAccordion} from './components/builds.accordion';
+import {ProjectsList} from './components/project.list';
+import {BuildList} from './components/build.list';
+import {EnvironmentList} from './components/environment.list';
+import {BuildsOfEnvironmentDialog} from './components/builds-of-environment.dialog';
 
 let components = [
   Navbar,
@@ -33,15 +37,18 @@ let components = [
   BuildLabelList,
   EnvironmentBuildsPanel,
   EnvironmentForm,
-  ErrorAlertPanel,
-  DeadCenterComponent
+  AlertPanel,
+  DeadCenterComponent,
+  BuildsAccordion,
+  ProjectsList,
+  EnvironmentList,
+  BuildsOfEnvironmentDialog
 ];
 
 let pages = [
   HomePage,
   BuildsPage,
-  EnvironmentPage,
-  ErrorPage
+  EnvironmentPage
 ]
 
 @NgModule({
@@ -54,13 +61,14 @@ let pages = [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   providers: [
     BuildzApi,
     EnvironmentsApi,
     BuildzData,
-    BuildzError,
+    BuildzAlert,
     LoadEnvironmentGuard,
     LoadBuildsSearchGuard
   ],

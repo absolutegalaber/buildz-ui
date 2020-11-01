@@ -84,13 +84,6 @@ export interface Environment {
   artifacts: Artifact[];
 }
 
-export interface EditableEnvironment {
-  id: number;
-  name: string;
-  artifacts: { [key: string]: Artifact }
-  requiredProjects?: string[];
-}
-
 export const EMPTY_ENVIRONMENT: Environment = {
   id: null,
   name: '',
@@ -105,4 +98,10 @@ export interface EnvironmentBuilds {
 export const EMPTY_ENVIRONMENT_BUILDS: EnvironmentBuilds = {
   environment: '',
   builds: {}
+}
+
+export interface Alert {
+  type: string;
+  heading: string;
+  message: string;
 }

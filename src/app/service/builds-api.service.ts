@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Build, BuildSearch, BuildSearchResult, BuildStats, DEFAULT_BUILD_SEARCH, EMTPY_BUILD_SEARCH_RESULT, SearchLabel} from './domain';
-import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, ReplaySubject, Subject} from 'rxjs';
+import {catchError, switchMap, tap} from 'rxjs/operators';
+import {BuildzAlert} from './buildz-alert.state';
 
 @Injectable()
 export class BuildzApi {
@@ -13,7 +14,11 @@ export class BuildzApi {
   private _buildSearchResult = this.buildSearch.pipe(
     switchMap((theSearch: BuildSearch) =>
       this.httpClient.post<BuildSearchResult>(`/api/v1/builds/search`, theSearch).pipe(
-        tap((result: BuildSearchResult) => this._currentBuildSearchResult = result)
+        tap((result: BuildSearchResult) => this._currentBuildSearchResult = result),
+        catchError((errorResponse: HttpErrorResponse) => {
+          this.buildzAlert.errorOccurred(errorResponse);
+          return of(EMTPY_BUILD_SEARCH_RESULT);
+        })
       )
     ));
 
@@ -76,6 +81,6 @@ export class BuildzApi {
     this.selectedBuild.next(newSelected);
   }
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private buildzAlert: BuildzAlert) {
   }
 }
