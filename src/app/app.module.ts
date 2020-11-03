@@ -28,6 +28,9 @@ import {ProjectsList} from './components/project.list';
 import {BuildList} from './components/build.list';
 import {EnvironmentList} from './components/environment.list';
 import {BuildsOfEnvironmentDialog} from './components/builds-of-environment.dialog';
+import {NewEnvironmentGuard} from './guards/new-environment-guard';
+import {NotFoundGuard} from './guards/not-found.guard';
+import {AddLabelDialog} from './components/add-label.dialog';
 
 let components = [
   Navbar,
@@ -42,7 +45,8 @@ let components = [
   BuildsAccordion,
   ProjectsList,
   EnvironmentList,
-  BuildsOfEnvironmentDialog
+  BuildsOfEnvironmentDialog,
+  AddLabelDialog
 ];
 
 let pages = [
@@ -70,7 +74,9 @@ let pages = [
     BuildzData,
     BuildzAlert,
     LoadEnvironmentGuard,
-    LoadBuildsSearchGuard
+    LoadBuildsSearchGuard,
+    NewEnvironmentGuard,
+    NotFoundGuard
   ],
   bootstrap: [AppComponent]
 })

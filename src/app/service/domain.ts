@@ -7,6 +7,15 @@ export interface BuildStats {
   numberOfLabels: number;
 }
 
+export const EMPTY_BUILD_STATS: BuildStats = {
+  projects: [],
+  branches: [],
+  environments: [],
+  labelKeys: [],
+  numberOfLabels: 0,
+  numberOfBuilds: 0
+}
+
 export interface BuildLabel {
   key: string;
   value: string;

@@ -1,17 +1,19 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ArtifactSearchLabel, BuildStats, Environment, EnvironmentBuilds} from '../service/domain';
+import {ArtifactSearchLabel, BuildStats, Environment, EnvironmentBuilds, SearchLabel} from '../service/domain';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AddLabelDialog} from './add-label.dialog';
 
 @Component({
   selector: 'bz-environment-form',
   template: `
     <div class="container-fluid" *ngIf="environment !== null">
-      <form novalidate>
+      <form novalidate #environmentForm="ngForm">
         <div class="form-row">
 
           <div class="col-4">
             <div class="form-group">
               <label for="envName">Environment Name</label>
-              <input type="text" class="form-control form-control-sm" id="envName" name="envName"
+              <input type="text" class="form-control form-control-sm" id="envName" name="envName" [required]="true" [minLength]="1"
                      [(ngModel)]="environment.name">
             </div>
           </div>
@@ -19,7 +21,7 @@ import {ArtifactSearchLabel, BuildStats, Environment, EnvironmentBuilds} from '.
           <div class="col-8">
             <bz-center>
               <button class="btn btn-secondary" (click)="verify.emit()">Verify</button>
-              <button class="btn btn-primary" (click)="save.emit()">Save</button>
+              <button class="btn btn-primary" [disabled]="!environmentForm.valid" (click)="save.emit()">Save</button>
             </bz-center>
           </div>
 
@@ -61,27 +63,23 @@ import {ArtifactSearchLabel, BuildStats, Environment, EnvironmentBuilds} from '.
                   </select>
                 </div>
 
-                <div class="form-group" *ngFor="let currentLabel of artifact.labels|keyvalue; let j = index">
-                  <label for="curLabel_{{j}}">{{currentLabel.key}}</label>
-                  <input type="text" class="form-control form-control-sm" id="curLabel_{{j}}" readonly
-                         [value]="currentLabel.value">
+                <div class="form row" *ngFor="let currentLabel of artifact.labels|keyvalue; let j = index">
+
+                  <div class="col-9">
+                    <div class="form-group">
+                      <label for="curLabel_{{j}}">{{currentLabel.key}}</label>
+                      <input type="text" class="form-control form-control-sm" id="curLabel_{{j}}" readonly
+                             [value]="currentLabel.value">
+                    </div>
+                  </div>
+
+                  <div class="col-3 text-left align-content-center">
+                    <button class="btn btn-sm btn-danger" (click)="removeLabel.emit({projectName:artifact.project, key:currentLabel.key, value:currentLabel.value})">X</button>
+                  </div>
+
                 </div>
 
-                <div class="form-group">
-                  <label for="labelkey_{{i}}">Label Key</label>
-                  <select class="form-control form-control-sm" name="labelkey_{{i}}" id="labelkey_{{i}}"
-                          [(ngModel)]="newLabel.key"
-                  >
-                    <option *ngFor="let lk of buildzData.labelKeys" [value]="lk">{{lk}}</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="labelValue_{{i}}">Label Value</label>
-                  <input type="text" class="form-control form-control-sm" id="labelValue_{{i}}" name="labelValue_{{i}}"
-                         [(ngModel)]="newLabel.value">
-                </div>
-                <button class="btn btn-secondary align-self-end" (click)="emitAddLabel(artifact.project)">Add Label</button>
+                <button class="btn btn-sm btn-secondary align-self-end" (click)="openAddLabelDialog(artifact.project)">Add Label</button>
               </fieldset>
 
             </div>
@@ -132,25 +130,21 @@ export class EnvironmentForm {
   @Output()
   addLabel = new EventEmitter<ArtifactSearchLabel>();
   @Output()
-  removeLabel = new EventEmitter<string>();
+  removeLabel = new EventEmitter<ArtifactSearchLabel>();
   @Output()
   verify = new EventEmitter<void>();
   @Output()
   save = new EventEmitter<void>();
-  newLabel: ArtifactSearchLabel = {
-    projectName: '',
-    key: '',
-    value: ''
-  }
 
-  emitAddLabel(projectName: string): void {
-    this.newLabel.projectName = projectName;
-    this.addLabel.emit(this.newLabel);
-    this.newLabel = {
-      projectName: '',
-      key: '',
-      value: ''
-    }
+  openAddLabelDialog(projectName: string) {
+    let ref = this.modal.open(AddLabelDialog);
+    ref.result.then((theNewLabel: SearchLabel) => {
+      this.addLabel.emit({
+        projectName: projectName,
+        key: theNewLabel.key,
+        value: theNewLabel.value
+      });
+    })
   }
 
   hasArtifactOf(projectName: string): boolean {
@@ -168,4 +162,6 @@ export class EnvironmentForm {
   }
 
 
+  constructor(private modal: NgbModal) {
+  }
 }

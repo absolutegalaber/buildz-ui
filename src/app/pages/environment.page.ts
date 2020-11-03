@@ -12,6 +12,7 @@ import {BuildzData} from '../service/buildz-data.state';
           [buildzData]="buildzData.data | async"
           (toggleProject)="environmentsApi.toggleRequiredProject($event)"
           (addLabel)="environmentsApi.addLabel($event)"
+          (removeLabel)="environmentsApi.removeLabel($event)"
           (verify)="environmentsApi.verify()"
           (save)="environmentsApi.save()"
         >

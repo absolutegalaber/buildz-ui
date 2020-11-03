@@ -19,7 +19,14 @@ export class BuildzAlert {
       heading: heading,
       message: message
     });
+  }
 
+  error(heading: string, message: string): void {
+    this._theAlert.next({
+      type: 'danger',
+      heading: heading,
+      message: message
+    });
   }
 
   errorOccurred(error: HttpErrorResponse) {
