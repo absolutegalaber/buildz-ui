@@ -6,7 +6,7 @@ import {BuildzData} from './service/buildz-data.state';
   template: `
     <bz-navbar></bz-navbar>
     <bz-alert-panel></bz-alert-panel>
-    <div class="container-fluid mt-2">
+    <div class="container-fluid">
       <router-outlet></router-outlet>
     </div>
   `
