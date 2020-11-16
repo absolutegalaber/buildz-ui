@@ -20,6 +20,7 @@ import {AddLabelDialog} from './add-label.dialog';
 
           <div class="col-8">
             <bz-center>
+              <button class="btn btn-danger" (click)="delete.emit()">Delete</button>
               <button class="btn btn-secondary" (click)="verify.emit()">Verify</button>
               <button class="btn btn-primary" [disabled]="!environmentForm.valid" (click)="save.emit()">Save</button>
             </bz-center>
@@ -135,6 +136,8 @@ export class EnvironmentForm {
   verify = new EventEmitter<void>();
   @Output()
   save = new EventEmitter<void>();
+  @Output()
+  delete = new EventEmitter<void>();
 
   openAddLabelDialog(projectName: string) {
     let ref = this.modal.open(AddLabelDialog);

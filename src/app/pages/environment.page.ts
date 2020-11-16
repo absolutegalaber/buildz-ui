@@ -15,6 +15,7 @@ import {BuildzData} from '../service/buildz-data.state';
           (removeLabel)="environmentsApi.removeLabel($event)"
           (verify)="environmentsApi.verify()"
           (save)="environmentsApi.save()"
+          (delete)="environmentsApi.delete()"
         >
         </bz-environment-form>
       </div>

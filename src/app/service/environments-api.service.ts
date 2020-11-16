@@ -98,6 +98,18 @@ export class EnvironmentsApi {
     this._environment.next(this._currentEnvironment)
   }
 
+  delete(): void {
+    this.httpClient.delete<Environment>(`/api/v1/environments/${this._currentEnvironment.name}`).pipe(
+      tap((response) => {
+        this._currentEnvironment = EMPTY_ENVIRONMENT
+        this.buildzAlert.info('Environment deleted', `The Enironment was deleted successfully.`)
+        this._environment.next(this._currentEnvironment)
+        this.buildzData.load()
+      })
+    ).subscribe()
+
+  }
+
   get environmentBuilds(): Observable<EnvironmentBuilds> {
     return this._environmentBuilds
   }
