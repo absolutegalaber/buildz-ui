@@ -1,6 +1,6 @@
 export interface BuildStats {
   projects: string[];
-  branches: string[];
+  projectBranches: { [key: string]: string[] };
   environments: string[];
   labelKeys: string[];
   numberOfBuilds: number;
@@ -9,7 +9,7 @@ export interface BuildStats {
 
 export const EMPTY_BUILD_STATS: BuildStats = {
   projects: [],
-  branches: [],
+  projectBranches: {},
   environments: [],
   labelKeys: [],
   numberOfLabels: 0,

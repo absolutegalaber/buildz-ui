@@ -52,6 +52,12 @@ export class BuildzApi {
     this.buildSearch.next(this._currentBuildSearch)
   }
 
+  toPage(page: number): void {
+    this._currentBuildSearch.page = (page - 1);
+    this._buildSearch.next(this._currentBuildSearch)
+    this.update()
+  }
+
   nextPage() {
     if (this._currentBuildSearch.page + 1 < this._currentBuildSearchResult.totalPages) {
       this._currentBuildSearch.page += 1;

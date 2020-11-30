@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BuildSearch, BuildSearchResult, BuildStats, SearchLabel} from '../service/domain';
+import {AddLabelDialog} from './add-label.dialog';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'bz-build-search-form',
@@ -19,58 +21,42 @@ import {BuildSearch, BuildSearchResult, BuildStats, SearchLabel} from '../servic
 
           <div class="col-2">
             <div class="form-group">
-              <input type="text" class="form-control form-control-sm" id="branch" aria-describedby="minBuildNumberHelp" name="minBuildNumber" placeholder="Min BuildNumber"
+              <input type="text" class="form-control form-control-sm" id="minBuildNumber" aria-describedby="minBuildNumberHelp" name="minBuildNumber" placeholder="Min BuildNumber"
                      (keyup)="doSearch.emit()"
                      [(ngModel)]="theSearch.minBuildNumber">
             </div>
           </div>
 
-          <div class="col-4">
-            <div class="form-group">
-              <select class="form-control form-control-sm" [(ngModel)]="newLabel.key" name="newLabelKey">
-                <option value="">New Label Key</option>
-                <option *ngFor="let lk of buildzData.labelKeys" [value]="lk">{{lk}}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-2 text-right">
-            <button class="btn btn-sm" (click)="previousPage.emit()">&lt;&lt;&lt;</button>
-            <a class="btn btn-sm" disabled="disabled">
-              {{theSearchResult.page + 1}} / {{theSearchResult.totalPages}}
-            </a>
-            <button class="btn btn-sm" (click)="nextPage.emit()">&gt;&gt;&gt;</button>
+          <div class="col-4 d-flex justify-content-center">
+            <ngb-pagination [collectionSize]="theSearchResult.totalElements" [pageSize]="theSearch.pageSize" size="sm" [maxSize]="3"
+                            (pageChange)="toPage.emit($event)"
+            >
+            </ngb-pagination>
           </div>
         </div>
-
         <div class="form-row">
 
           <div class="col-4">
             <div class="form-group">
               <select class="form-control form-control-sm" [(ngModel)]="theSearch.branch" name="branch" (ngModelChange)="doSearch.emit()">
                 <option value="">All Branches</option>
-                <option *ngFor="let b of buildzData.branches" [value]="b">{{b}}</option>
+                <option *ngFor="let b of buildzData.projectBranches[theSearch.project]" [value]="b">{{b}}</option>
               </select>
             </div>
           </div>
 
           <div class="col-2">
             <div class="form-group">
-              <input type="text" class="form-control form-control-sm" id="branch" name="maxBuildNumber" placeholder="Max BuildNumber"
+              <input type="text" class="form-control form-control-sm" id="maxBuildNumber" name="maxBuildNumber" placeholder="Max BuildNumber"
                      (keyup)="doSearch.emit()"
                      [(ngModel)]="theSearch.maxBuildNumber">
             </div>
           </div>
 
-          <div class="col-4">
-            <div class="form-group">
-              <input type="text" class="form-control form-control-sm" id="branch" name="newLabelValue" placeholder="New Label Value"
-                     [(ngModel)]="newLabel.value">
-            </div>
-          </div>
-
-          <div class="col-2 text-right">
-            <button class="btn btn-sm btn-secondary" (click)="emitNewLabel()" [disabled]="!(newLabel.key.length>0 && newLabel.value.length>0)">Add Label</button>
+          <div class="col-4 text-center">
+            <button class="btn btn-sm btn-secondary mx-2" (click)="openAddLabelDialog()">Add Label</button>
+            <button class="btn btn-sm btn-secondary mx-2" (click)="openAddLabelDialog()">Reset</button>
+            <button class="btn btn-sm btn-secondary mx-2" (click)="doSearch.emit()">Reload</button>
           </div>
 
         </div>
@@ -99,7 +85,7 @@ import {BuildSearch, BuildSearchResult, BuildStats, SearchLabel} from '../servic
     </div>
   `
 })
-export class BuildSearchFrom {
+export class BuildSearchForm {
   @Input()
   theSearch: BuildSearch;
   @Input()
@@ -113,6 +99,8 @@ export class BuildSearchFrom {
   @Output()
   clearLabels = new EventEmitter<string>();
   @Output()
+  toPage = new EventEmitter<number>();
+  @Output()
   previousPage = new EventEmitter<void>();
   @Output()
   nextPage = new EventEmitter<void>();
@@ -121,16 +109,16 @@ export class BuildSearchFrom {
     return (this.theSearch && this.theSearch.labels && (Object.keys(this.theSearch.labels).length > 0));
   }
 
-  emitNewLabel() {
-    this.addLabel.emit(this.newLabel);
-    this.newLabel = {
-      key: '',
-      value: ''
-    };
+  openAddLabelDialog() {
+    let ref = this.modal.open(AddLabelDialog);
+    ref.result.then((theNewLabel: SearchLabel) => {
+      this.addLabel.emit({
+        key: theNewLabel.key,
+        value: theNewLabel.value
+      });
+    })
   }
 
-  newLabel: SearchLabel = {
-    key: '',
-    value: ''
-  };
+  constructor(private modal: NgbModal) {
+  }
 }

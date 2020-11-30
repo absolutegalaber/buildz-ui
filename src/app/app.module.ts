@@ -9,7 +9,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {StatsPanel} from './components/stats.panel';
 import {BuildzApi} from './service/builds-api.service';
 import {BuildsPage} from './pages/builds.page';
-import {BuildSearchFrom} from './components/build-search.from';
+import {BuildSearchForm} from './components/build-search.form';
 import {FormsModule} from '@angular/forms';
 import {BuildLabelList} from './components/build-label.list';
 import {EnvironmentPage} from './pages/environment.page';
@@ -35,7 +35,7 @@ import {AddLabelDialog} from './components/add-label.dialog';
 let components = [
   Navbar,
   StatsPanel,
-  BuildSearchFrom,
+  BuildSearchForm,
   BuildList,
   BuildLabelList,
   EnvironmentBuildsPanel,

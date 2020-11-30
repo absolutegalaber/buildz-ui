@@ -25,7 +25,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
         <div class="form-group">
           <div class="form-group">
-            <input type="text" class="form-control form-control-sm" id="branch" name="newLabelValue" placeholder="New Label Value"
+            <input type="text" class="form-control form-control-sm" name="newLabelValue" placeholder="New Label Value"
                    [(ngModel)]="newLabel.value">
           </div>
         </div>

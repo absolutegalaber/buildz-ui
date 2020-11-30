@@ -60,7 +60,7 @@ import {AddLabelDialog} from './add-label.dialog';
                   <select class="form-control form-control-sm" name="branch_{{i}}"
                           [(ngModel)]="artifact.branch"
                   >
-                    <option *ngFor="let b of buildzData.branches" [value]="b">{{b}}</option>
+                    <option *ngFor="let b of buildzData.projectBranches[artifact.project]" [value]="b">{{b}}</option>
                   </select>
                 </div>
 

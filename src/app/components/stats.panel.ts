@@ -16,7 +16,7 @@ export class StatsPanel {
   @Input()
   stats: BuildStats = {
     projects: [],
-    branches: [],
+    projectBranches: {},
     environments: [],
     numberOfBuilds: 0,
     numberOfLabels: 0,

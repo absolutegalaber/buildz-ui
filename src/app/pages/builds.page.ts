@@ -15,8 +15,7 @@ import {BuildzData} from '../service/buildz-data.state';
               (doSearch)="client.update()"
               (addLabel)="client.addLabel($event)"
               (clearLabels)="client.clearLabel($event)"
-              (nextPage)="client.nextPage()"
-              (previousPage)="client.previousPage()"
+              (toPage)="client.toPage($event)"
             >
             </bz-build-search-form>
           </div>
