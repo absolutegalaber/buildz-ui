@@ -1,43 +1,42 @@
 import {Component} from '@angular/core';
-import {BuildzApi} from '../service/builds-api.service';
-import {ProjectsApi} from '../service/projects-api.service';
+import {select, Store} from '@ngrx/store';
+import {Buildz, IBuildSearchParams} from '../core/flux-store/model';
+import {buildSearchParams, buildSearchResult, projects} from '../core/flux-store/selectors';
+import {updateSearchParams} from '../core/flux-store/build-search.actions';
 
 @Component({
   template: `
-    <ng-container *ngIf="searchResult|async as theSearchResult">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col">
-            <bz-build-search-form
-              [theSearch]="search | async"
-              [theSearchResult]="theSearchResult"
-              [projectData]="projectsApi.data | async"
-              (doSearch)="client.update()"
-              (resetSearch)="client.resetSearch()"
-              (addLabel)="client.addLabel($event)"
-              (clearLabels)="client.clearLabel($event)"
-              (toPage)="client.toPage($event)"
-            >
-            </bz-build-search-form>
-          </div>
-        </div>
-        <div class="row mt-5">
-          <div class="col-10 offset-1">
-            <bz-builds-accordion
-              [searchResult]="theSearchResult.builds"
-              (buildSelected)="client.selectBuild($event)"
-            ></bz-builds-accordion>
-          </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <bz-build-search-form
+            [theSearch]="search | async | deepClone"
+            [theSearchResult]="searchResult | async"
+            [projects]="projects | async"
+            (updateSearchParams)="updateSearchParams($event)"
+          >
+          </bz-build-search-form>
         </div>
       </div>
-    </ng-container>
+      <div class="row mt-5">
+        <div class="col-10 offset-1">
+          <bz-builds-accordion
+            [builds]=" (searchResult | async).builds"
+          ></bz-builds-accordion>
+        </div>
+      </div>
+    </div>
   `
 })
 export class BuildsPage {
-  search = this.client.buildSearch;
-  searchResult = this.client.buildSearchResult;
-  selectedBuild = this.client.selectedBuild;
+  search = this.store.pipe(select(buildSearchParams))
+  searchResult = this.store.pipe(select(buildSearchResult))
+  projects = this.store.pipe(select(projects))
 
-  constructor(public client: BuildzApi, public projectsApi: ProjectsApi) {
+  updateSearchParams(search: IBuildSearchParams) {
+    this.store.dispatch(updateSearchParams({search}))
+  }
+
+  constructor(private store: Store<Buildz>) {
   }
 }

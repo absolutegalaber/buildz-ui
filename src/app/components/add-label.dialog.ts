@@ -1,12 +1,15 @@
 import {Component, EventEmitter} from '@angular/core';
 import {SearchLabel} from '../service/domain';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {ProjectsApi} from '../service/projects-api.service';
+import {select, Store} from '@ngrx/store';
+import {Buildz, IProjects} from '../core/flux-store/model';
+import {projects} from '../core/flux-store/selectors';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'bz-add-label-dialog',
   template: `
-    <ng-container *ngIf="projectsApi.data | async as theBuildzData">
+    <ng-container *ngIf="projects | async as theBuildzData">
       <div class="modal-header">
         <h4 class="modal-title">Add Label</h4>
         <!--        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">-->
@@ -40,12 +43,13 @@ import {ProjectsApi} from '../service/projects-api.service';
   `
 })
 export class AddLabelDialog {
+  projects: Observable<IProjects> = this.store.pipe(select(projects))
   newLabel: SearchLabel = {
     key: '',
     value: ''
   }
   addLabel = new EventEmitter<SearchLabel>()
 
-  constructor(public projectsApi: ProjectsApi, public activeModal: NgbActiveModal) {
+  constructor(private store: Store<Buildz>, public activeModal: NgbActiveModal) {
   }
 }

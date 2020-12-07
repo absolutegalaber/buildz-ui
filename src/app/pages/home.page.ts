@@ -1,51 +1,54 @@
 import {Component} from '@angular/core';
-import {BuildzData} from '../service/buildz-data.state';
-import {EnvironmentsApi} from '../service/environments-api.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BuildsOfEnvironmentDialog} from '../components/builds-of-environment.dialog';
-import {ProjectsApi} from '../service/projects-api.service';
 import {Router} from '@angular/router';
+import {select, Store} from '@ngrx/store';
+import {Buildz} from '../core/flux-store/model';
+import {buildStats, environmentNames, projectNames} from '../core/flux-store/selectors';
+import {Observable} from 'rxjs';
+import {loadEnvironmentBuilds} from '../core/flux-store/environment.actions';
 
 @Component({
   template: `
-    <ng-container *ngIf="{stats: buildzData.data|async, projectData:projectsApi.data | async} as theData">
+    <div class="row">
+      <div class="col text-center">
+        <bz-stats [stats]="stats | async"></bz-stats>
+      </div>
+    </div>
 
-      <div class="row">
-        <div class="col text-center">
-          <bz-stats [stats]="theData.stats"></bz-stats>
-        </div>
+    <div class="row">
+
+      <div class="col-6">
+        <bz-project-list
+          [projects]="projectNames | async"
+          (projectSelected)="showBuildzOf($event)"
+        ></bz-project-list>
       </div>
 
-      <div class="row">
-
-        <div class="col-6">
-          <bz-project-list
-            [projects]="theData.projectData.projects"
-            (projectSelected)="showBuildzOf($event)"
-          ></bz-project-list>
-        </div>
-
-        <div class="col-6">
-          <bz-environment-list
-            [environments]="theData.stats.environments"
-            (environmentSelected)="showBuildsOf($event)"
-          ></bz-environment-list>
-        </div>
-
+      <div class="col-6">
+        <bz-environment-list
+          [environments]="environmentNames | async"
+          (environmentSelected)="showBuildsOf($event)"
+        ></bz-environment-list>
       </div>
-    </ng-container>
+
+    </div>
   `
 })
 export class HomePage {
+  projectNames: Observable<string[]> = this.store.pipe(select(projectNames))
+  environmentNames = this.store.pipe(select(environmentNames))
+  stats = this.store.pipe(select(buildStats))
+
   showBuildzOf(project: string) {
     this.router.navigate(['/builds-of/', project])
   }
 
-  showBuildsOf(environment: string) {
-    this.environmentsApi.loadBuildsOf(environment);
+  showBuildsOf(environmentName: string) {
+    this.store.dispatch(loadEnvironmentBuilds({environmentName}));
     this.modelService.open(BuildsOfEnvironmentDialog, {size: 'lg'})
   }
 
-  constructor(public buildzData: BuildzData, public projectsApi: ProjectsApi, public environmentsApi: EnvironmentsApi, private modelService: NgbModal, private router: Router) {
+  constructor(private store: Store<Buildz>, private modelService: NgbModal, private router: Router) {
   }
 }

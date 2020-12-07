@@ -1,50 +1,73 @@
 import {Component} from '@angular/core';
-import {ProjectsApi} from '../service/projects-api.service';
+import {select, Store} from '@ngrx/store';
+import {Buildz} from '../core/flux-store/model';
+import {selectBranch, selectProject, toggleCurrentBranchActive, toggleCurrentProjectActive, toggleInactiveProjectsVisible} from '../core/flux-store/projects.actions';
+import {currentProjectWithBranches, includeInactiveProjects, projectNames, selectedProjectAndBranch} from '../core/flux-store/selectors';
 
 @Component({
   template: `
-    <ng-container *ngIf="projectsApi.data | async as theData">
-      <div class="row">
-        <div class="col-12">
-          <button class="btn" (click)="projectsApi.toggleIncludeInactive()">
-            <fa-icon icon="toggle-on" *ngIf="theData.inactiveIncluded"></fa-icon>
-            <fa-icon icon="toggle-off" *ngIf="!theData.inactiveIncluded"></fa-icon>
-            Inactive Projects and Branches visible?
-          </button>
-        </div>
+    <div class="row">
+      <div class="col-12">
+        <button class="btn" (click)="toggleInactiveProjects()">
+          <fa-icon icon="toggle-on" *ngIf="(inactiveProjectsIncluded | async)"></fa-icon>
+          <fa-icon icon="toggle-off" *ngIf="!(inactiveProjectsIncluded | async)"></fa-icon>
+          Inactive Projects and Branches visible?
+        </button>
       </div>
-      <div class="row mt-2">
-        <div class="col-6">
-          <bz-project-list
-            [projects]="theData.projects"
-            (projectSelected)="projectsApi.selectProject($event)"
-          >
-          </bz-project-list>
-        </div>
-        <div class="col-6">
-          <bz-branch-list
-            [project]="theData.currentProject"
-            [branches]="theData.branchesOf"
-            (branchSelected)="projectsApi.selectBranch($event)"
-          >
-          </bz-branch-list>
-        </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-6">
+        <bz-project-list
+          [projects]="projectNames | async"
+          (projectSelected)="selectCurrentProject($event)"
+        >
+        </bz-project-list>
       </div>
-      <div class="row mt-2">
-        <div class="col-12">
-          <bz-set-active
-            [includeInactive]="theData.inactiveIncluded"
-            [project]="theData.currentProject"
-            [branch]="theData.currentBranch"
-            (toggleBranchActive)="projectsApi.toggleBranchActive()"
-            (toggleProjectActive)="projectsApi.toggleProjectActive()"
-          ></bz-set-active>
-        </div>
+      <div class="col-6">
+        <bz-branch-list
+          [projectWithBranches]="currentProjectWithBranches | async"
+          (branchSelected)="selectCurrentBranch($event)"
+        >
+        </bz-branch-list>
       </div>
-    </ng-container>
+    </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <bz-set-active
+          [selectedProjectAndBranch]="selectedProjectAndBranch | async"
+          (toggleBranchActive)="toggleCurrentBranch()"
+          (toggleProjectActive)="toggleCurrentProject()"
+        ></bz-set-active>
+      </div>
+    </div>
   `
 })
 export class ManagementPage {
-  constructor(public projectsApi: ProjectsApi) {
+  projectNames = this.store.pipe(select(projectNames))
+  currentProjectWithBranches = this.store.pipe(select(currentProjectWithBranches))
+  inactiveProjectsIncluded = this.store.pipe(select(includeInactiveProjects))
+  selectedProjectAndBranch = this.store.pipe(select(selectedProjectAndBranch))
+
+  toggleInactiveProjects() {
+    this.store.dispatch(toggleInactiveProjectsVisible())
+  }
+
+  selectCurrentProject(projectName: string) {
+    this.store.dispatch(selectProject({projectName}))
+  }
+
+  selectCurrentBranch(branchName: string) {
+    this.store.dispatch(selectBranch({branchName}))
+  }
+
+  toggleCurrentProject() {
+    this.store.dispatch(toggleCurrentProjectActive())
+  }
+
+  toggleCurrentBranch() {
+    this.store.dispatch(toggleCurrentBranchActive())
+  }
+
+  constructor(private store: Store<Buildz>) {
   }
 }

@@ -37,6 +37,18 @@ import {BranchList} from './components/branch.list';
 import {SetActivationForm} from './components/set-activation.form';
 import {FaIconLibrary, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {faBackspace, faCheck, faCogs, faPlus, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
+import {Store, StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+import {ProjectsEffects} from './core/flux-store/projects.effects';
+import {BuildSearchEffects} from './core/flux-store/build-search.effects';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {environment} from '../environments/environment';
+import {Buildz, buildzReducers} from './core/flux-store/model';
+import {loadProjects} from './core/flux-store/projects.actions';
+import {loadBuildStats} from './core/flux-store/build-stats.actions';
+import {BuildStatsEffects} from './core/flux-store/build-stats.effects';
+import {EnvironmentEffects} from './core/flux-store/environment.effects';
+import {CoreModule} from './core/core.module';
 
 let components = [
   Navbar,
@@ -76,7 +88,16 @@ let pages = [
     HttpClientModule,
     FormsModule,
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    StoreModule.forRoot(buildzReducers, {}),
+    EffectsModule.forRoot([
+      BuildSearchEffects,
+      ProjectsEffects,
+      BuildStatsEffects,
+      EnvironmentEffects
+    ]),
+    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
+    CoreModule
   ],
   providers: [
     BuildzApi,
@@ -93,7 +114,9 @@ let pages = [
 })
 export class AppModule {
 
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary, store: Store<Buildz>) {
+    store.dispatch(loadProjects())
+    store.dispatch(loadBuildStats())
     library.addIcons(
       faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync
     )
