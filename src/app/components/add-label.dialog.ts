@@ -1,12 +1,12 @@
 import {Component, EventEmitter} from '@angular/core';
-import {BuildzData} from '../service/buildz-data.state';
 import {SearchLabel} from '../service/domain';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ProjectsApi} from '../service/projects-api.service';
 
 @Component({
   selector: 'bz-add-label-dialog',
   template: `
-    <ng-container *ngIf="buildzData.data | async as theBuildzData">
+    <ng-container *ngIf="projectsApi.data | async as theBuildzData">
       <div class="modal-header">
         <h4 class="modal-title">Add Label</h4>
         <!--        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">-->
@@ -46,6 +46,6 @@ export class AddLabelDialog {
   }
   addLabel = new EventEmitter<SearchLabel>()
 
-  constructor(public buildzData: BuildzData, public activeModal: NgbActiveModal) {
+  constructor(public projectsApi: ProjectsApi, public activeModal: NgbActiveModal) {
   }
 }

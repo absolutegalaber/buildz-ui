@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {BuildzApi} from '../service/builds-api.service';
-import {BuildzData} from '../service/buildz-data.state';
+import {ProjectsApi} from '../service/projects-api.service';
 
 @Component({
   template: `
@@ -11,8 +11,9 @@ import {BuildzData} from '../service/buildz-data.state';
             <bz-build-search-form
               [theSearch]="search | async"
               [theSearchResult]="theSearchResult"
-              [buildzData]="buildzData.data | async"
+              [projectData]="projectsApi.data | async"
               (doSearch)="client.update()"
+              (resetSearch)="client.resetSearch()"
               (addLabel)="client.addLabel($event)"
               (clearLabels)="client.clearLabel($event)"
               (toPage)="client.toPage($event)"
@@ -37,6 +38,6 @@ export class BuildsPage {
   searchResult = this.client.buildSearchResult;
   selectedBuild = this.client.selectedBuild;
 
-  constructor(public client: BuildzApi, public buildzData: BuildzData) {
+  constructor(public client: BuildzApi, public projectsApi: ProjectsApi) {
   }
 }

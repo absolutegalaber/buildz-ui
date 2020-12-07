@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {EnvironmentsApi} from '../service/environments-api.service';
-import {BuildzData} from '../service/buildz-data.state';
+import {ProjectsApi} from '../service/projects-api.service';
 
 @Component({
   template: `
@@ -9,7 +9,7 @@ import {BuildzData} from '../service/buildz-data.state';
         <bz-environment-form
           [environment]="environmentsApi.environment | async"
           [verificationResult]="environmentsApi.environmentVerificationResult |async"
-          [buildzData]="buildzData.data | async"
+          [projectData]="projectsApi.data | async"
           (toggleProject)="environmentsApi.toggleRequiredProject($event)"
           (addLabel)="environmentsApi.addLabel($event)"
           (removeLabel)="environmentsApi.removeLabel($event)"
@@ -23,6 +23,6 @@ import {BuildzData} from '../service/buildz-data.state';
   `
 })
 export class EnvironmentPage {
-  constructor(public environmentsApi: EnvironmentsApi, public buildzData: BuildzData) {
+  constructor(public environmentsApi: EnvironmentsApi, public projectsApi: ProjectsApi) {
   }
 }

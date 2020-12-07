@@ -24,13 +24,19 @@ import {DeadCenterComponent} from './layout/dead-center.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {BuildzAlert} from './service/buildz-alert.state';
 import {BuildsAccordion} from './components/builds.accordion';
-import {ProjectsList} from './components/project.list';
+import {ProjectList} from './components/project.list';
 import {BuildList} from './components/build.list';
 import {EnvironmentList} from './components/environment.list';
 import {BuildsOfEnvironmentDialog} from './components/builds-of-environment.dialog';
 import {NewEnvironmentGuard} from './guards/new-environment-guard';
 import {NotFoundGuard} from './guards/not-found.guard';
 import {AddLabelDialog} from './components/add-label.dialog';
+import {ProjectsApi} from './service/projects-api.service';
+import {ManagementPage} from './pages/management.page';
+import {BranchList} from './components/branch.list';
+import {SetActivationForm} from './components/set-activation.form';
+import {FaIconLibrary, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {faBackspace, faCheck, faCogs, faPlus, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
 
 let components = [
   Navbar,
@@ -43,16 +49,19 @@ let components = [
   AlertPanel,
   DeadCenterComponent,
   BuildsAccordion,
-  ProjectsList,
+  ProjectList,
   EnvironmentList,
   BuildsOfEnvironmentDialog,
-  AddLabelDialog
+  AddLabelDialog,
+  BranchList,
+  SetActivationForm
 ];
 
 let pages = [
   HomePage,
   BuildsPage,
-  EnvironmentPage
+  EnvironmentPage,
+  ManagementPage
 ]
 
 @NgModule({
@@ -66,11 +75,13 @@ let pages = [
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [
     BuildzApi,
     EnvironmentsApi,
+    ProjectsApi,
     BuildzData,
     BuildzAlert,
     LoadEnvironmentGuard,
@@ -81,4 +92,10 @@ let pages = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
+
+  constructor(library: FaIconLibrary) {
+    library.addIcons(
+      faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync
+    )
+  }
 }

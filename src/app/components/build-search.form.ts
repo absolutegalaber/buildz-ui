@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BuildSearch, BuildSearchResult, BuildStats, SearchLabel} from '../service/domain';
+import {BuildSearch, BuildSearchResult, ProjectData, SearchLabel} from '../service/domain';
 import {AddLabelDialog} from './add-label.dialog';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
@@ -14,7 +14,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
             <div class="form-group">
               <select class="form-control form-control-sm" [(ngModel)]="theSearch.project" name="project" (change)="doSearch.emit()">
                 <option value="">All Projects</option>
-                <option *ngFor="let p of buildzData.projects" [value]="p">{{p}}</option>
+                <option *ngFor="let p of projectData.projects" [value]="p">{{p}}</option>
               </select>
             </div>
           </div>
@@ -40,7 +40,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
             <div class="form-group">
               <select class="form-control form-control-sm" [(ngModel)]="theSearch.branch" name="branch" (ngModelChange)="doSearch.emit()">
                 <option value="">All Branches</option>
-                <option *ngFor="let b of buildzData.projectBranches[theSearch.project]" [value]="b">{{b}}</option>
+                <option *ngFor="let b of projectData.projectBranches[theSearch.project]" [value]="b">{{b}}</option>
               </select>
             </div>
           </div>
@@ -54,9 +54,18 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
           </div>
 
           <div class="col-4 text-center">
-            <button class="btn btn-sm btn-secondary mx-2" (click)="openAddLabelDialog()">Add Label</button>
-            <button class="btn btn-sm btn-secondary mx-2" (click)="openAddLabelDialog()">Reset</button>
-            <button class="btn btn-sm btn-secondary mx-2" (click)="doSearch.emit()">Reload</button>
+            <button class="btn btn-sm btn-secondary mx-2" (click)="openAddLabelDialog()">
+              <fa-icon icon="plus"></fa-icon>
+              Add Label
+            </button>
+            <button class="btn btn-sm btn-secondary mx-2" (click)="resetSearch.emit()">
+              <fa-icon icon="undo"></fa-icon>
+              Reset
+            </button>
+            <button class="btn btn-sm btn-secondary mx-2" (click)="doSearch.emit()">
+              <fa-icon icon="sync"></fa-icon>
+              Reload
+            </button>
           </div>
 
         </div>
@@ -78,7 +87,9 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
           </div>
 
           <div class="col-4">
-            <button class="btn btn-sm btn-danger" (click)="clearLabels.emit(label.key)">X</button>
+            <button class="btn btn-sm btn-danger" (click)="clearLabels.emit(label.key)">
+              <fa-icon icon="backspace"></fa-icon>
+            </button>
           </div>
         </div>
       </form>
@@ -91,19 +102,17 @@ export class BuildSearchForm {
   @Input()
   theSearchResult: BuildSearchResult;
   @Input()
-  buildzData: BuildStats;
+  projectData: ProjectData;
   @Output()
   doSearch = new EventEmitter<void>();
+  @Output()
+  resetSearch = new EventEmitter<void>();
   @Output()
   addLabel = new EventEmitter<SearchLabel>();
   @Output()
   clearLabels = new EventEmitter<string>();
   @Output()
   toPage = new EventEmitter<number>();
-  @Output()
-  previousPage = new EventEmitter<void>();
-  @Output()
-  nextPage = new EventEmitter<void>();
 
   labelsPresent(): boolean {
     return (this.theSearch && this.theSearch.labels && (Object.keys(this.theSearch.labels).length > 0));

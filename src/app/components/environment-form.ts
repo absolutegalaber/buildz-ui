@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ArtifactSearchLabel, BuildStats, Environment, EnvironmentBuilds, SearchLabel} from '../service/domain';
+import {ArtifactSearchLabel, Environment, EnvironmentBuilds, ProjectData, SearchLabel} from '../service/domain';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddLabelDialog} from './add-label.dialog';
 
@@ -20,9 +20,18 @@ import {AddLabelDialog} from './add-label.dialog';
 
           <div class="col-8">
             <bz-center>
-              <button class="btn btn-danger" (click)="delete.emit()">Delete</button>
-              <button class="btn btn-secondary" (click)="verify.emit()">Verify</button>
-              <button class="btn btn-primary" [disabled]="!environmentForm.valid" (click)="save.emit()">Save</button>
+              <button class="btn btn-danger" (click)="delete.emit()">
+                <fa-icon icon="backspace"></fa-icon>
+                Delete
+              </button>
+              <button class="btn btn-secondary" (click)="verify.emit()">
+                <fa-icon icon="check"></fa-icon>
+                Verify
+              </button>
+              <button class="btn btn-primary" [disabled]="!environmentForm.valid" (click)="save.emit()">
+                <fa-icon icon="save"></fa-icon>
+                Save
+              </button>
             </bz-center>
           </div>
 
@@ -30,7 +39,7 @@ import {AddLabelDialog} from './add-label.dialog';
 
         <div class="form-row">
 
-          <div class="col-1" *ngFor="let project of buildzData.projects">
+          <div class="col-1" *ngFor="let project of projectData.projects">
             <div class="form-check align-middle">
               <input class="form-check-input" type="checkbox"
                      value="{{project}}" [checked]="hasArtifactOf(project)" id="{{project}}"
@@ -60,7 +69,7 @@ import {AddLabelDialog} from './add-label.dialog';
                   <select class="form-control form-control-sm" name="branch_{{i}}"
                           [(ngModel)]="artifact.branch"
                   >
-                    <option *ngFor="let b of buildzData.projectBranches[artifact.project]" [value]="b">{{b}}</option>
+                    <option *ngFor="let b of projectData.projectBranches[artifact.project]" [value]="b">{{b}}</option>
                   </select>
                 </div>
 
@@ -125,7 +134,7 @@ export class EnvironmentForm {
   @Input()
   verificationResult: EnvironmentBuilds;
   @Input()
-  buildzData: BuildStats;
+  projectData: ProjectData;
   @Output()
   toggleProject = new EventEmitter<string>();
   @Output()
