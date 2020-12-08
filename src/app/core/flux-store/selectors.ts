@@ -1,4 +1,4 @@
-import {Buildz, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IProjects, IProjectWithBranches, ISelectedProjectAndBranch} from './model';
+import {Buildz, IArtifact, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IEnvironment, IEnvironmentBuilds, IProjects, IProjectWithBranches, ISelectedProjectAndBranch} from './model';
 
 export const buildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
 export const buildSearchResult = (state: Buildz): IBuildSearchResult => state.builds.result
@@ -21,10 +21,15 @@ export const selectedProjectAndBranch = (state: Buildz): ISelectedProjectAndBran
 }
 export const environmentNames = (state: Buildz): string[] => state.stats.environments
 export const currentEnvironmentName = (state: Buildz): string => state.environments.currentEnvironmentName
+export const currentEnvironment = (state: Buildz): IEnvironment => state.environments.currentEnvironment
 export const environmentBuildsAsArray = (state: Buildz): IBuild[] => {
   let environmentBuildsMap = state.environments.environmentBuilds.builds
   return Object.keys(environmentBuildsMap).map((key) => environmentBuildsMap[key])
 }
+export const environmentBuilds = (state: Buildz): IEnvironmentBuilds => state.environments.environmentBuilds
 export const buildStats = (state: Buildz): IBuildStats => state.stats
+export const verificationArtifacts = (state: Buildz): IArtifact[] =>
+  state.environments.currentEnvironment.artifacts.filter((artifact) => artifact.project.length > 0 && artifact.branch.length > 0)
+
 
 

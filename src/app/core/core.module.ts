@@ -3,6 +3,7 @@ import {ProjectsEffects} from './flux-store/projects.effects';
 import {BuildSearchEffects} from './flux-store/build-search.effects';
 import {BuildStatsEffects} from './flux-store/build-stats.effects';
 import {CloningPipe} from './pipes/cloning.pipe';
+import {EnvironmentEffects} from './flux-store/environment.effects';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import {CloningPipe} from './pipes/cloning.pipe';
   providers: [
     ProjectsEffects,
     BuildSearchEffects,
-    BuildStatsEffects
+    BuildStatsEffects,
+    EnvironmentEffects
   ]
 })
 export class CoreModule {

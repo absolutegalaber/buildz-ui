@@ -1,24 +1,22 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {catchError, mapTo} from 'rxjs/operators';
-import {EnvironmentsApi} from '../service/environments-api.service';
 import {BuildzAlert} from '../service/buildz-alert.state';
+import {Store} from '@ngrx/store';
+import {Buildz} from '../core/flux-store/model';
+import {loadSingleEnvironment} from '../core/flux-store/environment.actions';
 
 @Injectable()
 export class LoadEnvironmentGuard implements CanActivate {
 
-  constructor(private environmentsApi: EnvironmentsApi, private router: Router, private buildzAlert: BuildzAlert) {
+  constructor(private store: Store<Buildz>, private router: Router, private buildzAlert: BuildzAlert) {
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let environmentName = route.params['environmentName'];
-    return this.environmentsApi.selectEnvironment(environmentName).pipe(
-      mapTo(true),
-      catchError((err) => {
-        this.buildzAlert.errorOccurred(err)
-        return of(false)
-      })
-    );
+    if (!!environmentName) {
+      this.store.dispatch(loadSingleEnvironment({environmentName}))
+      return true;
+    }
+    return false;
   }
 }

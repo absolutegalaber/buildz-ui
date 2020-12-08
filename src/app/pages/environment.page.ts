@@ -1,21 +1,19 @@
 import {Component} from '@angular/core';
-import {EnvironmentsApi} from '../service/environments-api.service';
-import {ProjectsApi} from '../service/projects-api.service';
+import {select, Store} from '@ngrx/store';
+import {Buildz, IEnvironment} from '../core/flux-store/model';
+import {currentEnvironment, environmentBuilds, projects} from '../core/flux-store/selectors';
+import {saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
 
 @Component({
   template: `
     <div class="row">
       <div class="col">
         <bz-environment-form
-          [environment]="environmentsApi.environment | async"
-          [verificationResult]="environmentsApi.environmentVerificationResult |async"
-          [projectData]="projectsApi.data | async"
-          (toggleProject)="environmentsApi.toggleRequiredProject($event)"
-          (addLabel)="environmentsApi.addLabel($event)"
-          (removeLabel)="environmentsApi.removeLabel($event)"
-          (verify)="environmentsApi.verify()"
-          (save)="environmentsApi.save()"
-          (delete)="environmentsApi.delete()"
+          [environment]="environment | async | deepClone"
+          [verificationResult]="environmentBuilds | async"
+          [projects]="projects | async"
+          (update)="updateEnvironment($event)"
+          (save)="saveEnvironment()"
         >
         </bz-environment-form>
       </div>
@@ -23,6 +21,18 @@ import {ProjectsApi} from '../service/projects-api.service';
   `
 })
 export class EnvironmentPage {
-  constructor(public environmentsApi: EnvironmentsApi, public projectsApi: ProjectsApi) {
+  environment = this.store.pipe(select(currentEnvironment))
+  environmentBuilds = this.store.pipe(select(environmentBuilds))
+  projects = this.store.pipe(select(projects))
+
+  updateEnvironment(environment: IEnvironment) {
+    this.store.dispatch(updateCurrentEnvironment({environment}))
+  }
+
+  saveEnvironment() {
+    this.store.dispatch(saveEnvironment())
+  }
+
+  constructor(private store: Store<Buildz>) {
   }
 }

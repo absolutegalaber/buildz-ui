@@ -1,6 +1,4 @@
 import {Component} from '@angular/core';
-import {BuildzData} from './service/buildz-data.state';
-import {ProjectsApi} from './service/projects-api.service';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +11,4 @@ import {ProjectsApi} from './service/projects-api.service';
   `
 })
 export class AppComponent {
-  title = 'buildz-ui';
-
-
-  constructor(buildzData: BuildzData, projectsApi: ProjectsApi) {
-    buildzData.load()
-    projectsApi.load()
-  }
 }

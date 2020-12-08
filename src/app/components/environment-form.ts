@@ -1,7 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ArtifactSearchLabel, Environment, EnvironmentBuilds, ProjectData, SearchLabel} from '../service/domain';
+import {SearchLabel} from '../service/domain';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddLabelDialog} from './add-label.dialog';
+import {IEnvironment, IEnvironmentBuilds, IProjects} from '../core/flux-store/model';
+import {artifactOf} from '../service/util-functions';
 
 @Component({
   selector: 'bz-environment-form',
@@ -24,7 +26,7 @@ import {AddLabelDialog} from './add-label.dialog';
                 <fa-icon icon="backspace"></fa-icon>
                 Delete
               </button>
-              <button class="btn btn-secondary" (click)="verify.emit()">
+              <button class="btn btn-secondary" (click)="update.emit(this.environment)">
                 <fa-icon icon="check"></fa-icon>
                 Verify
               </button>
@@ -39,11 +41,11 @@ import {AddLabelDialog} from './add-label.dialog';
 
         <div class="form-row">
 
-          <div class="col-1" *ngFor="let project of projectData.projects">
+          <div class="col-1" *ngFor="let project of projects.projects">
             <div class="form-check align-middle">
               <input class="form-check-input" type="checkbox"
                      value="{{project}}" [checked]="hasArtifactOf(project)" id="{{project}}"
-                     (click)="toggleProject.emit(project)"
+                     (click)="toggleProject(project)"
               >
               <label class="form-check-label" for="{{project}}">
                 {{project}}
@@ -69,7 +71,7 @@ import {AddLabelDialog} from './add-label.dialog';
                   <select class="form-control form-control-sm" name="branch_{{i}}"
                           [(ngModel)]="artifact.branch"
                   >
-                    <option *ngFor="let b of projectData.projectBranches[artifact.project]" [value]="b">{{b}}</option>
+                    <option *ngFor="let b of projects.projectBranches[artifact.project]" [value]="b">{{b}}</option>
                   </select>
                 </div>
 
@@ -84,7 +86,7 @@ import {AddLabelDialog} from './add-label.dialog';
                   </div>
 
                   <div class="col-3 text-left align-content-center">
-                    <button class="btn btn-sm btn-danger" (click)="removeLabel.emit({projectName:artifact.project, key:currentLabel.key, value:currentLabel.value})">X</button>
+                    <button class="btn btn-sm btn-danger" (click)="removeLabel(artifact.project, currentLabel.key)">X</button>
                   </div>
 
                 </div>
@@ -130,19 +132,13 @@ import {AddLabelDialog} from './add-label.dialog';
 })
 export class EnvironmentForm {
   @Input()
-  environment: Environment;
+  environment: IEnvironment;
   @Input()
-  verificationResult: EnvironmentBuilds;
+  verificationResult: IEnvironmentBuilds;
   @Input()
-  projectData: ProjectData;
+  projects: IProjects;
   @Output()
-  toggleProject = new EventEmitter<string>();
-  @Output()
-  addLabel = new EventEmitter<ArtifactSearchLabel>();
-  @Output()
-  removeLabel = new EventEmitter<ArtifactSearchLabel>();
-  @Output()
-  verify = new EventEmitter<void>();
+  update = new EventEmitter<IEnvironment>();
   @Output()
   save = new EventEmitter<void>();
   @Output()
@@ -151,16 +147,20 @@ export class EnvironmentForm {
   openAddLabelDialog(projectName: string) {
     let ref = this.modal.open(AddLabelDialog);
     ref.result.then((theNewLabel: SearchLabel) => {
-      this.addLabel.emit({
-        projectName: projectName,
-        key: theNewLabel.key,
-        value: theNewLabel.value
-      });
+      let artifact = artifactOf(this.environment, projectName)
+      artifact.labels[theNewLabel.key] = theNewLabel.value
     })
   }
 
+  removeLabel(projectName: string, labelKey: string) {
+    let artifact = artifactOf(this.environment, projectName)
+    if (!!artifact) {
+      delete artifact.labels[labelKey]
+    }
+  }
+
   hasArtifactOf(projectName: string): boolean {
-    return this.environment.artifacts?.find((a) => a.project == projectName) != null
+    return !!artifactOf(this.environment, projectName)
   }
 
   theBuildOf(projectName: string) {
@@ -173,6 +173,18 @@ export class EnvironmentForm {
     return null;
   }
 
+  toggleProject(project: string) {
+    let a = artifactOf(this.environment, project)
+    if (!!a) {
+      this.environment.artifacts = this.environment.artifacts.filter((a) => a.project != project)
+    } else {
+      this.environment.artifacts.push({
+        project: project,
+        branch: '',
+        labels: {},
+      })
+    }
+  }
 
   constructor(private modal: NgbModal) {
   }

@@ -7,7 +7,6 @@ import {Navbar} from './components/navbar';
 import {HomePage} from './pages/home.page';
 import {HttpClientModule} from '@angular/common/http';
 import {StatsPanel} from './components/stats.panel';
-import {BuildzApi} from './service/builds-api.service';
 import {BuildsPage} from './pages/builds.page';
 import {BuildSearchForm} from './components/build-search.form';
 import {FormsModule} from '@angular/forms';
@@ -16,8 +15,6 @@ import {EnvironmentPage} from './pages/environment.page';
 import {LoadEnvironmentGuard} from './guards/load-environment-guard';
 import {EnvironmentBuildsPanel} from './components/environment-builds.panel';
 import {LoadBuildsSearchGuard} from './guards/load-builds-search-guard.service';
-import {BuildzData} from './service/buildz-data.state';
-import {EnvironmentsApi} from './service/environments-api.service';
 import {EnvironmentForm} from './components/environment-form';
 import {AlertPanel} from './components/alert.panel';
 import {DeadCenterComponent} from './layout/dead-center.component';
@@ -31,7 +28,6 @@ import {BuildsOfEnvironmentDialog} from './components/builds-of-environment.dial
 import {NewEnvironmentGuard} from './guards/new-environment-guard';
 import {NotFoundGuard} from './guards/not-found.guard';
 import {AddLabelDialog} from './components/add-label.dialog';
-import {ProjectsApi} from './service/projects-api.service';
 import {ManagementPage} from './pages/management.page';
 import {BranchList} from './components/branch.list';
 import {SetActivationForm} from './components/set-activation.form';
@@ -100,10 +96,6 @@ let pages = [
     CoreModule
   ],
   providers: [
-    BuildzApi,
-    EnvironmentsApi,
-    ProjectsApi,
-    BuildzData,
     BuildzAlert,
     LoadEnvironmentGuard,
     LoadBuildsSearchGuard,

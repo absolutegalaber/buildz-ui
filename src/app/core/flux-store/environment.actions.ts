@@ -6,3 +6,6 @@ export const environmentBuildsLoaded = createAction('ENVIRONMENT-BUILDS-LOADED',
 export const loadSingleEnvironment = createAction('LOAD-SINGLE-ENVIRONMENT', props<{ environmentName: string }>())
 export const singleEnvironmentLoaded = createAction('SINGLE-ENVIRONMENT-LOADED', props<{ environment: IEnvironment }>())
 export const environmentSelected = createAction('ENVIRONMENT-SELECTED', props<{ environmentName: string }>())
+export const updateCurrentEnvironment = createAction('UPDATE-ENVIRONMENT', props<{ environment: IEnvironment }>())
+export const saveEnvironment = createAction('SAVE-ENVIRONMENT')
+export const deleteEnvironment = createAction('DELETE-ENVIRONMENT')

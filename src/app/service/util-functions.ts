@@ -1,11 +1,12 @@
 import {Alert, Artifact, Build, Environment, EnvironmentBuilds} from './domain';
 import {HttpErrorResponse} from '@angular/common/http';
+import {IEnvironment} from '../core/flux-store/model';
 
 export const artifactsForVerification = (environment: Environment) => {
   return environment.artifacts.filter((artifact) => artifact.project?.length > 0 && artifact.branch?.length > 0)
 }
 
-export const artifactOf = (environment: Environment, project: string) => {
+export const artifactOf = (environment: IEnvironment, project: string) => {
   return environment.artifacts.find((artifact: Artifact) => artifact.project == project);
 }
 

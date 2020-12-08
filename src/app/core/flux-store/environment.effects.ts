@@ -1,9 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {HttpClient} from '@angular/common/http';
-import {environmentBuildsLoaded, environmentSelected, loadEnvironmentBuilds, loadSingleEnvironment, singleEnvironmentLoaded} from './environment.actions';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
-import {IEnvironment, IEnvironmentBuilds} from './model';
+import {environmentBuildsLoaded, environmentSelected, loadEnvironmentBuilds, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
+import {map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
+import {Buildz, IEnvironment, IEnvironmentBuilds} from './model';
+import {Action, select, Store} from '@ngrx/store';
+import {currentEnvironment, verificationArtifacts} from './selectors';
 
 @Injectable()
 export class EnvironmentEffects {
@@ -28,6 +30,24 @@ export class EnvironmentEffects {
     )
   ))
 
-  constructor(private actions$: Actions, private http: HttpClient) {
+  verifyBuildsOfEnv$ = createEffect(() => this.actions$.pipe(
+    ofType(updateCurrentEnvironment),
+    withLatestFrom(this.store.pipe(select(verificationArtifacts))),
+    switchMap(([action, artifacts]) => this.http.post<IEnvironmentBuilds>(`/api/v1/environments/verify-artifacts`, artifacts).pipe(
+      map((environmentBuilds: IEnvironmentBuilds) => environmentBuildsLoaded({environmentBuilds})
+      ))
+    )
+  ))
+
+  saveEnvironment$ = createEffect(() => this.actions$.pipe(
+    ofType(saveEnvironment),
+    withLatestFrom(this.store.pipe(select(currentEnvironment))),
+    switchMap(([action, environment]: [Action, IEnvironment]) => this.http.post<IEnvironment>(`/api/v1/environments`, environment).pipe(
+      map((environment: IEnvironment) => singleEnvironmentLoaded({environment}))
+      )
+    )
+  ))
+
+  constructor(private actions$: Actions, private http: HttpClient, private store: Store<Buildz>) {
   }
 }
