@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ISelectedProjectAndBranch} from '../core/flux-store/model';
+import {ISelectedProjectAndBranch} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-set-active',

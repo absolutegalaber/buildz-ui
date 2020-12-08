@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IBuild, IBuildSearchResult} from '../core/flux-store/model';
+import {IBuild, IBuildSearchResult} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-list',

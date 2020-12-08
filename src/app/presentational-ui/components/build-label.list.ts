@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {IBuild} from '../core/flux-store/model';
+import {IBuild} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-label-list',

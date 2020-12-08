@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
-import {Buildz} from '../core/flux-store/model';
-import {currentEnvironmentName, environmentBuildsAsArray} from '../core/flux-store/selectors';
+import {Buildz} from '../../core/flux-store/model';
+import {currentEnvironmentName, environmentBuildsAsArray} from '../../core/flux-store/selectors';
 
 @Component({
   selector: 'bz-default-dialog',

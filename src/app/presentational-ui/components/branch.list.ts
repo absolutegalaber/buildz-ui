@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IProjectWithBranches} from '../core/flux-store/model';
+import {IProjectWithBranches} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-branch-list',

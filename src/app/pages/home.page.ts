@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {BuildsOfEnvironmentDialog} from '../components/builds-of-environment.dialog';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Buildz} from '../core/flux-store/model';
 import {buildStats, environmentNames, projectNames} from '../core/flux-store/selectors';
 import {Observable} from 'rxjs';
 import {loadEnvironmentBuilds} from '../core/flux-store/environment.actions';
+import {BuildsOfEnvironmentDialog} from '../presentational-ui/components/builds-of-environment.dialog';
 
 @Component({
   template: `

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {IEnvironmentBuilds} from '../core/flux-store/model';
+import {IEnvironmentBuilds} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-environment-builds-panel',

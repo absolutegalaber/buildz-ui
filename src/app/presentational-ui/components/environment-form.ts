@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddLabelDialog} from './add-label.dialog';
-import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} from '../core/flux-store/model';
+import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-environment-form',

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {AddLabelDialog} from './add-label.dialog';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../core/flux-store/model';
+import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-search-form',

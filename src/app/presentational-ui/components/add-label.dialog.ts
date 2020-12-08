@@ -1,9 +1,9 @@
 import {Component, EventEmitter} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
-import {Buildz, IBuildLabel, IProjects} from '../core/flux-store/model';
-import {projects} from '../core/flux-store/selectors';
 import {Observable} from 'rxjs';
+import {Buildz, IBuildLabel, IProjects} from '../../core/flux-store/model';
+import {projects} from '../../core/flux-store/selectors';
 
 @Component({
   selector: 'bz-add-label-dialog',
