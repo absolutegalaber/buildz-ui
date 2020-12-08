@@ -1,20 +1,20 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BuildSearch, BuildSearchResult, ProjectData, SearchLabel} from '../service/domain';
 import {AddLabelDialog} from './add-label.dialog';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-search-form',
   template: `
     <div class="container-fluid" *ngIf="theSearch !== null && theSearchResult !== null">
-      <form novalidate (submit)="doSearch.emit()">
+      <form novalidate (submit)="updateSearchParams.emit(theSearch)">
         <div class="form-row">
 
           <div class="col-4">
             <div class="form-group">
-              <select class="form-control form-control-sm" [(ngModel)]="theSearch.project" name="project" (change)="doSearch.emit()">
+              <select class="form-control form-control-sm" [(ngModel)]="theSearch.project" name="project" (change)="updateSearchParams.emit(theSearch)">
                 <option value="">All Projects</option>
-                <option *ngFor="let p of projectData.projects" [value]="p">{{p}}</option>
+                <option *ngFor="let p of projects.projects" [value]="p">{{p}}</option>
               </select>
             </div>
           </div>
@@ -22,14 +22,14 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
           <div class="col-2">
             <div class="form-group">
               <input type="text" class="form-control form-control-sm" id="minBuildNumber" aria-describedby="minBuildNumberHelp" name="minBuildNumber" placeholder="Min BuildNumber"
-                     (keyup)="doSearch.emit()"
+                     (keyup)="updateSearchParams.emit(theSearch)"
                      [(ngModel)]="theSearch.minBuildNumber">
             </div>
           </div>
 
           <div class="col-4 d-flex justify-content-center">
             <ngb-pagination [collectionSize]="theSearchResult.totalElements" [pageSize]="theSearch.pageSize" size="sm" [maxSize]="3"
-                            (pageChange)="toPage.emit($event)"
+                            (pageChange)="toPage($event)"
             >
             </ngb-pagination>
           </div>
@@ -38,9 +38,9 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
           <div class="col-4">
             <div class="form-group">
-              <select class="form-control form-control-sm" [(ngModel)]="theSearch.branch" name="branch" (ngModelChange)="doSearch.emit()">
+              <select class="form-control form-control-sm" [(ngModel)]="theSearch.branch" name="branch" (ngModelChange)="updateSearchParams.emit(theSearch)">
                 <option value="">All Branches</option>
-                <option *ngFor="let b of projectData.projectBranches[theSearch.project]" [value]="b">{{b}}</option>
+                <option *ngFor="let b of projects.projectBranches[theSearch.project]" [value]="b">{{b}}</option>
               </select>
             </div>
           </div>
@@ -48,7 +48,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
           <div class="col-2">
             <div class="form-group">
               <input type="text" class="form-control form-control-sm" id="maxBuildNumber" name="maxBuildNumber" placeholder="Max BuildNumber"
-                     (keyup)="doSearch.emit()"
+                     (keyup)="updateSearchParams.emit(theSearch)"
                      [(ngModel)]="theSearch.maxBuildNumber">
             </div>
           </div>
@@ -62,7 +62,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
               <fa-icon icon="undo"></fa-icon>
               Reset
             </button>
-            <button class="btn btn-sm btn-secondary mx-2" (click)="doSearch.emit()">
+            <button class="btn btn-sm btn-secondary mx-2" (click)="updateSearchParams.emit(theSearch)">
               <fa-icon icon="sync"></fa-icon>
               Reload
             </button>
@@ -87,7 +87,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
           </div>
 
           <div class="col-4">
-            <button class="btn btn-sm btn-danger" (click)="clearLabels.emit(label.key)">
+            <button class="btn btn-sm btn-danger" (click)="deleteLabel(label.key)">
               <fa-icon icon="backspace"></fa-icon>
             </button>
           </div>
@@ -98,21 +98,17 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 export class BuildSearchForm {
   @Input()
-  theSearch: BuildSearch;
+  theSearch: IBuildSearchParams;
   @Input()
-  theSearchResult: BuildSearchResult;
+  theSearchResult: IBuildSearchResult;
   @Input()
-  projectData: ProjectData;
-  @Output()
-  doSearch = new EventEmitter<void>();
+  projects: IProjects
   @Output()
   resetSearch = new EventEmitter<void>();
   @Output()
-  addLabel = new EventEmitter<SearchLabel>();
-  @Output()
   clearLabels = new EventEmitter<string>();
   @Output()
-  toPage = new EventEmitter<number>();
+  updateSearchParams = new EventEmitter<IBuildSearchParams>();
 
   labelsPresent(): boolean {
     return (this.theSearch && this.theSearch.labels && (Object.keys(this.theSearch.labels).length > 0));
@@ -120,12 +116,20 @@ export class BuildSearchForm {
 
   openAddLabelDialog() {
     let ref = this.modal.open(AddLabelDialog);
-    ref.result.then((theNewLabel: SearchLabel) => {
-      this.addLabel.emit({
-        key: theNewLabel.key,
-        value: theNewLabel.value
-      });
+    ref.result.then((theNewLabel: IBuildLabel) => {
+      this.theSearch.labels[theNewLabel.key] = theNewLabel.value
+      this.updateSearchParams.emit(this.theSearch)
     })
+  }
+
+  deleteLabel(key: string) {
+    delete this.theSearch.labels[key]
+    this.updateSearchParams.emit(this.theSearch)
+  }
+
+  toPage(page: number) {
+    this.theSearch.page = (page - 1)
+    this.updateSearchParams.emit(this.theSearch)
   }
 
   constructor(private modal: NgbModal) {

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Build} from '../service/domain';
+import {IBuild} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-label-list',
@@ -19,5 +19,5 @@ import {Build} from '../service/domain';
 })
 export class BuildLabelList {
   @Input()
-  build: Build;
+  build: IBuild;
 }

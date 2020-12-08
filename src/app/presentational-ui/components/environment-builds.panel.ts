@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {EnvironmentBuilds} from '../service/domain';
+import {IEnvironmentBuilds} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-environment-builds-panel',
@@ -30,5 +30,5 @@ import {EnvironmentBuilds} from '../service/domain';
 })
 export class EnvironmentBuildsPanel {
   @Input()
-  environmentBuilds: EnvironmentBuilds;
+  environmentBuilds: IEnvironmentBuilds;
 }
