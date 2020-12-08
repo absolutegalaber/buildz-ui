@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {HttpClient} from '@angular/common/http';
-import {environmentBuildsLoaded, environmentSelected, loadEnvironmentBuilds, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
-import {catchError, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
+import {deleteEnvironment, environmentBuildsLoaded, environmentSelected, loadEnvironmentBuilds, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
+import {catchError, map, mergeMap, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Buildz, IEnvironment, IEnvironmentBuilds} from './model';
 import {Action, select, Store} from '@ngrx/store';
 import {currentEnvironment, verificationArtifacts} from './selectors';
 import {of} from 'rxjs';
-import {backendErrorOccurred} from './alert.actions';
+import {backendErrorOccurred, frontendInfo} from './alert.actions';
+import {loadBuildStats} from './build-stats.actions';
 
 @Injectable()
 export class EnvironmentEffects {
@@ -46,7 +47,34 @@ export class EnvironmentEffects {
     ofType(saveEnvironment),
     withLatestFrom(this.store.pipe(select(currentEnvironment))),
     switchMap(([action, environment]: [Action, IEnvironment]) => this.http.post<IEnvironment>(`/api/v1/environments`, environment).pipe(
-      map((environment: IEnvironment) => singleEnvironmentLoaded({environment})),
+      mergeMap((environment: IEnvironment) => [
+        singleEnvironmentLoaded({environment}),
+        loadBuildStats(),
+        frontendInfo({
+          alertMessage: {
+            heading: 'Environment Saved',
+            message: `Successfully saved the Environment with name='${environment.name}'. {DB-ID=${environment.id}}`
+          }
+        })
+      ]),
+      catchError(err => of(backendErrorOccurred(err)))
+    ))
+  ))
+
+  deleteEnvironment$ = createEffect(() => this.actions$.pipe(
+    ofType(deleteEnvironment),
+    withLatestFrom(this.store.pipe(select(currentEnvironment))),
+    switchMap(([action, environment]: [Action, IEnvironment]) => this.http.delete(`/api/v1/environments/${environment.name}`).pipe(
+      mergeMapTo([
+          frontendInfo({
+            alertMessage: {
+              heading: 'Environment Deleted',
+              message: `Successfully deleted the Environment with name='${environment.name}'`
+            }
+          }),
+          loadBuildStats()
+        ]
+      ),
       catchError(err => of(backendErrorOccurred(err)))
     ))
   ))

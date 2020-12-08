@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Buildz, IEnvironment} from '../core/flux-store/model';
 import {currentEnvironment, environmentBuilds, projects} from '../core/flux-store/selectors';
-import {saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
+import {deleteEnvironment, saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
 
 @Component({
   template: `
@@ -14,6 +14,7 @@ import {saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/envi
           [projects]="projects | async"
           (update)="updateEnvironment($event)"
           (save)="saveEnvironment()"
+          (delete)="deleteEnvironment()"
         >
         </bz-environment-form>
       </div>
@@ -31,6 +32,10 @@ export class EnvironmentPage {
 
   saveEnvironment() {
     this.store.dispatch(saveEnvironment())
+  }
+
+  deleteEnvironment() {
+    this.store.dispatch(deleteEnvironment())
   }
 
   constructor(private store: Store<Buildz>) {
