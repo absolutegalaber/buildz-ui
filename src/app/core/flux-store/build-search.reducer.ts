@@ -3,7 +3,7 @@ import {buildSearchLoaded, searchBuildsOfProject, updateSearchParams} from './bu
 import {IBuilds, IBuildSearchResult} from './model';
 import {deepClone} from '../util/deep-clone';
 
-export const EMPTY_BUILD_SEARCH: IBuilds = {
+export const INITIAL_BUILD_SEARCH: IBuilds = {
   search: {
     project: '',
     branch: '',
@@ -17,7 +17,7 @@ export const EMPTY_BUILD_SEARCH: IBuilds = {
 }
 
 export const _buildSearchReducer = createReducer(
-  EMPTY_BUILD_SEARCH,
+  INITIAL_BUILD_SEARCH,
   on(buildSearchLoaded, (state: IBuilds, {result}) => {
     return {...state, result: result}
   }),

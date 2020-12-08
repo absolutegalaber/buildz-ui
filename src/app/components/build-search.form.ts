@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BuildSearch, SearchLabel} from '../service/domain';
 import {AddLabelDialog} from './add-label.dialog';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {IBuildSearchParams, IBuildSearchResult, IProjects} from '../core/flux-store/model';
+import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-search-form',
@@ -99,15 +98,13 @@ import {IBuildSearchParams, IBuildSearchResult, IProjects} from '../core/flux-st
 })
 export class BuildSearchForm {
   @Input()
-  theSearch: BuildSearch;
+  theSearch: IBuildSearchParams;
   @Input()
   theSearchResult: IBuildSearchResult;
   @Input()
   projects: IProjects
   @Output()
   resetSearch = new EventEmitter<void>();
-  @Output()
-  addLabel = new EventEmitter<SearchLabel>();
   @Output()
   clearLabels = new EventEmitter<string>();
   @Output()
@@ -119,7 +116,7 @@ export class BuildSearchForm {
 
   openAddLabelDialog() {
     let ref = this.modal.open(AddLabelDialog);
-    ref.result.then((theNewLabel: SearchLabel) => {
+    ref.result.then((theNewLabel: IBuildLabel) => {
       this.theSearch.labels[theNewLabel.key] = theNewLabel.value
       this.updateSearchParams.emit(this.theSearch)
     })

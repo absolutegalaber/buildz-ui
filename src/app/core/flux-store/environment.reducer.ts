@@ -3,7 +3,7 @@ import {environmentBuildsLoaded, environmentSelected, singleEnvironmentLoaded, u
 import {IEnvironment, IEnvironments} from './model';
 import {deepClone} from '../util/deep-clone';
 
-export const EMPTY_ENVIRONMENT_BUILDS: IEnvironments = {
+export const INITIAL_ENVIRONMENT_BUILDS: IEnvironments = {
   currentEnvironmentName: '',
   currentEnvironment: <IEnvironment>{
     name: '',
@@ -16,7 +16,7 @@ export const EMPTY_ENVIRONMENT_BUILDS: IEnvironments = {
   }
 }
 export const _environmentReducer = createReducer(
-  EMPTY_ENVIRONMENT_BUILDS,
+  INITIAL_ENVIRONMENT_BUILDS,
   on(environmentBuildsLoaded, (state: IEnvironments, {environmentBuilds}) => {
     let newState: IEnvironments = deepClone(state)
     newState.environmentBuilds = environmentBuilds

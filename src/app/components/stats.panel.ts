@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {BuildStats} from '../service/domain';
+import {IBuildStats} from '../core/flux-store/model';
 
 @Component({
   selector: 'bz-stats',
@@ -13,9 +13,5 @@ import {BuildStats} from '../service/domain';
 })
 export class StatsPanel {
   @Input()
-  stats: BuildStats = {
-    environments: [],
-    numberOfBuilds: 0,
-    numberOfLabels: 0
-  }
+  stats: IBuildStats
 }

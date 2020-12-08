@@ -2,7 +2,7 @@ import {createReducer, on} from '@ngrx/store';
 import {IProjects} from './model';
 import {projectsLoaded, selectBranch, selectProject, toggleInactiveProjectsVisible} from './projects.actions';
 
-export const EMPTY_PROJECTS: IProjects = {
+export const INITIAL_PROJECTS: IProjects = {
   projects: [],
   projectBranches: {},
   labelKeys: [],
@@ -12,7 +12,7 @@ export const EMPTY_PROJECTS: IProjects = {
 }
 
 export const _projectsReducer = createReducer(
-  EMPTY_PROJECTS,
+  INITIAL_PROJECTS,
   on(projectsLoaded, (state: IProjects, {projectsResponse}) => {
     return {
       ...state,

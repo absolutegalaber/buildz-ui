@@ -1,10 +1,11 @@
-import {Build} from '../../service/domain';
 import {projectsReducer} from './projects.reducer';
 import {buildStatsReducer} from './build-stats.reducer';
 import {buildSearchReducer} from './build-search.reducer';
 import {environmentReducer} from './environment.reducer';
+import {alertReducer} from './alert.reducer';
 
 export interface Buildz {
+  alert: IAlert
   projects: IProjects
   environments: IEnvironments
   stats: IBuildStats
@@ -12,6 +13,7 @@ export interface Buildz {
 }
 
 export const buildzReducers = {
+  alert: alertReducer,
   projects: projectsReducer,
   environments: environmentReducer,
   stats: buildStatsReducer,
@@ -36,7 +38,7 @@ export interface IBuildSearchParams {
 }
 
 export interface IBuildSearchResult {
-  builds: Build[]
+  builds: IBuild[]
   page: number
   totalElements: number
   totalPages: number
@@ -110,4 +112,15 @@ export interface IArtifact {
 export interface IEnvironmentBuilds {
   environment: string
   builds: { [key: string]: IBuild }
+}
+
+export interface IAlert {
+  type: string
+  heading: string
+  message: string
+}
+
+export interface IAlertMessage {
+  heading: string
+  message: string
 }

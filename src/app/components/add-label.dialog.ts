@@ -1,8 +1,7 @@
 import {Component, EventEmitter} from '@angular/core';
-import {SearchLabel} from '../service/domain';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
-import {Buildz, IProjects} from '../core/flux-store/model';
+import {Buildz, IBuildLabel, IProjects} from '../core/flux-store/model';
 import {projects} from '../core/flux-store/selectors';
 import {Observable} from 'rxjs';
 
@@ -44,11 +43,11 @@ import {Observable} from 'rxjs';
 })
 export class AddLabelDialog {
   projects: Observable<IProjects> = this.store.pipe(select(projects))
-  newLabel: SearchLabel = {
+  newLabel: IBuildLabel = {
     key: '',
     value: ''
   }
-  addLabel = new EventEmitter<SearchLabel>()
+  addLabel = new EventEmitter<IBuildLabel>()
 
   constructor(private store: Store<Buildz>, public activeModal: NgbActiveModal) {
   }

@@ -3,9 +3,11 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {loadProjects, projectsLoaded, toggleCurrentBranchActive, toggleCurrentProjectActive, toggleInactiveProjectsVisible} from './projects.actions';
 import {HttpClient} from '@angular/common/http';
 import {Buildz, IProjectsResponse} from './model';
-import {map, mapTo, switchMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, mapTo, switchMap, withLatestFrom} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {currentProject, includeInactiveProjects, selectedProjectAndBranch} from './selectors';
+import {backendErrorOccurred} from './alert.actions';
+import {of} from 'rxjs';
 
 @Injectable()
 export class ProjectsEffects {
@@ -15,7 +17,8 @@ export class ProjectsEffects {
     ofType(loadProjects, toggleInactiveProjectsVisible),
     withLatestFrom(this.store.pipe(select(includeInactiveProjects))),
     switchMap(([action, includingInactive]) => this.http.get<IProjectsResponse>(`/api/v1/projects?include-inactive=${includingInactive}`).pipe(
-      map((data: IProjectsResponse) => projectsLoaded({projectsResponse: data}))
+      map((data: IProjectsResponse) => projectsLoaded({projectsResponse: data})),
+      catchError(err => of(backendErrorOccurred(err)))
       )
     )
   ))
@@ -25,7 +28,8 @@ export class ProjectsEffects {
     ofType(toggleCurrentProjectActive),
     withLatestFrom(this.store.pipe(select(currentProject))),
     switchMap(([action, project]) => this.http.post<void>(`/api/v1/projects/toggle-project-active`, {project}).pipe(
-      mapTo(loadProjects())
+      mapTo(loadProjects()),
+      catchError(err => of(backendErrorOccurred(err)))
       )
     )
   ))
@@ -35,7 +39,8 @@ export class ProjectsEffects {
     ofType(toggleCurrentBranchActive),
     withLatestFrom(this.store.pipe(select(selectedProjectAndBranch))),
     switchMap(([action, projectAndBranch]) => this.http.post<void>(`/api/v1/projects/toggle-branch-active`, {...projectAndBranch}).pipe(
-      mapTo(loadProjects())
+      mapTo(loadProjects()),
+      catchError(err => of(backendErrorOccurred(err)))
       )
     )
   ))

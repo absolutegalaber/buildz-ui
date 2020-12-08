@@ -1,23 +1,23 @@
-import {Component} from '@angular/core';
-import {BuildzAlert} from '../service/buildz-alert.state';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {IAlert} from '../core/flux-store/model';
 
 @Component({
   selector: 'bz-alert-panel',
   template: `
-    <ng-container *ngIf="alert.theAlert|async as theAlert">
-      <div class="col-8 offset-2" *ngIf="theAlert != null">
-        <ngb-alert [dismissible]="true" [type]="theAlert.type" (click)="alert.dismiss()">
-          <h5>{{theAlert.heading}}</h5>
-          <p [innerHTML]="theAlert.message"></p>
-        </ngb-alert>
+    <div class="col-10 offset-1" *ngIf="alert.message?.length > 0">
+      <div [class]="'alert alert-dismissible alert-'+ alert.type" role="alert">
+        <h5 class="alert-heading" [innerHTML]="alert.heading">_</h5>
+        <p [innerHTML]="alert.message">_</p>
+        <button type="button" class="close" (click)="clearAlert.emit()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </ng-container>
-
+    </div>
   `
 })
 export class AlertPanel {
-
-  constructor(public alert: BuildzAlert) {
-    alert.theAlert
-  }
+  @Input()
+  alert: IAlert
+  @Output()
+  clearAlert = new EventEmitter<void>()
 }

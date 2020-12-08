@@ -19,7 +19,6 @@ import {EnvironmentForm} from './components/environment-form';
 import {AlertPanel} from './components/alert.panel';
 import {DeadCenterComponent} from './layout/dead-center.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {BuildzAlert} from './service/buildz-alert.state';
 import {BuildsAccordion} from './components/builds.accordion';
 import {ProjectList} from './components/project.list';
 import {BuildList} from './components/build.list';
@@ -96,7 +95,6 @@ let pages = [
     CoreModule
   ],
   providers: [
-    BuildzAlert,
     LoadEnvironmentGuard,
     LoadBuildsSearchGuard,
     NewEnvironmentGuard,

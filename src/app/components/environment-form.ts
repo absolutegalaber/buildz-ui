@@ -1,9 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {SearchLabel} from '../service/domain';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddLabelDialog} from './add-label.dialog';
-import {IEnvironment, IEnvironmentBuilds, IProjects} from '../core/flux-store/model';
-import {artifactOf} from '../service/util-functions';
+import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} from '../core/flux-store/model';
 
 @Component({
   selector: 'bz-environment-form',
@@ -146,21 +144,21 @@ export class EnvironmentForm {
 
   openAddLabelDialog(projectName: string) {
     let ref = this.modal.open(AddLabelDialog);
-    ref.result.then((theNewLabel: SearchLabel) => {
-      let artifact = artifactOf(this.environment, projectName)
+    ref.result.then((theNewLabel: IBuildLabel) => {
+      let artifact = this.artifactOf(this.environment, projectName)
       artifact.labels[theNewLabel.key] = theNewLabel.value
     })
   }
 
   removeLabel(projectName: string, labelKey: string) {
-    let artifact = artifactOf(this.environment, projectName)
+    let artifact = this.artifactOf(this.environment, projectName)
     if (!!artifact) {
       delete artifact.labels[labelKey]
     }
   }
 
   hasArtifactOf(projectName: string): boolean {
-    return !!artifactOf(this.environment, projectName)
+    return !!this.artifactOf(this.environment, projectName)
   }
 
   theBuildOf(projectName: string) {
@@ -174,7 +172,7 @@ export class EnvironmentForm {
   }
 
   toggleProject(project: string) {
-    let a = artifactOf(this.environment, project)
+    let a = this.artifactOf(this.environment, project)
     if (!!a) {
       this.environment.artifacts = this.environment.artifacts.filter((a) => a.project != project)
     } else {
@@ -184,6 +182,10 @@ export class EnvironmentForm {
         labels: {},
       })
     }
+  }
+
+  artifactOf(environment: IEnvironment, project: string): IArtifact {
+    return environment.artifacts.find((artifact: IArtifact) => artifact.project == project);
   }
 
   constructor(private modal: NgbModal) {

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Build, BuildSearchResult} from '../service/domain';
+import {IBuild, IBuildSearchResult} from '../core/flux-store/model';
 
 @Component({
   selector: 'bz-build-list',
@@ -17,9 +17,9 @@ import {Build, BuildSearchResult} from '../service/domain';
 })
 export class BuildList {
   @Input()
-  searchResult: BuildSearchResult;
+  searchResult: IBuildSearchResult;
   @Output()
-  buildSelected = new EventEmitter<Build>();
+  buildSelected = new EventEmitter<IBuild>();
 
 
 }
