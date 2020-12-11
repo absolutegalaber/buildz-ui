@@ -1,16 +1,16 @@
-import {Buildz, IAlert, IArtifact, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IEnvironment, IEnvironmentBuilds, IProjects, IProjectWithBranches, ISelectedProjectAndBranch} from './model';
+import {Buildz, IAlert, IArtifact, IBranch, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IEnvironment, IEnvironmentBuilds, IProject, IProjects, IProjectWithBranches, ISelectedProjectAndBranch} from './model';
 
 export const buildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
 export const buildSearchResult = (state: Buildz): IBuildSearchResult => state.builds.result
 export const projects = (state: Buildz): IProjects => state.projects;
-export const projectNames = (state: Buildz): string[] => state.projects.projects;
+export const theProjects = (state: Buildz): IProject[] => state.projects.projects;
 export const includeInactiveProjects = (state: Buildz): boolean => state.projects.inactiveIncluded;
-export const currentProject = (state: Buildz): string => state.projects.currentProject;
-export const currentBranch = (state: Buildz): string => state.projects.currentBranch;
+export const currentProject = (state: Buildz): IProject => state.projects.currentProject;
+export const currentBranch = (state: Buildz): IBranch => state.projects.currentBranch;
 export const currentProjectWithBranches = (state: Buildz): IProjectWithBranches => {
   return {
     project: state.projects.currentProject,
-    branches: state.projects.projectBranches[state.projects.currentProject]
+    branches: state.projects.projectBranches[state.projects.currentProject?.name]
   }
 }
 export const selectedProjectAndBranch = (state: Buildz): ISelectedProjectAndBranch => {
@@ -19,7 +19,7 @@ export const selectedProjectAndBranch = (state: Buildz): ISelectedProjectAndBran
     branch: state.projects.currentBranch
   }
 }
-export const environmentNames = (state: Buildz): string[] => state.stats.environments
+export const environmentNames = (state: Buildz): string[] => state.environments.knownEnvironments
 export const currentEnvironmentName = (state: Buildz): string => state.environments.currentEnvironmentName
 export const currentEnvironment = (state: Buildz): IEnvironment => state.environments.currentEnvironment
 export const environmentBuildsAsArray = (state: Buildz): IBuild[] => {

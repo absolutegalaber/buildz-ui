@@ -60,37 +60,47 @@ export interface IBuild {
 }
 
 export interface IProjects {
-  projects: string[]
-  projectBranches: { [key: string]: string[] }
+  projects: IProject[]
+  projectBranches: { [key: string]: IBranch[] }
   labelKeys: string[]
   inactiveIncluded: boolean
-  currentProject: string
-  currentBranch: string
+  currentProject?: IProject
+  currentBranch?: IBranch
+}
+
+export interface IProject {
+  name: string
+  active: boolean
+}
+
+export interface IBranch {
+  name: string
+  active: boolean
 }
 
 export interface IProjectsResponse {
-  projects: string[]
-  projectBranches: { [key: string]: string[] }
+  projects: IProject[]
+  projectBranches: { [key: string]: IBranch[] }
   labelKeys: string[]
 }
 
 export interface IProjectWithBranches {
-  project: string
-  branches: string[]
+  project: IProject
+  branches: IBranch[]
 }
 
 export interface ISelectedProjectAndBranch {
-  project: string
-  branch: string
+  project: IProject
+  branch: IBranch
 }
 
 export interface IBuildStats {
-  environments: string[]
   numberOfBuilds: number
   numberOfLabels: number
 }
 
 export interface IEnvironments {
+  knownEnvironments: string[]
   currentEnvironmentName: string
   currentEnvironment: IEnvironment
   environmentBuilds: IEnvironmentBuilds

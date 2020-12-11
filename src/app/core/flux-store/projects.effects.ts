@@ -3,10 +3,10 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {loadProjects, projectsLoaded, toggleCurrentBranchActive, toggleCurrentProjectActive, toggleInactiveProjectsVisible} from './projects.actions';
 import {HttpClient} from '@angular/common/http';
 import {Buildz, IProjectsResponse} from './model';
-import {catchError, map, mapTo, switchMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, exhaustMap, map, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {currentProject, includeInactiveProjects, selectedProjectAndBranch} from './selectors';
-import {backendErrorOccurred} from './alert.actions';
+import {backendErrorOccurred, frontendInfo} from './alert.actions';
 import {of} from 'rxjs';
 
 @Injectable()
@@ -27,8 +27,22 @@ export class ProjectsEffects {
   toggleProjectActive = createEffect(() => this.actions$.pipe(
     ofType(toggleCurrentProjectActive),
     withLatestFrom(this.store.pipe(select(currentProject))),
-    switchMap(([action, project]) => this.http.post<void>(`/api/v1/projects/toggle-project-active`, {project}).pipe(
-      mapTo(loadProjects()),
+    map(([action, project]) => {
+      return {
+        projectName: project.name,
+        active: !project.active
+      }
+    }),
+    exhaustMap((projectStatus) => this.http.post<void>(`/api/v1/projects/project-branch-activa`, {...projectStatus}).pipe(
+      mergeMapTo([
+        loadProjects(),
+        frontendInfo({
+          alertMessage: {
+            heading: 'Success',
+            message: 'Project updated'
+          }
+        })
+      ]),
       catchError(err => of(backendErrorOccurred(err)))
       )
     )
@@ -38,8 +52,23 @@ export class ProjectsEffects {
   toggleBranchActive$ = createEffect(() => this.actions$.pipe(
     ofType(toggleCurrentBranchActive),
     withLatestFrom(this.store.pipe(select(selectedProjectAndBranch))),
-    switchMap(([action, projectAndBranch]) => this.http.post<void>(`/api/v1/projects/toggle-branch-active`, {...projectAndBranch}).pipe(
-      mapTo(loadProjects()),
+    map(([action, projectAndBranch]) => {
+      return {
+        projectName: projectAndBranch.project.name,
+        branch: projectAndBranch.branch.name,
+        active: !projectAndBranch.branch.active
+      }
+    }),
+    exhaustMap((projectAndBranchStatus) => this.http.post<void>(`/api/v1/projects/project-branch-activa`, {...projectAndBranchStatus}).pipe(
+      mergeMapTo([
+        loadProjects(),
+        frontendInfo({
+          alertMessage: {
+            heading: 'Success',
+            message: 'Branch updated'
+          }
+        })
+      ]),
       catchError(err => of(backendErrorOccurred(err)))
       )
     )

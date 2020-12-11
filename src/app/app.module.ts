@@ -23,6 +23,7 @@ import {loadBuildStats} from './core/flux-store/build-stats.actions';
 import {BuildStatsEffects} from './core/flux-store/build-stats.effects';
 import {EnvironmentEffects} from './core/flux-store/environment.effects';
 import {PresentationalUiModule} from './presentational-ui/presentational-ui.module';
+import {loadKnownEnvironments} from './core/flux-store/environment.actions';
 
 let pages = [
   HomePage,
@@ -61,6 +62,7 @@ export class AppModule {
   constructor(library: FaIconLibrary, store: Store<Buildz>) {
     store.dispatch(loadProjects())
     store.dispatch(loadBuildStats())
+    store.dispatch(loadKnownEnvironments())
     library.addIcons(
       faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync
     )

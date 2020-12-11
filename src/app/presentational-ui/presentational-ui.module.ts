@@ -17,8 +17,9 @@ import {EnvironmentList} from './components/environment.list';
 import {BuildsOfEnvironmentDialog} from './components/builds-of-environment.dialog';
 import {AddLabelDialog} from './components/add-label.dialog';
 import {BranchList} from './components/branch.list';
-import {SetActivationForm} from './components/set-activation.form';
+import {SetActivationPanel} from './components/set-activation.panel';
 import {DeadCenterComponent} from './components/dead-center.component';
+import {ProjectAccordion} from './components/project.accordion';
 
 const reExports = [
   CoreModule,
@@ -43,7 +44,8 @@ const declarations = [
   BuildsOfEnvironmentDialog,
   AddLabelDialog,
   BranchList,
-  SetActivationForm
+  SetActivationPanel,
+  ProjectAccordion
 ]
 
 @NgModule({

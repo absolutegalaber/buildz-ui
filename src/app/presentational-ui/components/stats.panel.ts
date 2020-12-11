@@ -5,7 +5,6 @@ import {IBuildStats} from '../../core/flux-store/model';
   selector: 'bz-stats',
   template: `
     <h4>
-      <b>{{stats.environments.length}}</b> Environments.&nbsp;
       <b>{{stats.numberOfBuilds}}</b> Builds.&nbsp;
       <b>{{stats.numberOfLabels}}</b> Labels.
     </h4>

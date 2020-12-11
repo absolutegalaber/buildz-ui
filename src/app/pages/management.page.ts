@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Buildz} from '../core/flux-store/model';
+import {Buildz, IBranch, IProject} from '../core/flux-store/model';
 import {selectBranch, selectProject, toggleCurrentBranchActive, toggleCurrentProjectActive, toggleInactiveProjectsVisible} from '../core/flux-store/projects.actions';
-import {currentProjectWithBranches, includeInactiveProjects, projectNames, selectedProjectAndBranch} from '../core/flux-store/selectors';
+import {currentProjectWithBranches, includeInactiveProjects, selectedProjectAndBranch, theProjects} from '../core/flux-store/selectors';
 
 @Component({
   template: `
@@ -16,34 +16,27 @@ import {currentProjectWithBranches, includeInactiveProjects, projectNames, selec
       </div>
     </div>
     <div class="row mt-2">
-      <div class="col-6">
-        <bz-project-list
-          [projects]="projectNames | async"
+      <div class="col-8">
+        <bz-project-accordion
+          [projects]="projectData | async"
           (projectSelected)="selectCurrentProject($event)"
-        >
-        </bz-project-list>
-      </div>
-      <div class="col-6">
-        <bz-branch-list
-          [projectWithBranches]="currentProjectWithBranches | async"
           (branchSelected)="selectCurrentBranch($event)"
         >
-        </bz-branch-list>
+        </bz-project-accordion>
       </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-12">
+      <div class="col-4">
         <bz-set-active
           [selectedProjectAndBranch]="selectedProjectAndBranch | async"
-          (toggleBranchActive)="toggleCurrentBranch()"
           (toggleProjectActive)="toggleCurrentProject()"
+          (toggleBranchActive)="toggleCurrentBranch()"
         ></bz-set-active>
       </div>
     </div>
   `
 })
 export class ManagementPage {
-  projectNames = this.store.pipe(select(projectNames))
+  projectData = this.store.pipe(select((state: Buildz) => state.projects))
+  projects = this.store.pipe(select(theProjects))
   currentProjectWithBranches = this.store.pipe(select(currentProjectWithBranches))
   inactiveProjectsIncluded = this.store.pipe(select(includeInactiveProjects))
   selectedProjectAndBranch = this.store.pipe(select(selectedProjectAndBranch))
@@ -52,12 +45,12 @@ export class ManagementPage {
     this.store.dispatch(toggleInactiveProjectsVisible())
   }
 
-  selectCurrentProject(projectName: string) {
-    this.store.dispatch(selectProject({projectName}))
+  selectCurrentProject(project: IProject) {
+    this.store.dispatch(selectProject({project}))
   }
 
-  selectCurrentBranch(branchName: string) {
-    this.store.dispatch(selectBranch({branchName}))
+  selectCurrentBranch(branch: IBranch) {
+    this.store.dispatch(selectBranch({branch}))
   }
 
   toggleCurrentProject() {

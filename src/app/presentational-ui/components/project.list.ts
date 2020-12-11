@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {IProject} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-project-list',
@@ -9,14 +10,14 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
               *ngFor="let project of projects"
               (click)="projectSelected.emit(project)"
       >
-        {{project}}
+        {{project.name}}
       </button>
     </div>
   `
 })
 export class ProjectList {
   @Input()
-  projects: string[] = [];
+  projects: IProject[] = [];
   @Output()
-  projectSelected = new EventEmitter<string>();
+  projectSelected = new EventEmitter<IProject>();
 }

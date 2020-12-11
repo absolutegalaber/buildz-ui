@@ -1,9 +1,10 @@
 import {createReducer, on} from '@ngrx/store';
-import {environmentBuildsLoaded, environmentSelected, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
+import {environmentBuildsLoaded, environmentSelected, knownEnvironmentsLoaded, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
 import {IEnvironment, IEnvironments} from './model';
 import {deepClone} from '../util/deep-clone';
 
 export const INITIAL_ENVIRONMENT_BUILDS: IEnvironments = {
+  knownEnvironments: [],
   currentEnvironmentName: '',
   currentEnvironment: <IEnvironment>{
     name: '',
@@ -21,6 +22,9 @@ export const _environmentReducer = createReducer(
     let newState: IEnvironments = deepClone(state)
     newState.environmentBuilds = environmentBuilds
     return newState
+  }),
+  on(knownEnvironmentsLoaded, (state: IEnvironments, {environments}) => {
+    return {...state, knownEnvironments: environments}
   }),
   on(environmentSelected, (state, {environmentName}) => {
     return {...state, currentEnvironmentName: environmentName}

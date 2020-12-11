@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {HttpClient} from '@angular/common/http';
-import {deleteEnvironment, environmentBuildsLoaded, environmentSelected, loadEnvironmentBuilds, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
-import {catchError, map, mergeMap, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
+import {deleteEnvironment, environmentBuildsLoaded, environmentSelected, knownEnvironmentsLoaded, loadEnvironmentBuilds, loadKnownEnvironments, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
+import {catchError, exhaustMap, map, mergeMap, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Buildz, IEnvironment, IEnvironmentBuilds} from './model';
 import {Action, select, Store} from '@ngrx/store';
 import {currentEnvironment, verificationArtifacts} from './selectors';
@@ -12,6 +12,13 @@ import {loadBuildStats} from './build-stats.actions';
 
 @Injectable()
 export class EnvironmentEffects {
+
+  loadKnownEnvironments$ = createEffect(() => this.actions$.pipe(
+    ofType(loadKnownEnvironments),
+    exhaustMap(() => this.http.get<string[]>(`/api/v1/environments`).pipe(
+      map((environments: string[]) => knownEnvironmentsLoaded({environments}))
+    ))
+  ))
 
   buildsOf$ = createEffect(() => this.actions$.pipe(
     ofType(loadEnvironmentBuilds),

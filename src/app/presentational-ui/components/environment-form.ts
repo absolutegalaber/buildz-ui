@@ -37,16 +37,16 @@ import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} fro
 
         </div>
 
-        <div class="form-row">
+        <div class="row">
 
-          <div class="col-1" *ngFor="let project of projects.projects">
+          <div class="col-2" *ngFor="let project of projects.projects">
             <div class="form-check align-middle">
               <input class="form-check-input" type="checkbox"
-                     value="{{project}}" [checked]="hasArtifactOf(project)" id="{{project}}"
-                     (click)="toggleProject(project)"
+                     value="{{project}}" [checked]="hasArtifactOf(project.name)" id="{{project}}"
+                     (click)="toggleProject(project.name)"
               >
               <label class="form-check-label" for="{{project}}">
-                {{project}}
+                {{project.name}}
               </label>
             </div>
           </div>
@@ -69,7 +69,7 @@ import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} fro
                   <select class="form-control form-control-sm" name="branch_{{i}}"
                           [(ngModel)]="artifact.branch"
                   >
-                    <option *ngFor="let b of projects.projectBranches[artifact.project]" [value]="b">{{b}}</option>
+                    <option *ngFor="let b of projects.projectBranches[artifact.project]" [value]="b.name">{{b.name}}</option>
                   </select>
                 </div>
 

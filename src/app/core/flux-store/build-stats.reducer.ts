@@ -3,7 +3,6 @@ import {createReducer, on} from '@ngrx/store';
 import {buildStatsLoaded} from './build-stats.actions';
 
 export const EMPTY_BUILD_STATS: IBuildStats = {
-  environments: [],
   numberOfLabels: 0,
   numberOfBuilds: 0
 }

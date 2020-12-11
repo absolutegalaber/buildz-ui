@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Buildz} from '../core/flux-store/model';
-import {buildStats, environmentNames, projectNames} from '../core/flux-store/selectors';
+import {Buildz, IProject} from '../core/flux-store/model';
+import {buildStats, environmentNames, theProjects} from '../core/flux-store/selectors';
 import {Observable} from 'rxjs';
 import {loadEnvironmentBuilds} from '../core/flux-store/environment.actions';
 import {BuildsOfEnvironmentDialog} from '../presentational-ui/components/builds-of-environment.dialog';
@@ -20,7 +20,7 @@ import {BuildsOfEnvironmentDialog} from '../presentational-ui/components/builds-
 
       <div class="col-6">
         <bz-project-list
-          [projects]="projectNames | async"
+          [projects]="projects | async"
           (projectSelected)="showBuildzOf($event)"
         ></bz-project-list>
       </div>
@@ -36,12 +36,12 @@ import {BuildsOfEnvironmentDialog} from '../presentational-ui/components/builds-
   `
 })
 export class HomePage {
-  projectNames: Observable<string[]> = this.store.pipe(select(projectNames))
+  projects: Observable<IProject[]> = this.store.pipe(select(theProjects))
   environmentNames = this.store.pipe(select(environmentNames))
   stats = this.store.pipe(select(buildStats))
 
-  showBuildzOf(project: string) {
-    this.router.navigate(['/builds-of/', project])
+  showBuildzOf(project: IProject) {
+    this.router.navigate(['/builds-of/', project.name])
   }
 
   showBuildsOf(environmentName: string) {

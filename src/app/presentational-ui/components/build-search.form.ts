@@ -14,7 +14,7 @@ import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '..
             <div class="form-group">
               <select class="form-control form-control-sm" [(ngModel)]="theSearch.project" name="project" (change)="updateSearchParams.emit(theSearch)">
                 <option value="">All Projects</option>
-                <option *ngFor="let p of projects.projects" [value]="p">{{p}}</option>
+                <option *ngFor="let p of projects.projects" [value]="p.name">{{p.name}}</option>
               </select>
             </div>
           </div>
@@ -40,7 +40,7 @@ import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '..
             <div class="form-group">
               <select class="form-control form-control-sm" [(ngModel)]="theSearch.branch" name="branch" (ngModelChange)="updateSearchParams.emit(theSearch)">
                 <option value="">All Branches</option>
-                <option *ngFor="let b of projects.projectBranches[theSearch.project]" [value]="b">{{b}}</option>
+                <option *ngFor="let b of projects.projectBranches[theSearch.project]" [value]="b.name">{{b.name}}</option>
               </select>
             </div>
           </div>

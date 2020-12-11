@@ -7,8 +7,6 @@ export const INITIAL_PROJECTS: IProjects = {
   projectBranches: {},
   labelKeys: [],
   inactiveIncluded: false,
-  currentProject: '',
-  currentBranch: ''
 }
 
 export const _projectsReducer = createReducer(
@@ -27,14 +25,11 @@ export const _projectsReducer = createReducer(
       inactiveIncluded: !state.inactiveIncluded
     }
   }),
-  on(selectProject, (state: IProjects, {projectName}) => {
-    return {
-      ...state, currentProject: projectName,
-      branchesOf: state.projectBranches[projectName]
-    }
+  on(selectProject, (state: IProjects, {project}) => {
+    return {...state, currentProject: project}
   }),
-  on(selectBranch, (state: IProjects, {branchName}) => {
-    return {...state, currentBranch: branchName}
+  on(selectBranch, (state: IProjects, {branch}) => {
+    return {...state, currentBranch: branch}
   })
 )
 
