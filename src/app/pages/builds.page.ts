@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Buildz, IBuildSearchParams} from '../core/flux-store/model';
 import {buildSearchParams, buildSearchResult, projects} from '../core/flux-store/selectors';
-import {updateSearchParams} from '../core/flux-store/build-search.actions';
+import {resetSearchParams, updateSearchParams} from '../core/flux-store/build-search.actions';
 
 @Component({
   template: `
@@ -14,6 +14,7 @@ import {updateSearchParams} from '../core/flux-store/build-search.actions';
             [theSearchResult]="searchResult | async"
             [projects]="projects | async"
             (updateSearchParams)="updateSearchParams($event)"
+            (resetSearch)="resetSearch()"
           >
           </bz-build-search-form>
         </div>
@@ -35,6 +36,10 @@ export class BuildsPage {
 
   updateSearchParams(search: IBuildSearchParams) {
     this.store.dispatch(updateSearchParams({search}))
+  }
+
+  resetSearch() {
+    this.store.dispatch(resetSearchParams())
   }
 
   constructor(private store: Store<Buildz>) {

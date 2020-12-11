@@ -1,5 +1,5 @@
 import {createReducer, on} from '@ngrx/store';
-import {buildSearchLoaded, searchBuildsOfProject, updateSearchParams} from './build-search.actions';
+import {buildSearchLoaded, resetSearchParams, searchBuildsOfProject, updateSearchParams} from './build-search.actions';
 import {IBuilds, IBuildSearchResult} from './model';
 import {deepClone} from '../util/deep-clone';
 
@@ -24,6 +24,7 @@ export const _buildSearchReducer = createReducer(
   on(updateSearchParams, (state: IBuilds, {search}) => {
     return {...state, search: search}
   }),
+  on(resetSearchParams, (state: IBuilds) => INITIAL_BUILD_SEARCH),
   on(searchBuildsOfProject, (state: IBuilds, {project}) => {
     let toReturn: IBuilds = deepClone(state)
     toReturn.search.project = project

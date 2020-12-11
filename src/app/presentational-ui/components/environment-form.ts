@@ -42,10 +42,10 @@ import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} fro
           <div class="col-2" *ngFor="let project of projects.projects">
             <div class="form-check align-middle">
               <input class="form-check-input" type="checkbox"
-                     value="{{project}}" [checked]="hasArtifactOf(project.name)" id="{{project}}"
+                     value="{{project.name}}" [checked]="hasArtifactOf(project.name)" id="{{project.name}}"
                      (click)="toggleProject(project.name)"
               >
-              <label class="form-check-label" for="{{project}}">
+              <label class="form-check-label" for="{{project.name}}">
                 {{project.name}}
               </label>
             </div>
