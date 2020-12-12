@@ -2,8 +2,8 @@ import {Component, EventEmitter} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {Buildz, IBuildLabel, IProjects} from '../../core/flux-store/model';
-import {projects} from '../../core/flux-store/selectors';
+import {Buildz, IBuildLabel, IProjects} from '../core/flux-store/model';
+import {theProjectsState} from '../core/flux-store/selectors';
 
 @Component({
   selector: 'bz-add-label-dialog',
@@ -42,7 +42,7 @@ import {projects} from '../../core/flux-store/selectors';
   `
 })
 export class AddLabelDialog {
-  projects: Observable<IProjects> = this.store.pipe(select(projects))
+  projects: Observable<IProjects> = this.store.pipe(select(theProjectsState))
   newLabel: IBuildLabel = {
     key: '',
     value: ''

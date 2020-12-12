@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {loadProjects, projectsLoaded, toggleCurrentBranchActive, toggleCurrentProjectActive, toggleInactiveProjectsVisible} from './projects.actions';
+import {loadProjects, projectsLoaded, setProjectActive, setProjectBranchActive, toggleInactiveProjectsVisible} from './projects.actions';
 import {HttpClient} from '@angular/common/http';
 import {Buildz, IProjectsResponse} from './model';
 import {catchError, exhaustMap, map, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
-import {currentProject, includeInactiveProjects, selectedProjectAndBranch} from './selectors';
+import {includeInactiveProjects} from './selectors';
 import {backendErrorOccurred, frontendInfo} from './alert.actions';
 import {of} from 'rxjs';
 
@@ -18,22 +18,18 @@ export class ProjectsEffects {
     withLatestFrom(this.store.pipe(select(includeInactiveProjects))),
     switchMap(([action, includingInactive]) => this.http.get<IProjectsResponse>(`/api/v1/projects?include-inactive=${includingInactive}`).pipe(
       map((data: IProjectsResponse) => projectsLoaded({projectsResponse: data})),
-      catchError(err => of(backendErrorOccurred(err)))
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
       )
     )
   ))
 
   // noinspection JSUnusedLocalSymbols
   toggleProjectActive = createEffect(() => this.actions$.pipe(
-    ofType(toggleCurrentProjectActive),
-    withLatestFrom(this.store.pipe(select(currentProject))),
-    map(([action, project]) => {
-      return {
-        projectName: project.name,
-        active: !project.active
-      }
-    }),
-    exhaustMap((projectStatus) => this.http.post<void>(`/api/v1/projects/project-branch-activa`, {...projectStatus}).pipe(
+    ofType(setProjectActive),
+    exhaustMap((action) => this.http.post<void>(`/api/v1/projects/project-branch-active`, {
+        projectName: action.project.name,
+        active: !action.project.active,
+      }).pipe(
       mergeMapTo([
         loadProjects(),
         frontendInfo({
@@ -43,23 +39,19 @@ export class ProjectsEffects {
           }
         })
       ]),
-      catchError(err => of(backendErrorOccurred(err)))
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
       )
     )
   ))
 
   // noinspection JSUnusedLocalSymbols
   toggleBranchActive$ = createEffect(() => this.actions$.pipe(
-    ofType(toggleCurrentBranchActive),
-    withLatestFrom(this.store.pipe(select(selectedProjectAndBranch))),
-    map(([action, projectAndBranch]) => {
-      return {
-        projectName: projectAndBranch.project.name,
-        branch: projectAndBranch.branch.name,
-        active: !projectAndBranch.branch.active
-      }
-    }),
-    exhaustMap((projectAndBranchStatus) => this.http.post<void>(`/api/v1/projects/project-branch-activa`, {...projectAndBranchStatus}).pipe(
+    ofType(setProjectBranchActive),
+    exhaustMap((action) => this.http.post<void>(`/api/v1/projects/project-branch-active`, {
+        projectName: action.projectBranch.projectName,
+        branchName: action.projectBranch.branchName,
+        active: !action.projectBranch.active,
+      }).pipe(
       mergeMapTo([
         loadProjects(),
         frontendInfo({
@@ -69,7 +61,7 @@ export class ProjectsEffects {
           }
         })
       ]),
-      catchError(err => of(backendErrorOccurred(err)))
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
       )
     )
   ))

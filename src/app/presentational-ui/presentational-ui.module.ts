@@ -14,12 +14,11 @@ import {AlertPanel} from './components/alert.panel';
 import {BuildsAccordion} from './components/builds.accordion';
 import {ProjectList} from './components/project.list';
 import {EnvironmentList} from './components/environment.list';
-import {BuildsOfEnvironmentDialog} from './components/builds-of-environment.dialog';
-import {AddLabelDialog} from './components/add-label.dialog';
 import {BranchList} from './components/branch.list';
 import {SetActivationPanel} from './components/set-activation.panel';
 import {DeadCenterComponent} from './components/dead-center.component';
 import {ProjectAccordion} from './components/project.accordion';
+import {IsVisibleIcon} from './components/is-visible.icon';
 
 const reExports = [
   CoreModule,
@@ -41,11 +40,10 @@ const declarations = [
   BuildsAccordion,
   ProjectList,
   EnvironmentList,
-  BuildsOfEnvironmentDialog,
-  AddLabelDialog,
   BranchList,
   SetActivationPanel,
-  ProjectAccordion
+  ProjectAccordion,
+  IsVisibleIcon
 ]
 
 @NgModule({

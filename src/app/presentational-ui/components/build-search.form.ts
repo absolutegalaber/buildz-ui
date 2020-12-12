@@ -1,6 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AddLabelDialog} from './add-label.dialog';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../../core/flux-store/model';
 
 @Component({
@@ -54,7 +52,7 @@ import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '..
           </div>
 
           <div class="col-4 text-center">
-            <button class="btn btn-sm btn-secondary mx-2" (click)="openAddLabelDialog()">
+            <button class="btn btn-sm btn-secondary mx-2" (click)="addSearchLabel.emit()">
               <fa-icon icon="plus"></fa-icon>
               Add Label
             </button>
@@ -87,7 +85,7 @@ import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '..
           </div>
 
           <div class="col-4">
-            <button class="btn btn-sm btn-danger" (click)="deleteLabel(label.key)">
+            <button class="btn btn-sm btn-danger" (click)="removeSearchLabel.emit({key:label.key, value:label.value})">
               <fa-icon icon="backspace"></fa-icon>
             </button>
           </div>
@@ -106,7 +104,9 @@ export class BuildSearchForm {
   @Output()
   resetSearch = new EventEmitter<void>();
   @Output()
-  clearLabels = new EventEmitter<string>();
+  addSearchLabel = new EventEmitter<void>();
+  @Output()
+  removeSearchLabel = new EventEmitter<IBuildLabel>();
   @Output()
   updateSearchParams = new EventEmitter<IBuildSearchParams>();
 
@@ -114,24 +114,11 @@ export class BuildSearchForm {
     return (this.theSearch && this.theSearch.labels && (Object.keys(this.theSearch.labels).length > 0));
   }
 
-  openAddLabelDialog() {
-    let ref = this.modal.open(AddLabelDialog);
-    ref.result.then((theNewLabel: IBuildLabel) => {
-      this.theSearch.labels[theNewLabel.key] = theNewLabel.value
-      this.updateSearchParams.emit(this.theSearch)
-    })
-  }
-
-  deleteLabel(key: string) {
-    delete this.theSearch.labels[key]
-    this.updateSearchParams.emit(this.theSearch)
-  }
-
   toPage(page: number) {
     this.theSearch.page = (page - 1)
     this.updateSearchParams.emit(this.theSearch)
   }
 
-  constructor(private modal: NgbModal) {
+  constructor() {
   }
 }

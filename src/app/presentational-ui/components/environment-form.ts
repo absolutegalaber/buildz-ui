@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {AddLabelDialog} from './add-label.dialog';
-import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} from '../../core/flux-store/model';
+import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-environment-form',
@@ -28,7 +26,7 @@ import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} fro
                 <fa-icon icon="check"></fa-icon>
                 Verify
               </button>
-              <button class="btn btn-primary" [disabled]="!environmentForm.valid" (click)="save.emit()">
+              <button class="btn btn-primary" [disabled]="!environmentForm.valid" (click)="save.emit(environment)">
                 <fa-icon icon="save"></fa-icon>
                 Save
               </button>
@@ -84,12 +82,12 @@ import {IArtifact, IBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} fro
                   </div>
 
                   <div class="col-3 text-left align-content-center">
-                    <button class="btn btn-sm btn-danger" (click)="removeLabel(artifact.project, currentLabel.key)">X</button>
+                    <button class="btn btn-sm btn-danger" (click)="removeLabel.emit({projectName: artifact.project, key: currentLabel.key, value: currentLabel.value})">X</button>
                   </div>
 
                 </div>
 
-                <button class="btn btn-sm btn-secondary align-self-end" (click)="openAddLabelDialog(artifact.project)">Add Label</button>
+                <button class="btn btn-sm btn-secondary align-self-end" (click)="addLabel.emit(artifact.project)">Add Label</button>
               </fieldset>
 
             </div>
@@ -138,24 +136,13 @@ export class EnvironmentForm {
   @Output()
   update = new EventEmitter<IEnvironment>();
   @Output()
-  save = new EventEmitter<void>();
+  save = new EventEmitter<IEnvironment>();
   @Output()
   delete = new EventEmitter<void>();
-
-  openAddLabelDialog(projectName: string) {
-    let ref = this.modal.open(AddLabelDialog);
-    ref.result.then((theNewLabel: IBuildLabel) => {
-      let artifact = this.artifactOf(this.environment, projectName)
-      artifact.labels[theNewLabel.key] = theNewLabel.value
-    })
-  }
-
-  removeLabel(projectName: string, labelKey: string) {
-    let artifact = this.artifactOf(this.environment, projectName)
-    if (!!artifact) {
-      delete artifact.labels[labelKey]
-    }
-  }
+  @Output()
+  addLabel = new EventEmitter<string>();
+  @Output()
+  removeLabel = new EventEmitter<IArtifactBuildLabel>();
 
   hasArtifactOf(projectName: string): boolean {
     return !!this.artifactOf(this.environment, projectName)
@@ -188,6 +175,6 @@ export class EnvironmentForm {
     return environment.artifacts.find((artifact: IArtifact) => artifact.project == project);
   }
 
-  constructor(private modal: NgbModal) {
+  constructor() {
   }
 }

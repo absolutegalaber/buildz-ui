@@ -51,6 +51,12 @@ export interface IBuildLabel {
   value: string
 }
 
+export interface IArtifactBuildLabel {
+  projectName: string
+  key: string
+  value: string
+}
+
 export interface IBuild {
   id: number
   project: string
@@ -75,6 +81,12 @@ export interface IProject {
 
 export interface IBranch {
   name: string
+  active: boolean
+}
+
+export interface IProjectBranch {
+  projectName: string
+  branchName: string
   active: boolean
 }
 

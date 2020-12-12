@@ -10,7 +10,7 @@ import {NewEnvironmentGuard} from './guards/new-environment-guard';
 import {NotFoundGuard} from './guards/not-found.guard';
 import {ManagementPage} from './pages/management.page';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBackspace, faCheck, faCogs, faPlus, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
+import {faBackspace, faCheck, faCogs, faEye, faEyeSlash, faPlus, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
 import {Store, StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProjectsEffects} from './core/flux-store/projects.effects';
@@ -24,6 +24,9 @@ import {BuildStatsEffects} from './core/flux-store/build-stats.effects';
 import {EnvironmentEffects} from './core/flux-store/environment.effects';
 import {PresentationalUiModule} from './presentational-ui/presentational-ui.module';
 import {loadKnownEnvironments} from './core/flux-store/environment.actions';
+import {AddLabelDialog} from './dialogs/add-label.dialog';
+import {BuildsOfEnvironmentDialog} from './dialogs/builds-of-environment.dialog';
+import {ConfirmDialog} from './dialogs/confirm.dialog';
 
 let pages = [
   HomePage,
@@ -31,11 +34,17 @@ let pages = [
   EnvironmentPage,
   ManagementPage
 ]
+let dialogs = [
+  AddLabelDialog,
+  BuildsOfEnvironmentDialog,
+  ConfirmDialog
+]
 
 @NgModule({
   declarations: [
     AppComponent,
-    ...pages
+    ...pages,
+    ...dialogs
   ],
   imports: [
     BrowserModule,
@@ -64,7 +73,7 @@ export class AppModule {
     store.dispatch(loadBuildStats())
     store.dispatch(loadKnownEnvironments())
     library.addIcons(
-      faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync
+      faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync, faEye, faEyeSlash
     )
   }
 }

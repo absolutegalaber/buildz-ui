@@ -10,6 +10,7 @@ export const INITIAL_ALERT: IAlert = {
 export const _alertReducer = createReducer(
   INITIAL_ALERT,
   on(backendErrorOccurred, (state: IAlert, {errorResponse}) => {
+    console.log(errorResponse)
     if (!!errorResponse?.error) {
       return {
         type: 'danger',
@@ -20,7 +21,7 @@ export const _alertReducer = createReducer(
       return {
         type: 'danger',
         heading: `Unexpected Error: ${errorResponse?.status}`,
-        message: errorResponse.statusText
+        message: errorResponse?.statusText
       }
     }
   }),

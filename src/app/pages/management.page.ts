@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Buildz, IBranch, IProject} from '../core/flux-store/model';
-import {selectBranch, selectProject, toggleCurrentBranchActive, toggleCurrentProjectActive, toggleInactiveProjectsVisible} from '../core/flux-store/projects.actions';
-import {currentProjectWithBranches, includeInactiveProjects, selectedProjectAndBranch, theProjects} from '../core/flux-store/selectors';
+import {Buildz, IProject, IProjectBranch} from '../core/flux-store/model';
+import {setProjectActive, setProjectBranchActive, toggleInactiveProjectsVisible} from '../core/flux-store/projects.actions';
+import {includeInactiveProjects, theCurrentProjectWithBranches, theProjects, theSelectedProjectAndBranch} from '../core/flux-store/selectors';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConfirmDialog} from '../dialogs/confirm.dialog';
 
 @Component({
   template: `
@@ -16,20 +18,13 @@ import {currentProjectWithBranches, includeInactiveProjects, selectedProjectAndB
       </div>
     </div>
     <div class="row mt-2">
-      <div class="col-8">
+      <div class="col-10 offset-1">
         <bz-project-accordion
           [projects]="projectData | async"
-          (projectSelected)="selectCurrentProject($event)"
-          (branchSelected)="selectCurrentBranch($event)"
+          (projectSelected)="toggleCurrentProject($event)"
+          (branchSelected)="toggleCurrentBranch($event)"
         >
         </bz-project-accordion>
-      </div>
-      <div class="col-4">
-        <bz-set-active
-          [selectedProjectAndBranch]="selectedProjectAndBranch | async"
-          (toggleProjectActive)="toggleCurrentProject()"
-          (toggleBranchActive)="toggleCurrentBranch()"
-        ></bz-set-active>
       </div>
     </div>
   `
@@ -37,30 +32,32 @@ import {currentProjectWithBranches, includeInactiveProjects, selectedProjectAndB
 export class ManagementPage {
   projectData = this.store.pipe(select((state: Buildz) => state.projects))
   projects = this.store.pipe(select(theProjects))
-  currentProjectWithBranches = this.store.pipe(select(currentProjectWithBranches))
+  currentProjectWithBranches = this.store.pipe(select(theCurrentProjectWithBranches))
   inactiveProjectsIncluded = this.store.pipe(select(includeInactiveProjects))
-  selectedProjectAndBranch = this.store.pipe(select(selectedProjectAndBranch))
+  selectedProjectAndBranch = this.store.pipe(select(theSelectedProjectAndBranch))
 
   toggleInactiveProjects() {
     this.store.dispatch(toggleInactiveProjectsVisible())
   }
 
-  selectCurrentProject(project: IProject) {
-    this.store.dispatch(selectProject({project}))
+  toggleCurrentProject(project: IProject) {
+    let question = `Are you sure you want to ${project.active ? 'HIDE' : 'SHOW'} the project <b>'${project.name}'</b>.`
+    let confirmation = this.ngbModal.open(ConfirmDialog)
+    confirmation.componentInstance.question = question
+    confirmation.result.then(() => {
+      this.store.dispatch(setProjectActive({project}))
+    })
   }
 
-  selectCurrentBranch(branch: IBranch) {
-    this.store.dispatch(selectBranch({branch}))
+  toggleCurrentBranch(projectBranch: IProjectBranch) {
+    let question = `Are you sure you want to ${projectBranch.active ? 'HIDE' : 'SHOW'} the project '<b>${projectBranch.branchName}</b>' of project '<b>${projectBranch.projectName}</b>'.`
+    let confirmation = this.ngbModal.open(ConfirmDialog)
+    confirmation.componentInstance.question = question
+    confirmation.result.then(() => {
+      this.store.dispatch(setProjectBranchActive({projectBranch}))
+    })
   }
 
-  toggleCurrentProject() {
-    this.store.dispatch(toggleCurrentProjectActive())
-  }
-
-  toggleCurrentBranch() {
-    this.store.dispatch(toggleCurrentBranchActive())
-  }
-
-  constructor(private store: Store<Buildz>) {
+  constructor(private store: Store<Buildz>, private ngbModal: NgbModal) {
   }
 }

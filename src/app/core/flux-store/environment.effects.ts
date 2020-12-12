@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {HttpClient} from '@angular/common/http';
-import {deleteEnvironment, environmentBuildsLoaded, environmentSelected, knownEnvironmentsLoaded, loadEnvironmentBuilds, loadKnownEnvironments, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
-import {catchError, exhaustMap, map, mergeMap, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
+import {cloneCurrentEnvironment, deleteEnvironment, environmentBuildsLoaded, environmentSelected, environmentToCloneLoaded, knownEnvironmentsLoaded, loadEnvironmentBuilds, loadKnownEnvironments, loadSingleEnvironment, saveEnvironment, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
+import {catchError, exhaustMap, map, mergeMap, mergeMapTo, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Buildz, IEnvironment, IEnvironmentBuilds} from './model';
-import {Action, select, Store} from '@ngrx/store';
-import {currentEnvironment, verificationArtifacts} from './selectors';
+import {select, Store} from '@ngrx/store';
+import {theArtifactsToVerify, theCurrentEnvironmentName} from './selectors';
 import {of} from 'rxjs';
 import {backendErrorOccurred, frontendInfo} from './alert.actions';
-import {loadBuildStats} from './build-stats.actions';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class EnvironmentEffects {
@@ -28,7 +28,7 @@ export class EnvironmentEffects {
         environmentBuildsLoaded({environmentBuilds}),
         environmentSelected({environmentName: environmentBuilds.environment})]
       ),
-      catchError(err => of(backendErrorOccurred(err)))
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
     ))
   ))
 
@@ -37,26 +37,27 @@ export class EnvironmentEffects {
     map((action) => action.environmentName),
     switchMap((environmentName) => this.http.get<IEnvironment>(`/api/v1/environments/${environmentName}`).pipe(
       map((environment: IEnvironment) => singleEnvironmentLoaded({environment})),
-      catchError(err => of(backendErrorOccurred(err)))
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
     ))
   ))
 
   verifyBuildsOfEnv$ = createEffect(() => this.actions$.pipe(
     ofType(updateCurrentEnvironment),
-    withLatestFrom(this.store.pipe(select(verificationArtifacts))),
+    withLatestFrom(this.store.pipe(select(theArtifactsToVerify))),
     switchMap(([action, artifacts]) => this.http.post<IEnvironmentBuilds>(`/api/v1/environments/verify-artifacts`, artifacts).pipe(
       map((environmentBuilds: IEnvironmentBuilds) => environmentBuildsLoaded({environmentBuilds})),
-      catchError(err => of(backendErrorOccurred(err)))
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
     ))
   ))
 
   saveEnvironment$ = createEffect(() => this.actions$.pipe(
     ofType(saveEnvironment),
-    withLatestFrom(this.store.pipe(select(currentEnvironment))),
-    switchMap(([action, environment]: [Action, IEnvironment]) => this.http.post<IEnvironment>(`/api/v1/environments`, environment).pipe(
+    switchMap((action) => this.http.post<IEnvironment>(`/api/v1/environments`, {
+      ...action.environment
+    }).pipe(
       mergeMap((environment: IEnvironment) => [
         singleEnvironmentLoaded({environment}),
-        loadBuildStats(),
+        loadKnownEnvironments(),
         frontendInfo({
           alertMessage: {
             heading: 'Environment Saved',
@@ -64,28 +65,41 @@ export class EnvironmentEffects {
           }
         })
       ]),
-      catchError(err => of(backendErrorOccurred(err)))
+      tap(() => this.router.navigate([''])),
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
     ))
   ))
 
   deleteEnvironment$ = createEffect(() => this.actions$.pipe(
     ofType(deleteEnvironment),
-    withLatestFrom(this.store.pipe(select(currentEnvironment))),
-    switchMap(([action, environment]: [Action, IEnvironment]) => this.http.delete(`/api/v1/environments/${environment.name}`).pipe(
+    withLatestFrom(this.store.pipe(select(theCurrentEnvironmentName))),
+    switchMap(([action, environmentName]) => this.http.delete(`/api/v1/environments/${environmentName}`).pipe(
       mergeMapTo([
           frontendInfo({
             alertMessage: {
               heading: 'Environment Deleted',
-              message: `Successfully deleted the Environment with name='${environment.name}'`
+              message: `Successfully deleted the Environment with name='${environmentName}'`
             }
           }),
-          loadBuildStats()
+          loadKnownEnvironments()
         ]
       ),
-      catchError(err => of(backendErrorOccurred(err)))
+      tap(() => this.router.navigate([''])),
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
     ))
   ))
 
-  constructor(private actions$: Actions, private http: HttpClient, private store: Store<Buildz>) {
+  cloneEnvironment$ = createEffect(() => this.actions$.pipe(
+    ofType(cloneCurrentEnvironment),
+    withLatestFrom(this.store.select(theCurrentEnvironmentName)),
+    map(([action, environmentName]) => environmentName),
+    exhaustMap((environmentName) => this.http.get<IEnvironment>(`/api/v1/environments/${environmentName}`).pipe(
+      map((environment: IEnvironment) => environmentToCloneLoaded({environment})),
+      tap(() => this.router.navigate(['new-environment'])),
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
+    ))
+  ))
+
+  constructor(private actions$: Actions, private http: HttpClient, private store: Store<Buildz>, private router: Router) {
   }
 }

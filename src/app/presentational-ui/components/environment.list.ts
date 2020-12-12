@@ -10,7 +10,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
       >
         {{environment}}
       </button>
-      <button class="list-group-item list-group-item-action list-group-item-secondary text-right" [routerLink]="['/new-environment']">
+      <button class="list-group-item list-group-item-action list-group-item-secondary text-right" (click)="newEnvironment.emit()">
         <fa-icon icon="plus"></fa-icon>
         New Env
       </button>
@@ -22,4 +22,6 @@ export class EnvironmentList {
   environments: string[] = [];
   @Output()
   environmentSelected = new EventEmitter<string>();
+  @Output()
+  newEnvironment = new EventEmitter<void>();
 }

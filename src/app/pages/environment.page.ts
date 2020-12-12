@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Buildz, IEnvironment} from '../core/flux-store/model';
-import {currentEnvironment, environmentBuilds, projects} from '../core/flux-store/selectors';
-import {deleteEnvironment, saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
+import {Buildz, IArtifactBuildLabel, IBuildLabel, IEnvironment} from '../core/flux-store/model';
+import {theCurrentEnvironment, theEnvironmentBuilds, theProjectsState} from '../core/flux-store/selectors';
+import {addArtifactLabel, deleteEnvironment, removeArtifactLabel, saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AddLabelDialog} from '../dialogs/add-label.dialog';
 
 @Component({
   template: `
@@ -13,8 +15,10 @@ import {deleteEnvironment, saveEnvironment, updateCurrentEnvironment} from '../c
           [verificationResult]="environmentBuilds | async"
           [projects]="projects | async"
           (update)="updateEnvironment($event)"
-          (save)="saveEnvironment()"
+          (save)="saveEnvironment($event)"
           (delete)="deleteEnvironment()"
+          (addLabel)="addLabel($event)"
+          (removeLabel)="removeLabel($event)"
         >
         </bz-environment-form>
       </div>
@@ -22,22 +26,39 @@ import {deleteEnvironment, saveEnvironment, updateCurrentEnvironment} from '../c
   `
 })
 export class EnvironmentPage {
-  environment = this.store.pipe(select(currentEnvironment))
-  environmentBuilds = this.store.pipe(select(environmentBuilds))
-  projects = this.store.pipe(select(projects))
+  environment = this.store.pipe(select(theCurrentEnvironment))
+  environmentBuilds = this.store.pipe(select(theEnvironmentBuilds))
+  projects = this.store.pipe(select(theProjectsState))
 
   updateEnvironment(environment: IEnvironment) {
     this.store.dispatch(updateCurrentEnvironment({environment}))
   }
 
-  saveEnvironment() {
-    this.store.dispatch(saveEnvironment())
+  saveEnvironment(environment: IEnvironment) {
+    this.store.dispatch(saveEnvironment({environment}))
   }
 
   deleteEnvironment() {
     this.store.dispatch(deleteEnvironment())
   }
 
-  constructor(private store: Store<Buildz>) {
+  addLabel(projectName: string) {
+    let ref = this.modal.open(AddLabelDialog);
+    ref.result.then((theNewLabel: IBuildLabel) => {
+      this.store.dispatch(addArtifactLabel({
+        label: {
+          projectName: projectName,
+          key: theNewLabel.key,
+          value: theNewLabel.value
+        }
+      }))
+    })
+  }
+
+  removeLabel(label: IArtifactBuildLabel) {
+    this.store.dispatch(removeArtifactLabel({label}))
+  }
+
+  constructor(private store: Store<Buildz>, private modal: NgbModal) {
   }
 }

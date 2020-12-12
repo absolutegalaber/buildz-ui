@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Buildz} from './core/flux-store/model';
-import {currentAlert} from './core/flux-store/selectors';
+import {theCurrentAlert} from './core/flux-store/selectors';
 import {clearAlert} from './core/flux-store/alert.actions';
 
 @Component({
@@ -15,7 +15,7 @@ import {clearAlert} from './core/flux-store/alert.actions';
   `
 })
 export class AppComponent {
-  alert = this.store.pipe(select(currentAlert))
+  alert = this.store.pipe(select(theCurrentAlert))
 
   clearAlert() {
     this.store.dispatch(clearAlert())

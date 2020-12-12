@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Buildz, IBuildSearchParams} from '../core/flux-store/model';
-import {buildSearchParams, buildSearchResult, projects} from '../core/flux-store/selectors';
-import {resetSearchParams, updateSearchParams} from '../core/flux-store/build-search.actions';
+import {Buildz, IBuildLabel, IBuildSearchParams} from '../core/flux-store/model';
+import {theBuildSearchParams, theBuildSearchResult, theProjectsState} from '../core/flux-store/selectors';
+import {addSearchLabel, removeSearchLabel, resetSearchParams, updateSearchParams} from '../core/flux-store/build-search.actions';
+import {AddLabelDialog} from '../dialogs/add-label.dialog';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   template: `
@@ -15,6 +17,8 @@ import {resetSearchParams, updateSearchParams} from '../core/flux-store/build-se
             [projects]="projects | async"
             (updateSearchParams)="updateSearchParams($event)"
             (resetSearch)="resetSearch()"
+            (addSearchLabel)="openAddLabelDialog()"
+            (removeSearchLabel)="removeSearchLabel($event)"
           >
           </bz-build-search-form>
         </div>
@@ -30,9 +34,9 @@ import {resetSearchParams, updateSearchParams} from '../core/flux-store/build-se
   `
 })
 export class BuildsPage {
-  search = this.store.pipe(select(buildSearchParams))
-  searchResult = this.store.pipe(select(buildSearchResult))
-  projects = this.store.pipe(select(projects))
+  search = this.store.pipe(select(theBuildSearchParams))
+  searchResult = this.store.pipe(select(theBuildSearchResult))
+  projects = this.store.pipe(select(theProjectsState))
 
   updateSearchParams(search: IBuildSearchParams) {
     this.store.dispatch(updateSearchParams({search}))
@@ -42,6 +46,17 @@ export class BuildsPage {
     this.store.dispatch(resetSearchParams())
   }
 
-  constructor(private store: Store<Buildz>) {
+  openAddLabelDialog() {
+    let ref = this.modal.open(AddLabelDialog);
+    ref.result.then((label: IBuildLabel) => {
+      this.store.dispatch(addSearchLabel({label}))
+    })
+  }
+
+  removeSearchLabel(label: IBuildLabel) {
+    this.store.dispatch(removeSearchLabel({label}))
+  }
+
+  constructor(private store: Store<Buildz>, private modal: NgbModal) {
   }
 }
