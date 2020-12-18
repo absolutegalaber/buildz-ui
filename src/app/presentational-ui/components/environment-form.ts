@@ -41,7 +41,7 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
             <div class="form-check align-middle">
               <input class="form-check-input" type="checkbox"
                      value="{{project.name}}" [checked]="hasArtifactOf(project.name)" id="{{project.name}}"
-                     (click)="toggleProject(project.name)"
+                     (click)="toggleProject.emit(project.name)"
               >
               <label class="form-check-label" for="{{project.name}}">
                 {{project.name}}
@@ -140,6 +140,8 @@ export class EnvironmentForm {
   @Output()
   delete = new EventEmitter<void>();
   @Output()
+  toggleProject = new EventEmitter<string>();
+  @Output()
   addLabel = new EventEmitter<string>();
   @Output()
   removeLabel = new EventEmitter<IArtifactBuildLabel>();
@@ -156,19 +158,6 @@ export class EnvironmentForm {
       return this.verificationResult?.builds[projectName]
     }
     return null;
-  }
-
-  toggleProject(project: string) {
-    let a = this.artifactOf(this.environment, project)
-    if (!!a) {
-      this.environment.artifacts = this.environment.artifacts.filter((a) => a.project != project)
-    } else {
-      this.environment.artifacts.push({
-        project: project,
-        branch: '',
-        labels: {},
-      })
-    }
   }
 
   artifactOf(environment: IEnvironment, project: string): IArtifact {

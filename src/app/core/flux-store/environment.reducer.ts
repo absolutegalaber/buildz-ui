@@ -1,5 +1,5 @@
 import {createReducer, on} from '@ngrx/store';
-import {addArtifactLabel, environmentBuildsLoaded, environmentSelected, environmentToCloneLoaded, knownEnvironmentsLoaded, newEnvironment, removeArtifactLabel, singleEnvironmentLoaded, updateCurrentEnvironment} from './environment.actions';
+import {addArtifactLabel, environmentBuildsLoaded, environmentSelected, environmentToCloneLoaded, knownEnvironmentsLoaded, newEnvironment, removeArtifactLabel, singleEnvironmentLoaded, toggleArtifactOfEnvironment, updateCurrentEnvironment} from './environment.actions';
 import {IArtifact, IEnvironment, IEnvironments} from './model';
 import {deepClone} from '../util/deep-clone';
 
@@ -45,6 +45,20 @@ export const _environmentReducer = createReducer(
         labels: artifact.labels
       }
     })
+    return newState
+  }),
+  on(toggleArtifactOfEnvironment, (state: IEnvironments, {projectName}) => {
+    let newState: IEnvironments = deepClone(state)
+    let a = newState.currentEnvironment.artifacts.find((artifact: IArtifact) => artifact.project == projectName)
+    if (!!a) {
+      newState.currentEnvironment.artifacts = newState.currentEnvironment.artifacts.filter((a) => a.project != projectName)
+    } else {
+      newState.currentEnvironment.artifacts.push({
+        project: projectName,
+        branch: '',
+        labels: {},
+      })
+    }
     return newState
   }),
   on(addArtifactLabel, (state: IEnvironments, {label}) => {

@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Buildz, IArtifactBuildLabel, IBuildLabel, IEnvironment} from '../core/flux-store/model';
 import {theCurrentEnvironment, theEnvironmentBuilds, theProjectsState} from '../core/flux-store/selectors';
-import {addArtifactLabel, deleteEnvironment, removeArtifactLabel, saveEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
+import {addArtifactLabel, deleteEnvironment, removeArtifactLabel, saveEnvironment, toggleArtifactOfEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AddLabelDialog} from '../dialogs/add-label.dialog';
 
@@ -17,6 +17,7 @@ import {AddLabelDialog} from '../dialogs/add-label.dialog';
           (update)="updateEnvironment($event)"
           (save)="saveEnvironment($event)"
           (delete)="deleteEnvironment()"
+          (toggleProject)="toggleProject($event)"
           (addLabel)="addLabel($event)"
           (removeLabel)="removeLabel($event)"
         >
@@ -40,6 +41,10 @@ export class EnvironmentPage {
 
   deleteEnvironment() {
     this.store.dispatch(deleteEnvironment())
+  }
+
+  toggleProject(projectName: string) {
+    this.store.dispatch(toggleArtifactOfEnvironment({projectName}))
   }
 
   addLabel(projectName: string) {
