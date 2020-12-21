@@ -5,8 +5,9 @@ import {IBuildStats} from '../../core/flux-store/model';
   selector: 'bz-stats',
   template: `
     <h4>
-      <b>{{stats.numberOfBuilds}}</b> Builds.&nbsp;
+      <b>{{stats.numberOfBuilds}}</b> Builds.
       <b>{{stats.numberOfLabels}}</b> Labels.
+      <b>{{stats.numberOfDeploys}}</b> Deploys.
     </h4>
   `
 })

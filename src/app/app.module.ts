@@ -27,18 +27,25 @@ import {loadKnownEnvironments} from './core/flux-store/environment.actions';
 import {AddLabelDialog} from './dialogs/add-label.dialog';
 import {BuildsOfEnvironmentDialog} from './dialogs/builds-of-environment.dialog';
 import {ConfirmDialog} from './dialogs/confirm.dialog';
+// Server related actions and effects
+import { LOAD_KNOWN_SERVERS } from './core/flux-store/server.actions';
+import { ServersEffects } from './core/flux-store/servers.effects';
+// Deploy related components
+import {DeploysPage} from './pages/deploys.page';
+import {LoadDeploysGuard} from './guards/load-deploys.guard';
 
-let pages = [
+const pages = [
   HomePage,
   BuildsPage,
   EnvironmentPage,
-  ManagementPage
-]
-let dialogs = [
+  ManagementPage,
+  DeploysPage
+];
+const dialogs = [
   AddLabelDialog,
   BuildsOfEnvironmentDialog,
-  ConfirmDialog
-]
+  ConfirmDialog,
+];
 
 @NgModule({
   declarations: [
@@ -54,7 +61,8 @@ let dialogs = [
       BuildSearchEffects,
       ProjectsEffects,
       BuildStatsEffects,
-      EnvironmentEffects
+      EnvironmentEffects,
+      ServersEffects
     ]),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
   ],
@@ -62,6 +70,7 @@ let dialogs = [
     LoadEnvironmentGuard,
     LoadBuildsSearchGuard,
     NewEnvironmentGuard,
+    LoadDeploysGuard,
     NotFoundGuard
   ],
   bootstrap: [AppComponent]
@@ -72,6 +81,7 @@ export class AppModule {
     store.dispatch(loadProjects())
     store.dispatch(loadBuildStats())
     store.dispatch(loadKnownEnvironments())
+    store.dispatch(LOAD_KNOWN_SERVERS());
     library.addIcons(
       faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync, faEye, faEyeSlash
     )
