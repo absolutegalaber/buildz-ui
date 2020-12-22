@@ -195,6 +195,6 @@ export interface IDeployBuild {
  * A view interface that represents a label which is meant to be associated to a specific Deploy
  */
 export interface IDeployLabel {
-  name: string;
+  key: string;
   value: string;
 }

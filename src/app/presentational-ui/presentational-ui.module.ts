@@ -22,6 +22,7 @@ import {IsVisibleIcon} from './components/is-visible.icon';
 // Server related components
 import { ServersListComponent } from './components/servers-list.component';
 import {DeploysAccordionComponent} from './components/deploys-accordion.component';
+import {MomentModule} from 'ngx-moment';
 
 const reExports = [
   CoreModule,
@@ -52,9 +53,10 @@ const declarations = [
 ];
 
 @NgModule({
-  imports: [
-    ...reExports
-  ],
+    imports: [
+        ...reExports,
+        MomentModule
+    ],
   exports: [
     ...reExports,
     ...declarations

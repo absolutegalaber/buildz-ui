@@ -33,6 +33,7 @@ import { ServersEffects } from './core/flux-store/servers.effects';
 // Deploy related components
 import {DeploysPage} from './pages/deploys.page';
 import {LoadDeploysGuard} from './guards/load-deploys.guard';
+import {MomentModule} from 'ngx-moment';
 
 const pages = [
   HomePage,
@@ -65,6 +66,7 @@ const dialogs = [
       ServersEffects
     ]),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
+    MomentModule
   ],
   providers: [
     LoadEnvironmentGuard,
