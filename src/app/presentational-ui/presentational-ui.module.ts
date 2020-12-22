@@ -19,6 +19,10 @@ import {SetActivationPanel} from './components/set-activation.panel';
 import {DeadCenterComponent} from './components/dead-center.component';
 import {ProjectAccordion} from './components/project.accordion';
 import {IsVisibleIcon} from './components/is-visible.icon';
+// Server related components
+import { ServersListComponent } from './components/servers-list.component';
+import {DeploysAccordionComponent} from './components/deploys-accordion.component';
+import {MomentModule} from 'ngx-moment';
 
 const reExports = [
   CoreModule,
@@ -43,13 +47,16 @@ const declarations = [
   BranchList,
   SetActivationPanel,
   ProjectAccordion,
-  IsVisibleIcon
-]
+  IsVisibleIcon,
+  ServersListComponent,
+  DeploysAccordionComponent
+];
 
 @NgModule({
-  imports: [
-    ...reExports
-  ],
+    imports: [
+        ...reExports,
+        MomentModule
+    ],
   exports: [
     ...reExports,
     ...declarations

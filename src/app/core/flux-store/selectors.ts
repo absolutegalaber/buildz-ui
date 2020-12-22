@@ -1,4 +1,19 @@
-import {Buildz, IAlert, IArtifact, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IEnvironment, IEnvironmentBuilds, IProject, IProjects, IProjectWithBranches, ISelectedProjectAndBranch} from './model';
+import {
+  Buildz,
+  IAlert,
+  IArtifact,
+  IBuild,
+  IBuildSearchParams,
+  IBuildSearchResult,
+  IBuildStats,
+  IDeploy,
+  IEnvironment,
+  IEnvironmentBuilds,
+  IProject,
+  IProjects,
+  IProjectWithBranches,
+  ISelectedProjectAndBranch, IServer
+} from './model';
 
 export const theBuildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
 export const theBuildSearchResult = (state: Buildz): IBuildSearchResult => state.builds.result
@@ -31,3 +46,7 @@ export const theArtifactsToVerify = (state: Buildz): IArtifact[] =>
   state.environments.currentEnvironment.artifacts.filter((artifact: IArtifact) => artifact.project.length > 0 && artifact.branch.length > 0)
 
 export const theCurrentAlert = (state: Buildz): IAlert => state.alert
+
+// Server related selectors
+export const theServerNames = (state: Buildz): IServer[] => state.servers.knownServers;
+export const theCurrentServer = (state: Buildz): IServer => state.servers.currentServer;

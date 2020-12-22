@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Buildz, IProject} from '../core/flux-store/model';
-import {theBuildStats, theEnvironmentNames, theProjects} from '../core/flux-store/selectors';
+import {Buildz, IProject, IServer} from '../core/flux-store/model';
+import {theBuildStats, theEnvironmentNames, theServerNames, theProjects} from '../core/flux-store/selectors';
 import {Observable} from 'rxjs';
 import {loadEnvironmentBuilds, newEnvironment} from '../core/flux-store/environment.actions';
 import {BuildsOfEnvironmentDialog} from '../dialogs/builds-of-environment.dialog';
@@ -18,19 +18,26 @@ import {BuildsOfEnvironmentDialog} from '../dialogs/builds-of-environment.dialog
 
     <div class="row">
 
-      <div class="col-6">
+      <div class="col-4">
         <bz-project-list
           [projects]="projects | async"
           (projectSelected)="showBuildzOf($event)"
         ></bz-project-list>
       </div>
 
-      <div class="col-6">
+      <div class="col-4">
         <bz-environment-list
           [environments]="environmentNames | async"
           (environmentSelected)="showBuildsOf($event)"
           (newEnvironment)="newEnvironment()"
         ></bz-environment-list>
+      </div>
+
+      <div class="col-4">
+        <bz-servers-list
+          [servers]="serverNames | async"
+          (serverSelected)="showDeploysOf($event)"
+        ></bz-servers-list>
       </div>
 
     </div>
@@ -39,6 +46,7 @@ import {BuildsOfEnvironmentDialog} from '../dialogs/builds-of-environment.dialog
 export class HomePage {
   projects: Observable<IProject[]> = this.store.pipe(select(theProjects))
   environmentNames = this.store.pipe(select(theEnvironmentNames))
+  serverNames = this.store.pipe(select(theServerNames));
   stats = this.store.pipe(select(theBuildStats))
 
   showBuildzOf(project: IProject) {
@@ -48,6 +56,10 @@ export class HomePage {
   showBuildsOf(environmentName: string) {
     this.store.dispatch(loadEnvironmentBuilds({environmentName}));
     this.modelService.open(BuildsOfEnvironmentDialog, {size: 'lg'})
+  }
+
+  showDeploysOf(serverName: string): void {
+    this.router.navigate(['/deploys-on/', serverName]);
   }
 
   newEnvironment() {

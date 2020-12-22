@@ -4,8 +4,9 @@ import {buildStatsLoaded} from './build-stats.actions';
 
 export const EMPTY_BUILD_STATS: IBuildStats = {
   numberOfLabels: 0,
-  numberOfBuilds: 0
-}
+  numberOfBuilds: 0,
+  numberOfDeploys: 0
+};
 
 export const _buildStatsReducer = createReducer(
   EMPTY_BUILD_STATS,

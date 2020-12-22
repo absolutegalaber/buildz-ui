@@ -3,6 +3,7 @@ import {buildStatsReducer} from './build-stats.reducer';
 import {buildSearchReducer} from './build-search.reducer';
 import {environmentReducer} from './environment.reducer';
 import {alertReducer} from './alert.reducer';
+import {serverReducer} from './server.reducer';
 
 export interface Buildz {
   alert: IAlert
@@ -10,6 +11,7 @@ export interface Buildz {
   environments: IEnvironments
   stats: IBuildStats
   builds: IBuilds
+  servers: IServersState;
 }
 
 export const buildzReducers = {
@@ -17,8 +19,9 @@ export const buildzReducers = {
   projects: projectsReducer,
   environments: environmentReducer,
   stats: buildStatsReducer,
-  builds: buildSearchReducer
-}
+  builds: buildSearchReducer,
+  servers: serverReducer
+};
 
 export interface IBuilds {
   search: IBuildSearchParams
@@ -108,7 +111,8 @@ export interface ISelectedProjectAndBranch {
 
 export interface IBuildStats {
   numberOfBuilds: number
-  numberOfLabels: number
+  numberOfLabels: number;
+  numberOfDeploys: number;
 }
 
 export interface IEnvironments {
@@ -145,4 +149,52 @@ export interface IAlert {
 export interface IAlertMessage {
   heading: string
   message: string
+}
+
+// Interfaces related to Server(s)
+/**
+ * A State interface that represents all Server related State data
+ */
+export interface IServersState {
+  knownServers: IServer[];
+  currentServer?: IServer;
+}
+
+/**
+ * A view interface that represents a specific Server
+ */
+export interface IServer {
+  id: number;
+  name: string;
+  // The deploys are loaded after the fact.
+  deploys?: IDeploy[];
+}
+
+// Interfaces related to Deploy(s)
+/**
+ * A view interface that represents a specific Deploy
+ */
+export interface IDeploy {
+  id: number;
+  deployedAt: Date;
+  build: IDeployBuild;
+  labels: IDeployLabel[];
+}
+
+/**
+ * A view interface that represents a Build related to a Deploy
+ */
+export interface IDeployBuild {
+  id: number;
+  project: string;
+  branch: string;
+  buildNumber: number;
+}
+
+/**
+ * A view interface that represents a label which is meant to be associated to a specific Deploy
+ */
+export interface IDeployLabel {
+  key: string;
+  value: string;
 }
