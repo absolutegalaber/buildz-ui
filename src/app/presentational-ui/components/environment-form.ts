@@ -109,7 +109,7 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
                       </td>
                     </tr>
                     </thead>
-                    <tr *ngFor="let l of theBuildOf(artifact.project).labels">
+                    <tr *ngFor="let l of theBuildOf(artifact.project).labels | keyvalue">
                       <td>{{l.key}}</td>
                       <td>{{l.value}}</td>
                     </tr>
