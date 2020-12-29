@@ -65,7 +65,7 @@ export interface IBuild {
   project: string
   branch: string
   buildNumber: number
-  labels: IBuildLabel[]
+  labels: any
 }
 
 export interface IProjects {
@@ -178,7 +178,7 @@ export interface IDeploy {
   id: number;
   deployedAt: Date;
   build: IDeployBuild;
-  labels: IDeployLabel[];
+  labels: any;
 }
 
 /**

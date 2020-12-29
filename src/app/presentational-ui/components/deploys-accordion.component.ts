@@ -13,7 +13,7 @@ import {IDeploy} from '../../core/flux-store/model';
         <ng-template ngbPanelContent>
           <h3>Labels</h3>
           <table class="table table-striped table-sm">
-            <tr *ngFor="let label of deploy.labels">
+            <tr *ngFor="let label of deploy.labels |keyvalue">
               <td>{{label.key}}</td>
               <td>{{label.value}}</td>
             </tr>

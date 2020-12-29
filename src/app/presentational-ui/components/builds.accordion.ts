@@ -11,7 +11,7 @@ import {IBuild} from '../../core/flux-store/model';
             <tr>
               <td colspan="2"><b>{{build.project}}:{{build.branch}}:{{build.buildNumber}}</b></td>
             </tr>
-            <tr *ngFor="let label of build.labels">
+            <tr *ngFor="let label of build.labels | keyvalue">
               <td>{{label.key}}</td>
               <td>{{label.value}}</td>
             </tr>
