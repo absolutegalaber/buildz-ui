@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h4 class="modal-title">Reserving Server: {{serverName}}</h4>
+</div>
+<div class="modal-body">
+    <form novalidate #reservationForm="ngForm">
+      <div class="form-row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="reservedBy">Reserved By</label>
+            <input
+                type="text"
+                class="form-control"
+                id="reservedBy"
+                name="reservedBy"
+                [required]="true"
+                [(ngModel)]="by"
+            />
+          </div>
+          <div class="form-group">
+            <label for="reservationNote">Note</label>
+            <textarea
+              type="text"
+              class="form-control"
+              id="reservationNote"
+              name="reservationNote"
+              [(ngModel)]="note"
+            ></textarea>
+          </div>
+          <div class="form-group text-center">
+            <button
+                class="btn btn-primary"
+                (click)="reserveServer()"
+                [disabled]="reservationForm.invalid"
+            >
+              Reserve Server
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>

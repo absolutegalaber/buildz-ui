@@ -10,7 +10,7 @@ import {NewEnvironmentGuard} from './guards/new-environment-guard';
 import {NotFoundGuard} from './guards/not-found.guard';
 import {ManagementPage} from './pages/management.page';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBackspace, faCheck, faCogs, faEye, faEyeSlash, faPlus, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
+import {faBackspace, faCheck, faCogs, faEye, faEyeSlash, faPlus, faLock, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
 import {Store, StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProjectsEffects} from './core/flux-store/projects.effects';
@@ -34,6 +34,9 @@ import { ServersEffects } from './core/flux-store/servers.effects';
 import {DeploysPage} from './pages/deploys.page';
 import {LoadDeploysGuard} from './guards/load-deploys.guard';
 import {MomentModule} from 'ngx-moment';
+// Release related components
+import {CreateReservationDialog} from './dialogs/create-reservation.dialog';
+import {ReleaseReservationDialog} from './dialogs/release-reservation.dialog';
 
 const pages = [
   HomePage,
@@ -46,6 +49,8 @@ const dialogs = [
   AddLabelDialog,
   BuildsOfEnvironmentDialog,
   ConfirmDialog,
+  CreateReservationDialog,
+  ReleaseReservationDialog
 ];
 
 @NgModule({
@@ -85,7 +90,18 @@ export class AppModule {
     store.dispatch(loadKnownEnvironments())
     store.dispatch(LOAD_KNOWN_SERVERS());
     library.addIcons(
-      faCogs, faSave, faToggleOn, faToggleOff, faPlus, faBackspace, faCheck, faUndo, faSync, faEye, faEyeSlash
-    )
+      faCogs,
+      faSave,
+      faToggleOn,
+      faToggleOff,
+      faPlus,
+      faBackspace,
+      faCheck,
+      faUndo,
+      faSync,
+      faEye,
+      faEyeSlash,
+      faLock
+    );
   }
 }

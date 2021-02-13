@@ -6,13 +6,13 @@ import {
   IBuildSearchParams,
   IBuildSearchResult,
   IBuildStats,
-  IDeploy,
   IEnvironment,
   IEnvironmentBuilds,
   IProject,
   IProjects,
   IProjectWithBranches,
-  ISelectedProjectAndBranch, IServer
+  ISelectedProjectAndBranch,
+  IServer
 } from './model';
 
 export const theBuildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
@@ -48,5 +48,6 @@ export const theArtifactsToVerify = (state: Buildz): IArtifact[] =>
 export const theCurrentAlert = (state: Buildz): IAlert => state.alert
 
 // Server related selectors
-export const theServerNames = (state: Buildz): IServer[] => state.servers.knownServers;
+export const theServers = (state: Buildz): IServer[] => state.servers.knownServers;
 export const theCurrentServer = (state: Buildz): IServer => state.servers.currentServer;
+export const theCurrentServerName = (state: Buildz): string => state.servers.currentServer.name;
