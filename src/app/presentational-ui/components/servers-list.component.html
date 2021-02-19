@@ -1,0 +1,11 @@
+<div class="list-group">
+  <span class="list-group-item list-group-item-primary">Known Servers</span>
+      <button
+        *ngFor="let server of servers"
+        class="list-group-item list-group-item-action"
+        (click)="serverSelected.emit(server.name)"
+      >
+        {{server.name}}
+        {{server.reservation ? "(Reserved by: " + server.reservation.by + ")" : null}}
+      </button>
+</div>

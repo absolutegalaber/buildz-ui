@@ -168,6 +168,28 @@ export interface IServer {
   name: string;
   // The deploys are loaded after the fact.
   deploys?: IDeploy[];
+  reservation?: IReservation;
+}
+
+// Interfaces related to Reservation(s)
+/**
+ * A view interface that represents a specific Server Reservation
+ */
+export interface IReservation {
+  by: string;
+  note: string;
+}
+
+
+/**
+ * An event interface that contains all data needed to reserve a server
+ */
+export interface ICreateReservationEvent {
+  serverName: string;
+  reservation: {
+    reservedBy: string;
+    reservationNote: string;
+  };
 }
 
 // Interfaces related to Deploy(s)

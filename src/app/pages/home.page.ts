@@ -3,7 +3,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Buildz, IProject, IServer} from '../core/flux-store/model';
-import {theBuildStats, theEnvironmentNames, theServerNames, theProjects} from '../core/flux-store/selectors';
+import {theBuildStats, theEnvironmentNames, theServers, theProjects} from '../core/flux-store/selectors';
 import {Observable} from 'rxjs';
 import {loadEnvironmentBuilds, newEnvironment} from '../core/flux-store/environment.actions';
 import {BuildsOfEnvironmentDialog} from '../dialogs/builds-of-environment.dialog';
@@ -46,7 +46,7 @@ import {BuildsOfEnvironmentDialog} from '../dialogs/builds-of-environment.dialog
 export class HomePage {
   projects: Observable<IProject[]> = this.store.pipe(select(theProjects))
   environmentNames = this.store.pipe(select(theEnvironmentNames))
-  serverNames = this.store.pipe(select(theServerNames));
+  serverNames = this.store.pipe(select(theServers));
   stats = this.store.pipe(select(theBuildStats))
 
   showBuildzOf(project: IProject) {

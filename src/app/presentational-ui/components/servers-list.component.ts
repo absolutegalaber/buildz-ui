@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IServer} from '../../core/flux-store/model';
+import {IReservation, IServer} from '../../core/flux-store/model';
 
 @Component({
   selector: 'bz-servers-list',
@@ -12,6 +12,13 @@ import {IServer} from '../../core/flux-store/model';
         (click)="serverSelected.emit(server.name)"
       >
         {{server.name}}
+        <fa-icon
+            icon="lock"
+            *ngIf="server.reservation"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            [title]="reservationTitle(server.reservation)">
+        </fa-icon>
       </button>
     </div>
   `
@@ -22,4 +29,14 @@ export class ServersListComponent {
   servers: IServer[] = [];
   @Output()
   serverSelected = new EventEmitter<string>();
+
+  reservationTitle(reservation: IReservation): string {
+    let title = `Reserved by: ${reservation.by}`;
+    if (reservation.note) {
+      title += `\n`;
+      title += `Note: ${reservation.note}`;
+    }
+
+    return title;
+  }
 }
