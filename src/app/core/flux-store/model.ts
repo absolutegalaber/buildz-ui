@@ -23,30 +23,48 @@ export const buildzReducers = {
   servers: serverReducer
 };
 
+// Base interfaces
+/**
+ * An interface that includes all
+ * information that every "Search Result"
+ * object should have
+ */
+export interface IBaseSearchResult {
+  page: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
+/**
+ * An interface that includes all
+ * information that should be included
+ * in every "Search Parameters" object
+ */
+export interface IBaseSearchParams {
+  pageSize?: number;
+  page?: number;
+  sortAttribute?: string;
+  sortDirection?: string;
+}
+
+// Build related interfaces
 export interface IBuilds {
   search: IBuildSearchParams
   result: IBuildSearchResult
 }
 
-export interface IBuildSearchParams {
-  project?: string
-  branch?: string
-  minBuildNumber?: number
-  maxBuildNumber?: number
-  labels?: any
-  pageSize?: number
-  page?: number
-  sortAttribute?: string
-  sortDirection?: string
+export interface IBuildSearchParams extends IBaseSearchParams {
+  project?: string;
+  branch?: string;
+  minBuildNumber?: number;
+  maxBuildNumber?: number;
+  labels?: any;
 }
 
-export interface IBuildSearchResult {
-  builds: IBuild[]
-  page: number
-  totalElements: number
-  totalPages: number
-  hasNext: boolean
-  hasPrevious: boolean
+export interface IBuildSearchResult extends IBaseSearchResult {
+  builds: IBuild[];
 }
 
 export interface IBuildLabel {
@@ -166,8 +184,8 @@ export interface IServersState {
 export interface IServer {
   id: number;
   name: string;
-  // The deploys are loaded after the fact.
-  deploys?: IDeploy[];
+  deploysSearch: IBaseSearchParams;
+  deploysResult: IDeploySearchResult;
   reservation?: IReservation;
 }
 
@@ -219,4 +237,12 @@ export interface IDeployBuild {
 export interface IDeployLabel {
   key: string;
   value: string;
+}
+
+/**
+ * A Search Result interface that encapsulates all info related
+ * to the results of a Deploy search
+ */
+export interface IDeploySearchResult extends IBaseSearchResult {
+  deploys?: IDeploy[];
 }

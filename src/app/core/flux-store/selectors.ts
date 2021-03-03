@@ -12,7 +12,8 @@ import {
   IProjects,
   IProjectWithBranches,
   ISelectedProjectAndBranch,
-  IServer
+  IServer,
+  IBaseSearchParams
 } from './model';
 
 export const theBuildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
@@ -51,3 +52,7 @@ export const theCurrentAlert = (state: Buildz): IAlert => state.alert
 export const theServers = (state: Buildz): IServer[] => state.servers.knownServers;
 export const theCurrentServer = (state: Buildz): IServer => state.servers.currentServer;
 export const theCurrentServerName = (state: Buildz): string => state.servers.currentServer.name;
+// Specific server deploys search selectors
+export const theDeploySearchParams = (state: Buildz): IBaseSearchParams => state.servers.currentServer != null
+  ? state.servers.currentServer.deploysSearch
+  : {};
