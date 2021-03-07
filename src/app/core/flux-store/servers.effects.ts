@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {HttpClient} from '@angular/common/http';
 import {
-  LOAD_SERVER_DEPLOYS,
-  LOAD_SERVER_DEPLOYS_OK,
+  DEPLOY_SEARCH,
+  DEPLOY_SEARCH_OK,
   LOAD_KNOWN_SERVERS,
   LOAD_KNOWN_SERVERS_OK,
   RESERVE_SERVER,
@@ -11,10 +11,12 @@ import {
   RELEASE_SERVER,
   RELEASE_SERVER_OK
 } from './server.actions';
-import {catchError, exhaustMap, switchMap, map} from 'rxjs/operators';
+import {catchError, exhaustMap, switchMap, map, withLatestFrom} from 'rxjs/operators';
 import {backendErrorOccurred} from './alert.actions';
 import {of} from 'rxjs';
-import {IDeploy, IReservation, IServer} from './model';
+import {IReservation, IServer, IDeploySearchResult, Buildz} from './model';
+import {select, Store} from '@ngrx/store';
+import {theDeploySearchParams} from './selectors';
 
 @Injectable()
 export class ServersEffects {
@@ -28,12 +30,19 @@ export class ServersEffects {
     )
   );
 
-  LOAD_SERVER_DEPLOYS$ = createEffect(() => this.actions$.pipe(
-    ofType(LOAD_SERVER_DEPLOYS),
-    switchMap((action) => this.http.get<IDeploy[]>(`/api/v1/deploys/on/${action.name}`).pipe(
-      map((data: IDeploy[]) => LOAD_SERVER_DEPLOYS_OK({serverName: action.name, deploys: data})),
-      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
-    ))
+  DEPLOY_SEARCH$ = createEffect(() => this.actions$.pipe(
+    ofType(DEPLOY_SEARCH),
+    withLatestFrom(this.store.pipe(select(theDeploySearchParams))),
+    exhaustMap(([action, searchParams]) => this.http.post<IDeploySearchResult>(
+        `/api/v1/deploys/on/${action.serverName}`,
+      // the pagination tag starts at 1 and the API starts at 0, so subtract 1 before sending
+      // search parameters to API.
+      { ...searchParams, page: (searchParams.page - 1)}
+      ).pipe(
+        map((result: IDeploySearchResult) => DEPLOY_SEARCH_OK({serverName: action.serverName, result})),
+        catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
+      )
+    )
   ));
 
   RESERVE_SERVER$ = createEffect(() => this.actions$.pipe(
@@ -57,6 +66,7 @@ export class ServersEffects {
 
   constructor(
       private actions$: Actions,
-      private http: HttpClient
+      private http: HttpClient,
+      private store: Store<Buildz>
   ) {}
 }

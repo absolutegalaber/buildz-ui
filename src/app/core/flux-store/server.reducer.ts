@@ -2,8 +2,8 @@ import {Action, createReducer, on} from '@ngrx/store';
 import {IServersState} from './model';
 import {
   LOAD_KNOWN_SERVERS_OK,
-  LOAD_SERVER_DEPLOYS,
-  LOAD_SERVER_DEPLOYS_OK,
+  DEPLOY_SEARCH,
+  DEPLOY_SEARCH_OK,
   RELEASE_SERVER_OK,
   RESERVE_SERVER_OK
 } from './server.actions';
@@ -21,16 +21,39 @@ const REDUCER = createReducer(
 
     return newState;
   }),
-  // Temporarily set the currentServer to just the server name while the network fetch completes
-  on(LOAD_SERVER_DEPLOYS, (state: IServersState, {name}) => {
+  on(DEPLOY_SEARCH, (state: IServersState, {serverName, searchParams}) => {
     const newState = deepClone(state);
-    newState.currentServer = newState.knownServers.find(server => server.name === name);
+    if (!newState.currentServer || newState.currentServer.name !== serverName) {
+      if (!newState.knownServers && !newState.knownServers.isEmpty()) {
+        newState.currentServer = newState.knownServers.find(server => server.name === serverName);
+      } else {
+        // If the user is navigating directly to the server or if the knownServers list is empty
+        // assume that the user's serverName is valid (if it's not the DEPLOY_SEARCH_OK will
+        // handle the error message).
+        newState.currentServer = {name: serverName};
+      }
+    }
+
+    if (searchParams) {
+      newState.currentServer.deploysSearch = searchParams;
+    } else if (!newState.currentServer.deploysSearch) {
+      newState.currentServer.deploysSearch = {
+        page: 1,
+        pageSize: 10,
+        sortAttribute: 'id',
+        sortDirection: 'DESC',
+      };
+    }
+
+    if (newState.currentServer.deploysResult === undefined) {
+      newState.currentServer.deploysResult = {};
+    }
 
     return newState;
   }),
-  on(LOAD_SERVER_DEPLOYS_OK, (state: IServersState, {serverName, deploys}) => {
+  on(DEPLOY_SEARCH_OK, (state: IServersState, {serverName, result}) => {
     const newState = deepClone(state);
-    newState.currentServer = {...newState.currentServer, name: serverName, deploys};
+    newState.currentServer = {...newState.currentServer, name: serverName, deploysResult: result};
 
     return newState;
   }),
