@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {Buildz} from '../core/flux-store/model';
-import {theCurrentEnvironmentName, theEnvironmentBuildsAsArray} from '../core/flux-store/selectors';
+import {theCurrentEnvironmentInternalFlag, theCurrentEnvironmentName, theEnvironmentBuildsAsArray} from '../core/flux-store/selectors';
 import {cloneCurrentEnvironment, deleteEnvironment} from '../core/flux-store/environment.actions';
 
 @Component({
@@ -22,16 +22,39 @@ import {cloneCurrentEnvironment, deleteEnvironment} from '../core/flux-store/env
 
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger" (click)="delete()">Delete</button>
-      <button type="button" class="btn btn-secondary" (click)="clone()">Clone</button>
-      <button type="button" class="btn btn-primary" [routerLink]="['/edit-environment', currentEnvironmentName |async]" (click)="activeModal.close()">Edit</button>
+      <button
+            type="button"
+            *ngIf="(isCurrentEnvironmentInternal | async) === false"
+            class="btn btn-danger"
+            (click)="delete()"
+      >
+        Delete
+      </button>
+      <button
+            type="button"
+            *ngIf="(isCurrentEnvironmentInternal | async) === false"
+            class="btn btn-secondary"
+            (click)="clone()"
+      >
+        Clone
+      </button>
+      <button
+            type="button"
+            *ngIf="(isCurrentEnvironmentInternal | async) === false"
+            class="btn btn-primary"
+            [routerLink]="['/edit-environment', currentEnvironmentName |async]"
+            (click)="activeModal.close()"
+      >
+        Edit
+      </button>
       <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">OK</button>
     </div>
   `
 })
 export class BuildsOfEnvironmentDialog {
-  currentEnvironmentName = this.store.pipe(select(theCurrentEnvironmentName))
-  environmentBuildsArray = this.store.pipe(select(theEnvironmentBuildsAsArray))
+  currentEnvironmentName = this.store.pipe(select(theCurrentEnvironmentName));
+  environmentBuildsArray = this.store.pipe(select(theEnvironmentBuildsAsArray));
+  isCurrentEnvironmentInternal = this.store.pipe(select(theCurrentEnvironmentInternalFlag));
 
   clone() {
     this.activeModal.close()
