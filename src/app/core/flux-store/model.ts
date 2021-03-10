@@ -154,8 +154,9 @@ export interface IArtifact {
 }
 
 export interface IEnvironmentBuilds {
-  environment: string
-  builds: { [key: string]: IBuild }
+  environment: string;
+  internal: boolean;
+  builds: { [key: string]: IBuild };
 }
 
 export interface IAlert {
