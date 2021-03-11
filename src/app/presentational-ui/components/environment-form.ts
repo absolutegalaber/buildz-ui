@@ -18,7 +18,7 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
 
           <div class="col-8">
             <bz-center>
-              <button class="btn btn-danger" (click)="delete.emit()">
+              <button *ngIf="!!environment.id" class="btn btn-danger" (click)="delete.emit()">
                 <fa-icon icon="backspace"></fa-icon>
                 Delete
               </button>
