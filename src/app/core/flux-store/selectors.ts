@@ -37,6 +37,8 @@ export const theSelectedProjectAndBranch = (state: Buildz): ISelectedProjectAndB
 export const theEnvironmentNames = (state: Buildz): string[] => state.environments.knownEnvironments
 export const theCurrentEnvironmentName = (state: Buildz): string => state.environments.currentEnvironmentName
 export const theCurrentEnvironment = (state: Buildz): IEnvironment => state.environments.currentEnvironment
+export const theCurrentEnvironmentInternalFlag = (state: Buildz): boolean => state.environments.environmentBuilds ?
+    state.environments.environmentBuilds.internal : false;
 export const theEnvironmentBuildsAsArray = (state: Buildz): IBuild[] => {
   let environmentBuildsMap = state.environments.environmentBuilds.builds
   return Object.keys(environmentBuildsMap).map((key) => environmentBuildsMap[key])

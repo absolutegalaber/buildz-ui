@@ -1,5 +1,16 @@
 import {createReducer, on} from '@ngrx/store';
-import {addArtifactLabel, environmentBuildsLoaded, environmentSelected, environmentToCloneLoaded, knownEnvironmentsLoaded, newEnvironment, removeArtifactLabel, singleEnvironmentLoaded, toggleArtifactOfEnvironment, updateCurrentEnvironment} from './environment.actions';
+import {
+  addArtifactLabel,
+  environmentBuildsLoaded,
+  environmentSelected,
+  environmentToCloneLoaded,
+  knownEnvironmentsLoaded,
+  newEnvironment,
+  removeArtifactLabel,
+  singleEnvironmentLoaded,
+  toggleArtifactOfEnvironment,
+  updateCurrentEnvironment
+} from './environment.actions';
 import {IArtifact, IEnvironment, IEnvironments} from './model';
 import {deepClone} from '../util/deep-clone';
 
@@ -12,7 +23,8 @@ export const INITIAL_ENVIRONMENT_BUILDS: IEnvironments = {
   },
   environmentBuilds: {
     environment: '',
-    builds: {}
+    builds: {},
+    internal: false
   }
 }
 export const _environmentReducer = createReducer(
@@ -86,7 +98,8 @@ export const _environmentReducer = createReducer(
     }
     newState.environmentBuilds = {
       environment: '',
-      builds: {}
+      builds: {},
+      internal: false
     }
     return newState
   })
