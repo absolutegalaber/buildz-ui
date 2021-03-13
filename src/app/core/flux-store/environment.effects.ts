@@ -15,8 +15,8 @@ export class EnvironmentEffects {
 
   loadKnownEnvironments$ = createEffect(() => this.actions$.pipe(
     ofType(loadKnownEnvironments),
-    exhaustMap(() => this.http.get<string[]>(`/api/v1/environments`).pipe(
-      map((environments: string[]) => knownEnvironmentsLoaded({environments}))
+    exhaustMap(() => this.http.get<IEnvironment[]>(`/api/v1/environments/all`).pipe(
+      map((environments: IEnvironment[]) => knownEnvironmentsLoaded({environments}))
     ))
   ))
 

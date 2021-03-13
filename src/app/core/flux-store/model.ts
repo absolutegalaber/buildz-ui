@@ -134,7 +134,7 @@ export interface IBuildStats {
 }
 
 export interface IEnvironments {
-  knownEnvironments: string[]
+  knownEnvironments: IEnvironment[]
   currentEnvironmentName: string
   currentEnvironment: IEnvironment
   environmentBuilds: IEnvironmentBuilds
@@ -143,6 +143,7 @@ export interface IEnvironments {
 export interface IEnvironment {
   id?: number;
   name: string;
+  internal?: boolean;
   artifacts: IArtifact[]
 }
 

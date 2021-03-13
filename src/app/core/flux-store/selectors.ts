@@ -1,20 +1,4 @@
-import {
-  Buildz,
-  IAlert,
-  IArtifact,
-  IBuild,
-  IBuildSearchParams,
-  IBuildSearchResult,
-  IBuildStats,
-  IEnvironment,
-  IEnvironmentBuilds,
-  IProject,
-  IProjects,
-  IProjectWithBranches,
-  ISelectedProjectAndBranch,
-  IServer,
-  IBaseSearchParams
-} from './model';
+import {Buildz, IAlert, IArtifact, IBaseSearchParams, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IEnvironment, IEnvironmentBuilds, IProject, IProjects, IProjectWithBranches, ISelectedProjectAndBranch, IServer} from './model';
 
 export const theBuildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
 export const theBuildSearchResult = (state: Buildz): IBuildSearchResult => state.builds.result
@@ -34,11 +18,12 @@ export const theSelectedProjectAndBranch = (state: Buildz): ISelectedProjectAndB
     branch: state.projects.currentBranch
   }
 }
-export const theEnvironmentNames = (state: Buildz): string[] => state.environments.knownEnvironments
+export const theDefinedEnvironments = (state: Buildz): IEnvironment[] => state.environments.knownEnvironments.filter((it) => !it.internal)
+export const theInternalEnvironments = (state: Buildz): IEnvironment[] => state.environments.knownEnvironments.filter((it) => it.internal)
 export const theCurrentEnvironmentName = (state: Buildz): string => state.environments.currentEnvironmentName
 export const theCurrentEnvironment = (state: Buildz): IEnvironment => state.environments.currentEnvironment
 export const theCurrentEnvironmentInternalFlag = (state: Buildz): boolean => state.environments.environmentBuilds ?
-    state.environments.environmentBuilds.internal : false;
+  state.environments.environmentBuilds.internal : false;
 export const theEnvironmentBuildsAsArray = (state: Buildz): IBuild[] => {
   let environmentBuildsMap = state.environments.environmentBuilds.builds
   return Object.keys(environmentBuildsMap).map((key) => environmentBuildsMap[key])
