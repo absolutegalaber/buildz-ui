@@ -105,7 +105,7 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
                     <thead>
                     <tr>
                       <td colspan="2">
-                        <b>{{theBuildOf(artifact.project).project}}:{{theBuildOf(artifact.project).branch}}:{{theBuildOf(artifact.project).buildNumber}}</b>
+                        <b><bz-build-id [build]="theBuildOf(artifact.project)"></bz-build-id></b>
                       </td>
                     </tr>
                     </thead>

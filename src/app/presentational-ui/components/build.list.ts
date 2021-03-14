@@ -9,7 +9,7 @@ import {IBuild, IBuildSearchResult} from '../../core/flux-store/model';
       <button class="list-group-item list-group-item-action" *ngFor="let build of searchResult.builds"
               (click)="buildSelected.emit(build)"
       >
-        {{build.project}}:{{build.branch}}:{{build.buildNumber}}
+        <bz-build-id [build]="build"></bz-build-id>
       </button>
     </div>
     <span *ngIf="searchResult === null"> Nothing Loaded </span>
