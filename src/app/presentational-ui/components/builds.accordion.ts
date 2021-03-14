@@ -5,11 +5,11 @@ import {IBuild} from '../../core/flux-store/model';
   selector: 'bz-builds-accordion',
   template: `
     <ngb-accordion [closeOthers]="true">
-      <ngb-panel *ngFor="let build of builds" title="{{build.project}}:{{build.branch}}:{{build.buildNumber}}">
+      <ngb-panel *ngFor="let build of builds" title="{{build.project}} :: {{build.branch}} :: {{build.buildNumber}}">
         <ng-template ngbPanelContent>
           <table class="table table-striped table-sm">
             <tr>
-              <td colspan="2"><b>{{build.project}}:{{build.branch}}:{{build.buildNumber}}</b></td>
+              <td colspan="2"><b><bz-build-id [build]="build"></bz-build-id></b></td>
             </tr>
             <tr *ngFor="let label of build.labels | keyvalue">
               <td>{{label.key}}</td>

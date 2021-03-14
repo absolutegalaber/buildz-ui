@@ -20,9 +20,10 @@ import {DeadCenterComponent} from './components/dead-center.component';
 import {ProjectAccordion} from './components/project.accordion';
 import {IsVisibleIcon} from './components/is-visible.icon';
 // Server related components
-import { ServersListComponent } from './components/servers-list.component';
+import {ServersListComponent} from './components/servers-list.component';
 import {DeploysAccordionComponent} from './components/deploys-accordion.component';
 import {MomentModule} from 'ngx-moment';
+import {BuildIdentifierPanel} from './components/build-identifier.panel';
 
 const reExports = [
   CoreModule,
@@ -49,14 +50,15 @@ const declarations = [
   ProjectAccordion,
   IsVisibleIcon,
   ServersListComponent,
-  DeploysAccordionComponent
+  DeploysAccordionComponent,
+  BuildIdentifierPanel
 ];
 
 @NgModule({
-    imports: [
-        ...reExports,
-        MomentModule
-    ],
+  imports: [
+    ...reExports,
+    MomentModule
+  ],
   exports: [
     ...reExports,
     ...declarations
