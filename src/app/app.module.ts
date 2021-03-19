@@ -10,7 +10,7 @@ import {NewEnvironmentGuard} from './guards/new-environment-guard';
 import {NotFoundGuard} from './guards/not-found.guard';
 import {ManagementPage} from './pages/management.page';
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
-import {faBackspace, faCheck, faCogs, faEye, faEyeSlash, faPlus, faLock, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
+import {faBackspace, faCheck, faCogs, faEye, faEyeSlash, faLock, faPlus, faSave, faSync, faToggleOff, faToggleOn, faUndo} from '@fortawesome/free-solid-svg-icons';
 import {Store, StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ProjectsEffects} from './core/flux-store/projects.effects';
@@ -28,8 +28,8 @@ import {AddLabelDialog} from './dialogs/add-label.dialog';
 import {BuildsOfEnvironmentDialog} from './dialogs/builds-of-environment.dialog';
 import {ConfirmDialog} from './dialogs/confirm.dialog';
 // Server related actions and effects
-import { LOAD_KNOWN_SERVERS } from './core/flux-store/server.actions';
-import { ServersEffects } from './core/flux-store/servers.effects';
+import {LOAD_KNOWN_SERVERS} from './core/flux-store/server.actions';
+import {ServersEffects} from './core/flux-store/servers.effects';
 // Deploy related components
 import {DeploysPage} from './pages/deploys.page';
 import {LoadDeploysGuard} from './guards/load-deploys.guard';
@@ -37,6 +37,7 @@ import {MomentModule} from 'ngx-moment';
 // Release related components
 import {CreateReservationDialog} from './dialogs/create-reservation.dialog';
 import {ReleaseReservationDialog} from './dialogs/release-reservation.dialog';
+import {LoadServerGuard} from './guards/load-server.guard';
 
 const pages = [
   HomePage,
@@ -78,6 +79,7 @@ const dialogs = [
     LoadBuildsSearchGuard,
     NewEnvironmentGuard,
     LoadDeploysGuard,
+    LoadServerGuard,
     NotFoundGuard
   ],
   bootstrap: [AppComponent]

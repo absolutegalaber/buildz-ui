@@ -1,4 +1,4 @@
-import {Buildz, IAlert, IArtifact, IBaseSearchParams, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IEnvironment, IEnvironmentBuilds, IProject, IProjects, IProjectWithBranches, ISelectedProjectAndBranch, IServer} from './model';
+import {Buildz, IAlert, IArtifact, IBaseSearchParams, IBuild, IBuildSearchParams, IBuildSearchResult, IBuildStats, IDeploySearch, IDeploySearchResult, IEnvironment, IEnvironmentBuilds, IProject, IProjects, IProjectWithBranches, ISelectedProjectAndBranch, IServer} from './model';
 
 export const theBuildSearchParams = (state: Buildz): IBuildSearchParams => state.builds.search
 export const theBuildSearchResult = (state: Buildz): IBuildSearchResult => state.builds.result
@@ -40,6 +40,7 @@ export const theServers = (state: Buildz): IServer[] => state.servers.knownServe
 export const theCurrentServer = (state: Buildz): IServer => state.servers.currentServer;
 export const theCurrentServerName = (state: Buildz): string => state.servers.currentServer.name;
 // Specific server deploys search selectors
-export const theDeploySearchParams = (state: Buildz): IBaseSearchParams => state.servers.currentServer != null
-  ? state.servers.currentServer.deploysSearch
-  : {};
+export const theDeploySearchParams = (state: Buildz): IBaseSearchParams => state.servers.deploysSearch;
+export const theDeploysResult = (state: Buildz): IDeploySearchResult => state.servers.deploysResult
+export const theDeploysSearch = (state: Buildz): IDeploySearch => state.servers.deploysSearch
+export const theTotalNumberOfDeploys = (state: Buildz): number => state.servers.deploysResult?.totalElements
