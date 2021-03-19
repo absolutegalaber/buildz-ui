@@ -1,17 +1,23 @@
 import {Action, createReducer, on} from '@ngrx/store';
-import {IServersState} from './model';
-import {
-  LOAD_KNOWN_SERVERS_OK,
-  DEPLOY_SEARCH,
-  DEPLOY_SEARCH_OK,
-  RELEASE_SERVER_OK,
-  RESERVE_SERVER_OK
-} from './server.actions';
+import {IDeploySearchResult, IServersState} from './model';
+import {DEPLOY_SEARCH_OK, LOAD_KNOWN_SERVERS_OK, LOAD_SINGLE_SERVER, LOAD_SINGLE_SERVER_OK, UPDATE_DEPLOY_SEARCH} from './server.actions';
 import {deepClone} from '../util/deep-clone';
 
 export const INITIAL_SERVER_STATE: IServersState = {
-  knownServers: []
-};
+  knownServers: [],
+  currentServer: {
+    id: -1,
+    name: ''
+  },
+  deploysSearch: {
+    serverName: '',
+    page: 0,
+    pageSize: 10,
+    sortAttribute: 'id',
+    sortDirection: 'DESC'
+  },
+  deploysResult: <IDeploySearchResult>{}
+}
 
 const REDUCER = createReducer(
   INITIAL_SERVER_STATE,
@@ -21,63 +27,29 @@ const REDUCER = createReducer(
 
     return newState;
   }),
-  on(DEPLOY_SEARCH, (state: IServersState, {serverName, searchParams}) => {
-    const newState = deepClone(state);
-    if (!newState.currentServer || newState.currentServer.name !== serverName) {
-      if (!newState.knownServers && !newState.knownServers.isEmpty()) {
-        newState.currentServer = newState.knownServers.find(server => server.name === serverName);
-      } else {
-        // If the user is navigating directly to the server or if the knownServers list is empty
-        // assume that the user's serverName is valid (if it's not the DEPLOY_SEARCH_OK will
-        // handle the error message).
-        newState.currentServer = {name: serverName};
-      }
+  on(UPDATE_DEPLOY_SEARCH, (state: IServersState, {serverName, newSearch}) => {
+    const newState: IServersState = deepClone(state)
+    if (!!newSearch) {
+      newState.deploysSearch = newSearch
     }
-
-    if (searchParams) {
-      newState.currentServer.deploysSearch = searchParams;
-    } else if (!newState.currentServer.deploysSearch) {
-      newState.currentServer.deploysSearch = {
-        page: 1,
-        pageSize: 10,
-        sortAttribute: 'id',
-        sortDirection: 'DESC',
-      };
+    if (!!serverName) {
+      newState.deploysSearch.serverName = serverName
     }
-
-    if (newState.currentServer.deploysResult === undefined) {
-      newState.currentServer.deploysResult = {};
-    }
-
     return newState;
   }),
-  on(DEPLOY_SEARCH_OK, (state: IServersState, {serverName, result}) => {
+  on(DEPLOY_SEARCH_OK, (state: IServersState, {result}) => {
     const newState = deepClone(state);
-    newState.currentServer = {...newState.currentServer, name: serverName, deploysResult: result};
-
+    newState.deploysResult = result
     return newState;
   }),
-  on(RESERVE_SERVER_OK, (state: IServersState, { serverName, reservation}) => {
+  on(LOAD_SINGLE_SERVER, (state: IServersState, {serverName}) => {
     const newState = deepClone(state);
-
-    if (newState.currentServer && newState.currentServer.name === serverName) {
-      newState.currentServer.reservation = reservation;
-    }
-
-    const index = newState.knownServers.findIndex(server => server.name === serverName);
-    newState.knownServers[index].reservation = reservation;
-
+    newState.deploysSearch.serverName = serverName;
     return newState;
   }),
-  on(RELEASE_SERVER_OK, (state: IServersState, { serverName }) => {
+  on(LOAD_SINGLE_SERVER_OK, (state: IServersState, {server}) => {
     const newState = deepClone(state);
-    if (newState.currentServer && newState.currentServer.name === serverName) {
-      newState.currentServer.reservation = null;
-    }
-
-    const index = newState.knownServers.findIndex(server => server.name === serverName);
-    newState.knownServers[index].reservation = null;
-
+    newState.currentServer = server;
     return newState;
   })
 );

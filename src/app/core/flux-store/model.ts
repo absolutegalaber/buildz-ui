@@ -11,7 +11,7 @@ export interface Buildz {
   environments: IEnvironments
   stats: IBuildStats
   builds: IBuilds
-  servers: IServersState;
+  servers: IServersState
 }
 
 export const buildzReducers = {
@@ -30,11 +30,11 @@ export const buildzReducers = {
  * object should have
  */
 export interface IBaseSearchResult {
-  page: number;
-  totalElements: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+  page: number
+  totalElements: number
+  totalPages: number
+  hasNext: boolean
+  hasPrevious: boolean
 }
 
 /**
@@ -43,10 +43,10 @@ export interface IBaseSearchResult {
  * in every "Search Parameters" object
  */
 export interface IBaseSearchParams {
-  pageSize?: number;
-  page?: number;
-  sortAttribute?: string;
-  sortDirection?: string;
+  pageSize?: number
+  page?: number
+  sortAttribute?: string
+  sortDirection?: string
 }
 
 // Build related interfaces
@@ -56,15 +56,15 @@ export interface IBuilds {
 }
 
 export interface IBuildSearchParams extends IBaseSearchParams {
-  project?: string;
-  branch?: string;
-  minBuildNumber?: number;
-  maxBuildNumber?: number;
-  labels?: any;
+  project?: string
+  branch?: string
+  minBuildNumber?: number
+  maxBuildNumber?: number
+  labels?: any
 }
 
 export interface IBuildSearchResult extends IBaseSearchResult {
-  builds: IBuild[];
+  builds: IBuild[]
 }
 
 export interface IBuildLabel {
@@ -141,9 +141,9 @@ export interface IEnvironments {
 }
 
 export interface IEnvironment {
-  id?: number;
-  name: string;
-  internal?: boolean;
+  id?: number
+  name: string
+  internal?: boolean
   artifacts: IArtifact[]
 }
 
@@ -155,9 +155,9 @@ export interface IArtifact {
 }
 
 export interface IEnvironmentBuilds {
-  environment: string;
-  internal: boolean;
-  builds: { [key: string]: IBuild };
+  environment: string
+  internal: boolean
+  builds: { [key: string]: IBuild }
 }
 
 export interface IAlert {
@@ -176,19 +176,19 @@ export interface IAlertMessage {
  * A State interface that represents all Server related State data
  */
 export interface IServersState {
-  knownServers: IServer[];
-  currentServer?: IServer;
+  knownServers: IServer[]
+  currentServer?: IServer
+  deploysSearch?: IDeploySearch
+  deploysResult?: IDeploySearchResult
 }
 
 /**
  * A view interface that represents a specific Server
  */
 export interface IServer {
-  id: number;
-  name: string;
-  deploysSearch: IBaseSearchParams;
-  deploysResult: IDeploySearchResult;
-  reservation?: IReservation;
+  id: number
+  name: string
+  reservation?: IReservation
 }
 
 // Interfaces related to Reservation(s)
@@ -196,8 +196,8 @@ export interface IServer {
  * A view interface that represents a specific Server Reservation
  */
 export interface IReservation {
-  by: string;
-  note: string;
+  by: string
+  note: string
 }
 
 
@@ -205,10 +205,10 @@ export interface IReservation {
  * An event interface that contains all data needed to reserve a server
  */
 export interface ICreateReservationEvent {
-  serverName: string;
+  serverName: string
   reservation: {
-    reservedBy: string;
-    reservationNote: string;
+    reservedBy: string
+    reservationNote: string
   };
 }
 
@@ -217,28 +217,32 @@ export interface ICreateReservationEvent {
  * A view interface that represents a specific Deploy
  */
 export interface IDeploy {
-  id: number;
-  deployedAt: Date;
-  build: IDeployBuild;
-  labels: any;
+  id: number
+  deployedAt: Date
+  build: IDeployBuild
+  labels: any
 }
 
 /**
  * A view interface that represents a Build related to a Deploy
  */
 export interface IDeployBuild {
-  id: number;
-  project: string;
-  branch: string;
-  buildNumber: number;
+  id: number
+  project: string
+  branch: string
+  buildNumber: number
 }
 
 /**
  * A view interface that represents a label which is meant to be associated to a specific Deploy
  */
 export interface IDeployLabel {
-  key: string;
-  value: string;
+  key: string
+  value: string
+}
+
+export interface IDeploySearch extends IBaseSearchParams {
+  serverName: string
 }
 
 /**
@@ -246,5 +250,5 @@ export interface IDeployLabel {
  * to the results of a Deploy search
  */
 export interface IDeploySearchResult extends IBaseSearchResult {
-  deploys?: IDeploy[];
+  deploys: IDeploy[]
 }

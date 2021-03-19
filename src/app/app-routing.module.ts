@@ -11,12 +11,13 @@ import {ManagementPage} from './pages/management.page';
 // Deploy imports
 import {DeploysPage} from './pages/deploys.page';
 import {LoadDeploysGuard} from './guards/load-deploys.guard';
+import {LoadServerGuard} from './guards/load-server.guard';
 
 const routes: Routes = [
   {path: '', component: HomePage},
   {path: 'builds', component: BuildsPage, canActivate: [LoadBuildsSearchGuard]},
   {path: 'builds-of/:projectName', component: BuildsPage, canActivate: [LoadBuildsSearchGuard]},
-  { path: 'deploys-on/:serverName', component: DeploysPage, canActivate: [LoadDeploysGuard]},
+  {path: 'deploys-on/:serverName', component: DeploysPage, canActivate: [LoadServerGuard, LoadDeploysGuard]},
   {path: 'edit-environment/:environmentName', component: EnvironmentPage, canActivate: [LoadEnvironmentGuard]},
   {path: 'new-environment', component: EnvironmentPage, canActivate: [NewEnvironmentGuard]},
   {path: 'manage', component: ManagementPage},

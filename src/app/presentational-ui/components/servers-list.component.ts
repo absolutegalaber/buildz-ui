@@ -8,16 +8,16 @@ import {IReservation, IServer} from '../../core/flux-store/model';
       <span class="list-group-item list-group-item-primary">Known Servers</span>
       <button
         *ngFor="let server of servers"
-        class="list-group-item list-group-item-action"
+        class="list-group-item list-group-item-action" [ngClass]="{'list-group-item-danger': server.reservation, 'list-group-item-success':!server.reservation}"
         (click)="serverSelected.emit(server.name)"
       >
         {{server.name}}
         <fa-icon
-            icon="lock"
-            *ngIf="server.reservation"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            [title]="reservationTitle(server.reservation)">
+          icon="lock"
+          *ngIf="server.reservation"
+          data-toggle="tooltip"
+          data-placement="bottom"
+          [title]="reservationTitle(server.reservation)">
         </fa-icon>
       </button>
     </div>
