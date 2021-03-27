@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IReservation, IServer} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IReservation, IServer} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-servers-list',
@@ -11,13 +11,12 @@ import {IReservation, IServer} from '../../core/flux-store/model';
         class="list-group-item list-group-item-action" [ngClass]="{'list-group-item-danger': server.reservation, 'list-group-item-success':!server.reservation}"
         (click)="serverSelected.emit(server.name)"
       >
-        {{server.name}}
-        <fa-icon
+        <bz-server-id [server]="server"></bz-server-id>
+        <fa-icon class="float-right"
           icon="lock"
           *ngIf="server.reservation"
-          data-toggle="tooltip"
-          data-placement="bottom"
-          [title]="reservationTitle(server.reservation)">
+                 [ngbTooltip]="reservationTitle(server.reservation)"
+          >
         </fa-icon>
       </button>
     </div>
@@ -26,17 +25,17 @@ import {IReservation, IServer} from '../../core/flux-store/model';
 
 export class ServersListComponent {
   @Input()
-  servers: IServer[] = [];
+  servers: IServer[] = []
   @Output()
-  serverSelected = new EventEmitter<string>();
+  serverSelected = new EventEmitter<string>()
 
   reservationTitle(reservation: IReservation): string {
-    let title = `Reserved by: ${reservation.by}`;
+    let title = `Reserved by: ${reservation.by}`
     if (reservation.note) {
-      title += `\n`;
-      title += `Note: ${reservation.note}`;
+      title += `\n`
+      title += `Note: ${reservation.note}`
     }
 
-    return title;
+    return title
   }
 }

@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Buildz, IArtifactBuildLabel, IBuildLabel, IEnvironment} from '../core/flux-store/model';
-import {theCurrentEnvironment, theEnvironmentBuilds, theProjectsState} from '../core/flux-store/selectors';
-import {addArtifactLabel, deleteEnvironment, removeArtifactLabel, saveEnvironment, toggleArtifactOfEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {AddLabelDialog} from '../dialogs/add-label.dialog';
+import {Component} from '@angular/core'
+import {select, Store} from '@ngrx/store'
+import {Buildz, IArtifactBuildLabel, IBuildLabel, IEnvironment} from '../core/flux-store/model'
+import {theCurrentEnvironment, theEnvironmentBuilds, theProjectsState} from '../core/flux-store/selectors'
+import {addArtifactLabel, deleteEnvironment, removeArtifactLabel, saveEnvironment, toggleArtifactOfEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions'
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap'
+import {AddLabelDialog} from '../dialogs/add-label.dialog'
 
 @Component({
   template: `
@@ -31,24 +31,24 @@ export class EnvironmentPage {
   environmentBuilds = this.store.pipe(select(theEnvironmentBuilds))
   projects = this.store.pipe(select(theProjectsState))
 
-  updateEnvironment(environment: IEnvironment) {
+  updateEnvironment(environment: IEnvironment): void {
     this.store.dispatch(updateCurrentEnvironment({environment}))
   }
 
-  saveEnvironment(environment: IEnvironment) {
+  saveEnvironment(environment: IEnvironment): void {
     this.store.dispatch(saveEnvironment({environment}))
   }
 
-  deleteEnvironment() {
+  deleteEnvironment(): void {
     this.store.dispatch(deleteEnvironment())
   }
 
-  toggleProject(projectName: string) {
+  toggleProject(projectName: string): void {
     this.store.dispatch(toggleArtifactOfEnvironment({projectName}))
   }
 
   addLabel(projectName: string) {
-    let ref = this.modal.open(AddLabelDialog);
+    const ref = this.modal.open(AddLabelDialog)
     ref.result.then((theNewLabel: IBuildLabel) => {
       this.store.dispatch(addArtifactLabel({
         label: {

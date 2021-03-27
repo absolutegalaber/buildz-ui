@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IProject} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IProject} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-project-list',
@@ -17,7 +17,7 @@ import {IProject} from '../../core/flux-store/model';
 })
 export class ProjectList {
   @Input()
-  projects: IProject[] = [];
+  projects: IProject[] = []
   @Output()
-  projectSelected = new EventEmitter<IProject>();
+  projectSelected = new EventEmitter<IProject>()
 }
