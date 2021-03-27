@@ -1,9 +1,9 @@
-import {projectsReducer} from './projects.reducer';
-import {buildStatsReducer} from './build-stats.reducer';
-import {buildSearchReducer} from './build-search.reducer';
-import {environmentReducer} from './environment.reducer';
-import {alertReducer} from './alert.reducer';
-import {serverReducer} from './server.reducer';
+import {projectsReducer} from './projects.reducer'
+import {buildStatsReducer} from './build-stats.reducer'
+import {buildSearchReducer} from './build-search.reducer'
+import {environmentReducer} from './environment.reducer'
+import {alertReducer} from './alert.reducer'
+import {serverReducer} from './server.reducer'
 
 export interface Buildz {
   alert: IAlert
@@ -21,7 +21,7 @@ export const buildzReducers = {
   stats: buildStatsReducer,
   builds: buildSearchReducer,
   servers: serverReducer
-};
+}
 
 // Base interfaces
 /**
@@ -129,8 +129,8 @@ export interface ISelectedProjectAndBranch {
 
 export interface IBuildStats {
   numberOfBuilds: number
-  numberOfLabels: number;
-  numberOfDeploys: number;
+  numberOfLabels: number
+  numberOfDeploys: number
 }
 
 export interface IEnvironments {
@@ -189,6 +189,8 @@ export interface IServer {
   id: number
   name: string
   reservation?: IReservation
+  nickName?: string
+  description?: string
 }
 
 // Interfaces related to Reservation(s)
@@ -209,7 +211,7 @@ export interface ICreateReservationEvent {
   reservation: {
     reservedBy: string
     reservationNote: string
-  };
+  }
 }
 
 // Interfaces related to Deploy(s)
@@ -231,14 +233,6 @@ export interface IDeployBuild {
   project: string
   branch: string
   buildNumber: number
-}
-
-/**
- * A view interface that represents a label which is meant to be associated to a specific Deploy
- */
-export interface IDeployLabel {
-  key: string
-  value: string
 }
 
 export interface IDeploySearch extends IBaseSearchParams {

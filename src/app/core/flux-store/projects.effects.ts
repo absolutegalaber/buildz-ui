@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {loadProjects, projectsLoaded, setProjectActive, setProjectBranchActive, toggleInactiveProjectsVisible} from './projects.actions';
-import {HttpClient} from '@angular/common/http';
-import {Buildz, IProjectsResponse} from './model';
-import {catchError, exhaustMap, map, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators';
-import {select, Store} from '@ngrx/store';
-import {includeInactiveProjects} from './selectors';
-import {backendErrorOccurred, frontendInfo} from './alert.actions';
-import {of} from 'rxjs';
+import {Injectable} from '@angular/core'
+import {Actions, createEffect, ofType} from '@ngrx/effects'
+import {loadProjects, projectsLoaded, setProjectActive, setProjectBranchActive, toggleInactiveProjectsVisible} from './projects.actions'
+import {HttpClient} from '@angular/common/http'
+import {Buildz, IProjectsResponse} from './model'
+import {catchError, exhaustMap, map, mergeMapTo, switchMap, withLatestFrom} from 'rxjs/operators'
+import {select, Store} from '@ngrx/store'
+import {includeInactiveProjects} from './selectors'
+import {backendErrorOccurred, frontendInfo} from './alert.actions'
+import {of} from 'rxjs'
 
 @Injectable()
 export class ProjectsEffects {

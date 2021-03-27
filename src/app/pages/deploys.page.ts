@@ -1,12 +1,12 @@
-import {Component} from '@angular/core';
-import {Buildz, IDeploySearch, IDeploySearchResult, IServer} from '../core/flux-store/model';
-import {select, Store} from '@ngrx/store';
-import {theCurrentServer, theDeploysResult, theDeploysSearch} from '../core/flux-store/selectors';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CreateReservationDialog} from '../dialogs/create-reservation.dialog';
-import {ReleaseReservationDialog} from '../dialogs/release-reservation.dialog';
-import {UPDATE_DEPLOY_SEARCH} from '../core/flux-store/server.actions';
-import {Observable} from 'rxjs';
+import {Component} from '@angular/core'
+import {Buildz, IDeploySearch, IDeploySearchResult, IServer} from '../core/flux-store/model'
+import {select, Store} from '@ngrx/store'
+import {theCurrentServer, theDeploysResult, theDeploysSearch} from '../core/flux-store/selectors'
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap'
+import {CreateReservationDialog} from '../dialogs/create-reservation.dialog'
+import {ReleaseReservationDialog} from '../dialogs/release-reservation.dialog'
+import {UPDATE_DEPLOY_SEARCH} from '../core/flux-store/server.actions'
+import {Observable} from 'rxjs'
 
 @Component({
   template: `
@@ -34,20 +34,24 @@ import {Observable} from 'rxjs';
             </div>
 
             <div class="col-3">
-              <ngb-pagination
-                [collectionSize]="data.theResult.totalElements"
-                [pageSize]="data.theDeploySearch.pageSize"
-                [page]="data.theResult.page+1"
-                size="sm"
-                (pageChange)="toPage(data.theDeploySearch, $event)"
-              >
-              </ngb-pagination>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row mt-5">
+      <div class="row mt-1">
+        <div class="col-10 offset-1">
+          <ngb-pagination
+            [collectionSize]="data.theResult.totalElements"
+            [pageSize]="data.theDeploySearch.pageSize"
+            [page]="data.theResult.page+1"
+            size="sm"
+            (pageChange)="toPage(data.theDeploySearch, $event)"
+          ></ngb-pagination>
+        </div>
+      </div>
+
+      <div class="row mt-1">
         <div class="col-10 offset-1">
           <bz-deploys-accordion
             [searchResult]="data.theResult"
@@ -68,17 +72,17 @@ export class DeploysPage {
   }
 
   startReservation(): void {
-    this.modelService.open(CreateReservationDialog, {size: 'lg'});
+    this.modelService.open(CreateReservationDialog, {size: 'lg'})
   }
 
   startRelease(): void {
-    this.modelService.open(ReleaseReservationDialog, {size: 'lg'});
+    this.modelService.open(ReleaseReservationDialog, {size: 'lg'})
   }
 
   toPage(deploySearch: IDeploySearch, page: number): void {
     deploySearch.page = page - 1
     this.store.dispatch(UPDATE_DEPLOY_SEARCH({
       newSearch: deploySearch
-    }));
+    }))
   }
 }

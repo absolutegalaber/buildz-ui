@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {IBranch, IProject, IProjectBranch, IProjectsResponse} from './model';
+import {createAction, props} from '@ngrx/store'
+import {IBranch, IProject, IProjectBranch, IProjectsResponse} from './model'
 
 export const loadProjects = createAction('LOAD-PROJECTS')
 export const projectsLoaded = createAction('PROJECTS-LOADED', props<{ projectsResponse: IProjectsResponse }>())

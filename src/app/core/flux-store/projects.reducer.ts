@@ -1,6 +1,6 @@
-import {createReducer, on} from '@ngrx/store';
-import {IProjects} from './model';
-import {projectsLoaded, selectBranch, selectProject, toggleInactiveProjectsVisible} from './projects.actions';
+import {createReducer, on} from '@ngrx/store'
+import {IProjects} from './model'
+import {projectsLoaded, selectBranch, selectProject, toggleInactiveProjectsVisible} from './projects.actions'
 
 export const INITIAL_PROJECTS: IProjects = {
   projects: [],
@@ -9,7 +9,7 @@ export const INITIAL_PROJECTS: IProjects = {
   inactiveIncluded: false,
 }
 
-export const _projectsReducer = createReducer(
+export const projectsReducerImpl = createReducer(
   INITIAL_PROJECTS,
   on(projectsLoaded, (state: IProjects, {projectsResponse}) => {
     return {
@@ -34,5 +34,5 @@ export const _projectsReducer = createReducer(
 )
 
 export function projectsReducer(state, action) {
-  return _projectsReducer(state, action)
+  return projectsReducerImpl(state, action)
 }

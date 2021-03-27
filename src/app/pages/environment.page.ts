@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Buildz, IArtifactBuildLabel, IBuildLabel, IEnvironment} from '../core/flux-store/model';
-import {theCurrentEnvironment, theEnvironmentBuilds, theProjectsState} from '../core/flux-store/selectors';
-import {addArtifactLabel, deleteEnvironment, removeArtifactLabel, saveEnvironment, toggleArtifactOfEnvironment, updateCurrentEnvironment} from '../core/flux-store/environment.actions';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {AddLabelDialog} from '../dialogs/add-label.dialog';
+import {Component} from '@angular/core'
+import {select, Store} from '@ngrx/store'
+import {Buildz, IArtifactBuildLabel, IBuildLabel, IEnvironment} from '../core/flux-store/model'
+import {theCurrentEnvironment, theEnvironmentBuilds, theProjectsState} from '../core/flux-store/selectors'
+import * as EnvironmentActions from '../core/flux-store/environment.actions'
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap'
+import {AddLabelDialog} from '../dialogs/add-label.dialog'
 
 @Component({
   template: `
@@ -31,28 +31,28 @@ export class EnvironmentPage {
   environmentBuilds = this.store.pipe(select(theEnvironmentBuilds))
   projects = this.store.pipe(select(theProjectsState))
 
-  updateEnvironment(environment: IEnvironment) {
-    this.store.dispatch(updateCurrentEnvironment({environment}))
+  updateEnvironment(environment: IEnvironment): void {
+    this.store.dispatch(EnvironmentActions.updateCurrentEnvironment({environment}))
   }
 
-  saveEnvironment(environment: IEnvironment) {
-    this.store.dispatch(saveEnvironment({environment}))
+  saveEnvironment(environment: IEnvironment): void {
+    this.store.dispatch(EnvironmentActions.saveEnvironment({environment}))
   }
 
-  deleteEnvironment() {
-    this.store.dispatch(deleteEnvironment())
+  deleteEnvironment(): void {
+    this.store.dispatch(EnvironmentActions.deleteEnvironment())
   }
 
-  toggleProject(projectName: string) {
-    this.store.dispatch(toggleArtifactOfEnvironment({projectName}))
+  toggleProject(projectName: string): void {
+    this.store.dispatch(EnvironmentActions.toggleArtifactOfEnvironment({projectName}))
   }
 
-  addLabel(projectName: string) {
-    let ref = this.modal.open(AddLabelDialog);
+  addLabel(projectName: string): void {
+    const ref = this.modal.open(AddLabelDialog)
     ref.result.then((theNewLabel: IBuildLabel) => {
-      this.store.dispatch(addArtifactLabel({
+      this.store.dispatch(EnvironmentActions.addArtifactLabel({
         label: {
-          projectName: projectName,
+          projectName,
           key: theNewLabel.key,
           value: theNewLabel.value
         }
@@ -60,8 +60,8 @@ export class EnvironmentPage {
     })
   }
 
-  removeLabel(label: IArtifactBuildLabel) {
-    this.store.dispatch(removeArtifactLabel({label}))
+  removeLabel(label: IArtifactBuildLabel): void {
+    this.store.dispatch(EnvironmentActions.removeArtifactLabel({label}))
   }
 
   constructor(private store: Store<Buildz>, private modal: NgbModal) {

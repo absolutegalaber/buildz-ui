@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds} from './model';
+import {createAction, props} from '@ngrx/store'
+import {IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds} from './model'
 
 export const loadKnownEnvironments = createAction('LOAD-KNOWN-ENVIRONMENTS')
 export const knownEnvironmentsLoaded = createAction('KNOWN-ENVIRONMENTS-LOADED', props<{ environments: IEnvironment[] }>())

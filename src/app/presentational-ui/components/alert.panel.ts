@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IAlert} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IAlert} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-alert-panel',
