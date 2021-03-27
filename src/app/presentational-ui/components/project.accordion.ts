@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IProject, IProjectBranch, IProjects} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IProject, IProjectBranch, IProjects} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-project-accordion',
@@ -38,7 +38,7 @@ import {IProject, IProjectBranch, IProjects} from '../../core/flux-store/model';
 })
 export class ProjectAccordion {
   @Input()
-  projects: IProjects;
+  projects: IProjects
   @Output()
   projectSelected = new EventEmitter<IProject>()
   @Output()

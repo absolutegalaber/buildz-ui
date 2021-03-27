@@ -1,9 +1,9 @@
-import {Component, EventEmitter} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {Buildz, IBuildLabel, IProjects} from '../core/flux-store/model';
-import {theProjectsState} from '../core/flux-store/selectors';
+import {Component, EventEmitter} from '@angular/core'
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap'
+import {select, Store} from '@ngrx/store'
+import {Observable} from 'rxjs'
+import {Buildz, IBuildLabel, IProjects} from '../core/flux-store/model'
+import {theProjectsState} from '../core/flux-store/selectors'
 
 @Component({
   selector: 'bz-add-label-dialog',
@@ -12,7 +12,7 @@ import {theProjectsState} from '../core/flux-store/selectors';
       <div class="modal-header">
         <h4 class="modal-title">Add Label</h4>
         <!--        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">-->
-        <!--          <span aria-hidden="true">&times;</span>-->
+        <!--          <span aria-hidden="true">&times</span>-->
         <!--        </button>-->
       </div>
       <div class="modal-body">

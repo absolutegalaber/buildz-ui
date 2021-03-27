@@ -1,6 +1,6 @@
-import {createAction, props} from '@ngrx/store';
-import {IAlertMessage} from './model';
-import {HttpErrorResponse} from '@angular/common/http';
+import {createAction, props} from '@ngrx/store'
+import {IAlertMessage} from './model'
+import {HttpErrorResponse} from '@angular/common/http'
 
 export const backendErrorOccurred = createAction('BACKEND-ERROR-OCCURRED', props<{ errorResponse: HttpErrorResponse }>())
 export const frontendInfo = createAction('FRONTEND-INFO', props<{ alertMessage: IAlertMessage }>())

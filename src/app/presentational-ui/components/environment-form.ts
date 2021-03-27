@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProjects} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IArtifact, IArtifactBuildLabel, IBuild, IEnvironment, IEnvironmentBuilds, IProjects} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-environment-form',
@@ -51,7 +51,7 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
 
         </div>
 
-        <div *ngFor="let artifact of environment.artifacts; let i = index">
+        <div *ngFor="let artifact of environment.artifacts let i = index">
           <div class="form-row">
             <div class="col-3">
               <fieldset class="border rounded p-2">
@@ -71,7 +71,7 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
                   </select>
                 </div>
 
-                <div class="form row" *ngFor="let currentLabel of artifact.labels|keyvalue; let j = index">
+                <div class="form row" *ngFor="let currentLabel of artifact.labels | keyvalue let j = index">
 
                   <div class="col-9">
                     <div class="form-group">
@@ -105,7 +105,9 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
                     <thead>
                     <tr>
                       <td colspan="2">
-                        <b><bz-build-id [build]="theBuildOf(artifact.project)"></bz-build-id></b>
+                        <b>
+                          <bz-build-id [build]="theBuildOf(artifact.project)"></bz-build-id>
+                        </b>
                       </td>
                     </tr>
                     </thead>
@@ -128,40 +130,40 @@ import {IArtifact, IArtifactBuildLabel, IEnvironment, IEnvironmentBuilds, IProje
 })
 export class EnvironmentForm {
   @Input()
-  environment: IEnvironment;
+  environment: IEnvironment
   @Input()
-  verificationResult: IEnvironmentBuilds;
+  verificationResult: IEnvironmentBuilds
   @Input()
-  projects: IProjects;
+  projects: IProjects
   @Output()
-  update = new EventEmitter<IEnvironment>();
+  update = new EventEmitter<IEnvironment>()
   @Output()
-  save = new EventEmitter<IEnvironment>();
+  save = new EventEmitter<IEnvironment>()
   @Output()
-  delete = new EventEmitter<void>();
+  delete = new EventEmitter<void>()
   @Output()
-  toggleProject = new EventEmitter<string>();
+  toggleProject = new EventEmitter<string>()
   @Output()
-  addLabel = new EventEmitter<string>();
+  addLabel = new EventEmitter<string>()
   @Output()
-  removeLabel = new EventEmitter<IArtifactBuildLabel>();
+  removeLabel = new EventEmitter<IArtifactBuildLabel>()
 
   hasArtifactOf(projectName: string): boolean {
     return !!this.artifactOf(this.environment, projectName)
   }
 
-  theBuildOf(projectName: string) {
+  theBuildOf(projectName: string): IBuild | null {
     if (!this.verificationResult) {
-      return null;
+      return null
     }
     if (this.verificationResult?.builds[projectName]) {
       return this.verificationResult?.builds[projectName]
     }
-    return null;
+    return null
   }
 
   artifactOf(environment: IEnvironment, project: string): IArtifact {
-    return environment.artifacts.find((artifact: IArtifact) => artifact.project == project);
+    return environment.artifacts.find((artifact: IArtifact) => artifact.project === project)
   }
 
   constructor() {

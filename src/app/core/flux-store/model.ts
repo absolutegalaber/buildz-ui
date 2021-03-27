@@ -235,14 +235,6 @@ export interface IDeployBuild {
   buildNumber: number
 }
 
-/**
- * A view interface that represents a label which is meant to be associated to a specific Deploy
- */
-export interface IDeployLabel {
-  key: string
-  value: string
-}
-
 export interface IDeploySearch extends IBaseSearchParams {
   serverName: string
 }

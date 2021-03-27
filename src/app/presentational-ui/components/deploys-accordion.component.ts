@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {IDeploySearchResult} from '../../core/flux-store/model';
+import {Component, Input} from '@angular/core'
+import {IDeploySearchResult} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-deploys-accordion',
@@ -26,5 +26,5 @@ import {IDeploySearchResult} from '../../core/flux-store/model';
 })
 export class DeploysAccordionComponent {
   @Input()
-  searchResult: IDeploySearchResult;
+  searchResult: IDeploySearchResult
 }

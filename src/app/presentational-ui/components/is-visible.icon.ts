@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {IBranch, IProject} from '../../core/flux-store/model';
+import {Component, Input} from '@angular/core'
+import {IBranch, IProject} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-is-visible',

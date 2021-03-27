@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {IBuild} from '../../core/flux-store/model';
+import {Component, Input} from '@angular/core'
+import {IBuild} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-builds-accordion',
@@ -23,5 +23,5 @@ import {IBuild} from '../../core/flux-store/model';
 })
 export class BuildsAccordion {
   @Input()
-  builds: IBuild[] = [];
+  builds: IBuild[] = []
 }

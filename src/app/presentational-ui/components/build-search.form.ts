@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '../../core/flux-store/model'
 
 @Component({
   selector: 'bz-build-search-form',
@@ -96,25 +96,25 @@ import {IBuildLabel, IBuildSearchParams, IBuildSearchResult, IProjects} from '..
 })
 export class BuildSearchForm {
   @Input()
-  theSearch: IBuildSearchParams;
+  theSearch: IBuildSearchParams
   @Input()
-  theSearchResult: IBuildSearchResult;
+  theSearchResult: IBuildSearchResult
   @Input()
   projects: IProjects
   @Output()
-  resetSearch = new EventEmitter<void>();
+  resetSearch = new EventEmitter<void>()
   @Output()
-  addSearchLabel = new EventEmitter<void>();
+  addSearchLabel = new EventEmitter<void>()
   @Output()
-  removeSearchLabel = new EventEmitter<IBuildLabel>();
+  removeSearchLabel = new EventEmitter<IBuildLabel>()
   @Output()
-  updateSearchParams = new EventEmitter<IBuildSearchParams>();
+  updateSearchParams = new EventEmitter<IBuildSearchParams>()
 
   labelsPresent(): boolean {
-    return (this.theSearch && this.theSearch.labels && (Object.keys(this.theSearch.labels).length > 0));
+    return (this.theSearch && this.theSearch.labels && (Object.keys(this.theSearch.labels).length > 0))
   }
 
-  toPage(page: number) {
+  toPage(page: number): void {
     this.theSearch.page = (page - 1)
     this.updateSearchParams.emit(this.theSearch)
   }

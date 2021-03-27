@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IEnvironment} from '../../core/flux-store/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core'
+import {IEnvironment} from '../../core/flux-store/model'
 
 @Component({
     selector: 'bz-environment-list',
@@ -25,11 +25,11 @@ import {IEnvironment} from '../../core/flux-store/model';
 })
 export class EnvironmentList {
     @Input()
-    definedEnvironments: IEnvironment[] = [];
+    definedEnvironments: IEnvironment[] = []
     @Input()
-    internalEnvironments: IEnvironment[] = [];
+    internalEnvironments: IEnvironment[] = []
     @Output()
-    environmentSelected = new EventEmitter<string>();
+    environmentSelected = new EventEmitter<string>()
     @Output()
-    newEnvironment = new EventEmitter<void>();
+    newEnvironment = new EventEmitter<void>()
 }
