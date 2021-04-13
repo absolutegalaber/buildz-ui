@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store'
-import {ICreateReservationEvent, IDeploySearch, IDeploySearchResult, IServer} from './model'
+import {ICreateReservationEvent, IDeploy, IDeploySearch, IDeploySearchResult, IServer} from './model';
 
 // Servers related actions
 export const LOAD_KNOWN_SERVERS = createAction('LOAD-KNOWN-SERVERS')
@@ -13,6 +13,7 @@ export const UPDATE_SERVER = createAction('UPDATE_SERVER', props<{ server: IServ
 export const UPDATE_DEPLOY_SEARCH = createAction('DEPLOY_SEARCH', props<{ serverName?: string, newSearch?: IDeploySearch }>())
 export const DEPLOY_SEARCH = createAction('DEPLOY_SEARCH')
 export const DEPLOY_SEARCH_OK = createAction('DEPLOY_SEARCH_OK', props<{ result: IDeploySearchResult }>())
+export const DEPLOY_AT_SEARCH = createAction('DEPLOY_AT_SEARCH', props<{ serverName: string, date: Date }>())
 
 // Reservation related actions
 export const RESERVE_SERVER = createAction('RESERVE_SERVER', props<{ event: ICreateReservationEvent }>())
