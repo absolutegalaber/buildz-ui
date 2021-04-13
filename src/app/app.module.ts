@@ -38,6 +38,8 @@ import {MomentModule} from 'ngx-moment'
 import {CreateReservationDialog} from './dialogs/create-reservation.dialog'
 import {ReleaseReservationDialog} from './dialogs/release-reservation.dialog'
 import {LoadServerGuard} from './guards/load-server.guard'
+import {DeployAtFilterDialog} from './dialogs/deploy-at-filter.dialog'
+
 
 const pages = [
   HomePage,
@@ -51,7 +53,8 @@ const dialogs = [
   BuildsOfEnvironmentDialog,
   ConfirmDialog,
   CreateReservationDialog,
-  ReleaseReservationDialog
+  ReleaseReservationDialog,
+  DeployAtFilterDialog
 ]
 
 @NgModule({
