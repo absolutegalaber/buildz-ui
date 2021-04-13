@@ -7,6 +7,7 @@ import {CreateReservationDialog} from '../dialogs/create-reservation.dialog'
 import {ReleaseReservationDialog} from '../dialogs/release-reservation.dialog'
 import {UPDATE_DEPLOY_SEARCH} from '../core/flux-store/server.actions'
 import {Observable} from 'rxjs'
+import {DeployAtFilterDialog} from '../dialogs/deploy-at-filter.dialog'
 
 @Component({
   template: `
@@ -27,6 +28,7 @@ import {Observable} from 'rxjs'
               <button *ngIf="!data.theServer.reservation" class="btn btn-primary btn-lg mx-2" (click)="startReservation()">
                 Reserve
               </button>
+              <button class="btn btn-primary btn-lg mx-2" (click)="startShowDeployAt()">Deploy at Datetime</button>
             </div>
             <div class="col-6" *ngIf="data.theServer.reservation">
               <strong>By:</strong> {{data.theServer.reservation.by}}<br/>
@@ -77,6 +79,10 @@ export class DeploysPage {
 
   startRelease(): void {
     this.modelService.open(ReleaseReservationDialog, {size: 'lg'})
+  }
+
+  startShowDeployAt(): void {
+    this.modelService.open(DeployAtFilterDialog, {size: 'lg'})
   }
 
   toPage(deploySearch: IDeploySearch, page: number): void {
