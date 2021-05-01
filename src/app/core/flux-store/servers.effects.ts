@@ -5,7 +5,7 @@ import * as DeployActions from './server.actions'
 import {catchError, exhaustMap, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators'
 import {backendErrorOccurred} from './alert.actions'
 import {of} from 'rxjs'
-import {Buildz, IDeploySearchResult, IReservation, IServer} from './model'
+import {Buildz, IDeploy, IDeploySearchResult, IReservation, IServer} from './model';
 import {select, Store} from '@ngrx/store'
 import {theDeploysSearch} from './selectors'
 
@@ -29,6 +29,17 @@ export class ServersEffects {
       catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
       )
     )
+  ))
+
+  DEPLOY_SEARCH_AT$ = createEffect(() => this.actions$.pipe(
+    ofType(DeployActions.DEPLOY_AT_SEARCH),
+    switchMap((action) => this.http.post<IDeploySearchResult>(
+      `/api/v1/deploy/on/${action.serverName}/at`,
+      action.date
+    ).pipe(
+      map((result: IDeploySearchResult) => DeployActions.DEPLOY_SEARCH_OK({result})),
+      catchError(errorResponse => of(backendErrorOccurred({errorResponse})))
+    ))
   ))
 
   RESERVE_SERVER$ = createEffect(() => this.actions$.pipe(
